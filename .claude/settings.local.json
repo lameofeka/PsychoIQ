@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npm create *)",
+      "Bash(npx create-vite@latest --help)",
+      "Bash(npx create-vite@latest . --template react --no-interactive)",
+      "Bash(rm -rf /c/Users/Ofek/AppData/Local/Temp/claude/C-----------PsychoIQ/280862a1-f6e5-48d3-b014-f4718cb0a552/scratchpad/psychoiq-scaffold)",
+      "Bash(npx create-vite@latest /c/Users/Ofek/AppData/Local/Temp/claude/C-----------PsychoIQ/280862a1-f6e5-48d3-b014-f4718cb0a552/scratchpad/psychoiq-scaffold --template react --no-interactive)",
+      "Bash(mkdir -p /c/Users/Ofek/AppData/Local/Temp/claude/C-----------PsychoIQ/280862a1-f6e5-48d3-b014-f4718cb0a552/scratchpad/psychoiq-scaffold)",
+      "Read(//c/Users/Ofek/AppData/Local/Temp/claude/C-----------PsychoIQ/280862a1-f6e5-48d3-b014-f4718cb0a552/scratchpad/**)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(rm -f src/assets/hero.png src/assets/react.svg src/assets/vite.svg public/icons.svg)",
+      "Bash(rmdir src/assets)",
+      "Bash(curl -s http://localhost:5173/ -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173/)",
+      "Bash(npx oxlint *)",
+      "Bash(npx vite *)",
+      "Read(//tmp/**)",
+      "Bash(pkill -f \"vite --port 5183\")"
+    ]
+  }
+}
