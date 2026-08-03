@@ -4,7 +4,7 @@ import DictionaryManager from './DictionaryManager'
 import MistakesList from './MistakesList'
 import GamePlay from './GamePlay'
 import Results from './Results'
-import { getWords, getGroups } from './dictionary'
+import { getWords, getGroups, loadDictionary } from './dictionary'
 import { shuffle } from './logic'
 import { recordGroupResult, recordWordResult, runMistakeLockMigrationOnce, setLastPracticedGroup } from './stats'
 
@@ -47,6 +47,7 @@ function refreshWords(list) {
 }
 
 export default function VocabularyGame({ onExit }) {
+  const [ready, setReady] = useState(false)
   const [stage, setStage] = useState('groupSelect')
   const [practiceWords, setPracticeWords] = useState([])
   const [practiceLabel, setPracticeLabel] = useState(null)
@@ -60,7 +61,10 @@ export default function VocabularyGame({ onExit }) {
   const recordedThisChainRef = useRef(new Set())
 
   useEffect(() => {
-    runMistakeLockMigrationOnce(getWords())
+    loadDictionary().then(() => {
+      runMistakeLockMigrationOnce(getWords())
+      setReady(true)
+    })
   }, [])
 
   function startRound(words, label) {
@@ -152,6 +156,16 @@ export default function VocabularyGame({ onExit }) {
     if (mistakeWords.length === 0) return
     setUseBufferedQuiz(false)
     startRound(refreshWords(mistakeWords), MISTAKES_LABEL)
+  }
+
+  if (!ready) {
+    return (
+      <div className="game-shell">
+        <div className="wizard">
+          <p className="summary-line">טוען מילון...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

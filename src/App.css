@@ -1363,8 +1363,14 @@
 
 .dict-toolbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.dict-toolbar .dict-action-btn {
+  flex: 1 1 30%;
+  min-width: 90px;
 }
 
 .dict-search-row {
@@ -2066,4 +2072,71 @@
 .synonym-slot-num {
   color: var(--text-h);
   font-weight: 700;
+}
+
+/* --- Mobile responsiveness --- */
+
+@media (max-width: 600px) {
+  /* The mode-switch / quiz-group-nav are absolutely centered over
+     .wizard-topbar so they can sit alongside the back button on wide
+     screens. On narrow phones there isn't room for both without overlap,
+     so drop them into normal flow on their own centered row instead. */
+  .wizard-topbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .mode-switch,
+  .quiz-group-nav {
+    position: static;
+    transform: none;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mode-switch-btn {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell {
+    padding: 24px 12px 40px;
+  }
+
+  .app-header h1 {
+    font-size: 32px;
+  }
+
+  .app-header p {
+    font-size: 16px;
+  }
+
+  .wizard,
+  .gameplay,
+  .results {
+    padding: 20px 16px;
+  }
+
+  .question-text {
+    font-size: 32px;
+  }
+
+  .vocab-word {
+    font-size: 28px;
+  }
+
+  .game-card {
+    width: 100%;
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mode-switch-btn {
+    padding: 6px 9px;
+    font-size: 12px;
+  }
 }

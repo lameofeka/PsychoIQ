@@ -1,1 +1,5 @@
 claude --dangerously-skip-permissions
+
+
+git commit -am "עדכנתי את הקוד"
+git push
