@@ -1,30 +1,44 @@
+import staticWords from './words.data.json'
+
 const API_URL = '/api/vocabulary'
 export const GROUP_SIZE = 10
 
-// The dictionary lives in the project (words.data.json), served and written
-// back to disk by a dev-only Vite middleware — not localStorage — so the word
-// list is shared across every device that talks to this dev server instead of
-// being siloed per browser. See vite.config.js for the /api/vocabulary route.
+// In dev, the dictionary lives in the project (words.data.json) and is served
+// and written back to disk by a dev-only Vite middleware — not localStorage —
+// so the word list is shared across every device that talks to this dev
+// server instead of being siloed per browser. See vite.config.js for the
+// /api/vocabulary route.
+//
+// That route only exists on the Vite dev server, not on a static host like
+// Vercel, so production instead uses words.data.json baked straight into the
+// build. Editing the dictionary from a deployed site won't persist — edit it
+// locally (npm run dev) and redeploy to update what's shown in production.
 let wordsCache = []
 let loadPromise = null
 
 export function loadDictionary() {
   if (!loadPromise) {
-    loadPromise = fetch(API_URL)
-      .then((res) => res.json())
-      .then((words) => {
-        wordsCache = Array.isArray(words) ? words : []
-        return wordsCache
-      })
-      .catch(() => {
-        wordsCache = []
-        return wordsCache
-      })
+    if (import.meta.env.DEV) {
+      loadPromise = fetch(API_URL)
+        .then((res) => res.json())
+        .then((words) => {
+          wordsCache = Array.isArray(words) ? words : staticWords
+          return wordsCache
+        })
+        .catch(() => {
+          wordsCache = staticWords
+          return wordsCache
+        })
+    } else {
+      wordsCache = staticWords
+      loadPromise = Promise.resolve(wordsCache)
+    }
   }
   return loadPromise
 }
 
 function persist(words) {
+  if (!import.meta.env.DEV) return
   fetch(API_URL, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
