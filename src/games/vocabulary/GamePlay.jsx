@@ -324,6 +324,12 @@ export default function GamePlay({
           </div>
         )}
       </div>
+
+      {verdict && !isEditing && (
+        <button type="button" className="next-word-fab" onClick={goNext} title="למילה הבאה">
+          {isLastOverall ? 'סיום' : 'הבא'}
+        </button>
+      )}
     </div>
   )
 }

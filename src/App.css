@@ -2015,6 +2015,42 @@
   transform: scale(1.05);
 }
 
+/* --- Vocabulary: floating "next word" button --- */
+
+/* Mirrors .scroll-jump-btn on the opposite (bottom-right) corner — the
+   thumb-reach zone for a right hand holding the phone — as a squircle
+   (a rounded square, not a circle) so it reads as a distinct action from
+   the round scroll button. Lets you advance to the next word without
+   reaching up to the in-card "לשאלה הבאה" button below the definition. */
+.next-word-fab {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: 24px;
+  width: 68px;
+  height: 68px;
+  border-radius: 28%;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  z-index: 40;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.next-word-fab:hover {
+  background: var(--accent-dark);
+  transform: scale(1.05);
+}
+
+.next-word-fab:active {
+  transform: scale(0.96);
+}
+
 /* --- Vocabulary: modal popup --- */
 
 .modal-overlay {
