@@ -1271,7 +1271,7 @@
 }
 
 .group-chip.selected {
-  background: var(--accent-bg);
+  background: rgba(124, 77, 255, 0.13);
 }
 
 .group-chip-title {
