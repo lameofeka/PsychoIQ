@@ -6,6 +6,7 @@ import PrimesGame from './games/primes/PrimesGame'
 import CirclePartsGame from './games/circleParts/CirclePartsGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
+import { recordVisitAndGetStreak } from './streak'
 import './App.css'
 
 function QuantitativeIcon() {
@@ -82,6 +83,7 @@ function firstGameIdForCategory(cat) {
 }
 
 function App() {
+  const [streak] = useState(() => recordVisitAndGetStreak())
   const [category, setCategory] = useState('quantitative')
   const [selectedGameId, setSelectedGameId] = useState(() => firstGameIdForCategory('quantitative'))
   // 'inline' = the game's landing/setup screen, shown under the pill row
@@ -113,6 +115,12 @@ function App() {
       {showChrome && (
         <>
           <header className="app-header">
+            {streak > 0 && (
+              <div className="streak-badge" title={`רצף של ${streak} ${streak === 1 ? 'יום' : 'ימים'}`}>
+                <span className="streak-flame">🔥</span>
+                <span>{streak}</span>
+              </div>
+            )}
             <h1>PsychoIQ</h1>
             <p>תרגול לפסיכומטרי</p>
           </header>

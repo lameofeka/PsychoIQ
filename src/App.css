@@ -8,6 +8,7 @@
 }
 
 .app-header {
+  position: relative;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -22,6 +23,23 @@
   margin-top: 6px;
   font-size: 18px;
   color: var(--text);
+}
+
+.streak-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.streak-flame {
+  font-size: 17px;
+  line-height: 1;
 }
 
 /* --- Game menu --- */
