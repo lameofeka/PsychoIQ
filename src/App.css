@@ -2371,8 +2371,8 @@
   }
 
   .category-switch .mode-switch-btn.active {
-    background: var(--accent-bg);
-    color: var(--text-h);
+    background: none;
+    color: var(--accent);
   }
 
   /* Bigger touch targets for small icon-only controls once fingers, not a
