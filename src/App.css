@@ -8,8 +8,6 @@
 }
 
 .app-header {
-  position: relative;
-  width: 100%;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -27,15 +25,13 @@
 }
 
 .streak-badge {
-  /* Anchored to .app-header (title + subtitle) rather than the viewport, so
-     top: 50% always lands between the two lines regardless of font-size
-     per breakpoint, and left: 0 sits at the header's own left edge - which,
-     since the header is full-width, is the screen's left edge (inset by
-     .app-shell's own padding, same as everything else in the layout). */
+  /* Anchored to .category-switch itself (not a guessed pixel offset) so it
+     sits exactly above the switch's own left edge - its "end" in RTL -
+     regardless of how wide the switch renders. */
   position: absolute;
-  top: 50%;
+  bottom: 100%;
   left: 0;
-  transform: translateY(-50%);
+  margin-bottom: 8px;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -61,11 +57,24 @@
 /* --- Game menu --- */
 
 .category-switch {
+  position: relative;
   display: inline-flex;
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
   margin-bottom: 28px;
+}
+
+/* overflow: hidden on .category-switch would clip .streak-badge (anchored
+   to it, positioned above its own box) - round the outer buttons directly
+   instead so an edge .active fill still respects the pill's corners. */
+.category-switch .mode-switch-btn:first-child {
+  border-top-right-radius: 9px;
+  border-bottom-right-radius: 9px;
+}
+
+.category-switch .mode-switch-btn:last-child {
+  border-top-left-radius: 9px;
+  border-bottom-left-radius: 9px;
 }
 
 /* --- Game pill nav: replaces the home-screen game-card grid. Tapping a
@@ -1164,7 +1173,7 @@
   position: relative;
   background: color-mix(in srgb, var(--border) 18%, var(--bg));
   border: none;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 14px;
   display: flex;
   flex-direction: column;
@@ -1207,24 +1216,11 @@
 
 .group-chip-title {
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 500;
+  /* Level is conveyed by the chip's background tint alone - matches the
+     progress-map grid-cell numbers, which stay one neutral gray on every
+     level instead of matching it. */
   color: var(--text);
-}
-
-.group-chip.level-green .group-chip-title {
-  color: var(--success);
-}
-
-.group-chip.level-yellow .group-chip-title {
-  color: var(--warning);
-}
-
-.group-chip.level-red .group-chip-title {
-  color: var(--danger);
-}
-
-.group-chip.selected .group-chip-title {
-  color: var(--accent-dark);
 }
 
 /* --- Vocabulary: mistakes list --- */
@@ -2281,7 +2277,9 @@
     box-shadow: 0 -6px 20px rgba(28, 26, 36, 0.08);
   }
 
-  .category-switch .mode-switch-btn {
+  .category-switch .mode-switch-btn,
+  .category-switch .mode-switch-btn:first-child,
+  .category-switch .mode-switch-btn:last-child {
     flex: 1;
     flex-direction: column;
     gap: 4px;
