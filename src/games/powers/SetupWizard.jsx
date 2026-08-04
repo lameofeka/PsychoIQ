@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { OPERATIONS, RANGE_TYPES, MIN_BASE, MAX_BASE, describeSettings } from './logic'
+import { OPERATIONS, RANGE_TYPES, MIN_BASE, MAX_BASE } from './logic'
 import ProgressMap from './ProgressMap'
 
 const OPERATION_OPTIONS = [
@@ -25,7 +25,6 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   const [inOrder, setInOrder] = useState(initialSettings?.inOrder ?? false)
 
   const canStart = Boolean(operation && rangeType)
-  const previewSettings = { operation, rangeType, singleBase, rangeStart, rangeEnd }
 
   function start() {
     if (!canStart) return
@@ -114,8 +113,6 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
             </button>
           </div>
         </div>
-
-        {canStart && <p className="summary-line">{describeSettings(previewSettings)}</p>}
 
         <button className="primary-btn big" disabled={!canStart} onClick={start}>
           התחל תרגול
