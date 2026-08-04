@@ -54,6 +54,34 @@
   height: 14px;
 }
 
+.mastery-badge {
+  /* Mirrors .streak-badge on the opposite side - the switch's own right
+     edge (its "start" in RTL) - same anchoring logic, no guessed offset. */
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mastery-check {
+  display: flex;
+}
+
+.mastery-check svg {
+  width: 14px;
+  height: 14px;
+}
+
 /* --- Game menu --- */
 
 .category-switch {
@@ -254,7 +282,6 @@
 .secondary-btn,
 .game-card,
 .game-pill,
-.option-card,
 .operation-cube,
 .number-chip,
 .group-chip,
@@ -269,7 +296,6 @@
 .secondary-btn:active,
 .game-card:active,
 .game-pill:active,
-.option-card:active,
 .operation-cube:active,
 .number-chip:active,
 .group-chip:active,

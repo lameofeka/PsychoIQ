@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
@@ -7,12 +7,22 @@ import CirclePartsGame from './games/circleParts/CirclePartsGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
 import { recordVisitAndGetStreak } from './streak'
+import { getOverallMasteryPercent } from './overallProgress'
 import './App.css'
 
 function FlameIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2.5c1 3-3 4.5-3 8.5a3 3 0 0 0 6 0c0-1.2-1-2.3-1-3.3 2 1.2 3.5 4 3.5 6.3a5.5 5.5 0 0 1-11 0c0-5.3 3.5-6.5 5.5-11.5Z" />
+    </svg>
+  )
+}
+
+function ProgressIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="8" />
+      <path d="M9 12.3l2 2 4-4.6" />
     </svg>
   )
 }
@@ -92,12 +102,27 @@ function firstGameIdForCategory(cat) {
 
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
+  const [masteryPercent, setMasteryPercent] = useState(null)
   const [category, setCategory] = useState('quantitative')
   const [selectedGameId, setSelectedGameId] = useState(() => firstGameIdForCategory('quantitative'))
   // 'inline' = the game's landing/setup screen, shown under the pill row
   // alongside the header. 'full' = actual gameplay/results, which takes
   // over the whole screen like before (header + pills hidden).
   const [phase, setPhase] = useState('inline')
+
+  // Recompute whenever the home/inline chrome (where the badge lives) comes
+  // back into view - including right after finishing a round - so the
+  // number stays fresh without needing a manual refresh.
+  useEffect(() => {
+    if (phase !== 'inline') return
+    let cancelled = false
+    getOverallMasteryPercent().then((pct) => {
+      if (!cancelled) setMasteryPercent(pct)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [phase])
 
   function selectCategory(value) {
     setCategory(value)
@@ -147,6 +172,14 @@ function App() {
                 {c.label}
               </button>
             ))}
+            {masteryPercent !== null && (
+              <div className="mastery-badge" title="אחוז שליטה כולל בכל הפלטפורמה">
+                <span className="mastery-check">
+                  <ProgressIcon />
+                </span>
+                <span>{masteryPercent}%</span>
+              </div>
+            )}
           </div>
 
           <div className="game-pill-row">
