@@ -2192,7 +2192,19 @@
     flex: 1;
   }
 
+  /* Visually move the correct/wrong feedback (and, in chain-mode quizzes,
+     its "המשך מכאן"/"התחל מהתחלה" buttons) up to right under the answer
+     field instead of below the keypad — without touching DOM order, which
+     stays as-is for desktop and for the chain-mode continue/restart logic
+     that reads sibling structure. .feedback-msg's own margin-top:16px
+     becomes the gap under the input once it's reordered here. */
+  .question-card:has(.numeric-keypad) .feedback-msg,
+  .question-card:has(.numeric-keypad) .chain-actions {
+    order: 1;
+  }
+
   .numeric-keypad {
+    order: 2;
     /* Combined horizontal padding of .gameplay (12px) + .question-card
        (16px) + .app-shell (8px) that sits between the keypad's natural
        position and the true viewport edge: 12+16+8 = 36px. To make the
