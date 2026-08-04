@@ -2221,8 +2221,8 @@
        bleed above); aspect-ratio derives height from it directly so
        buttons are always noticeably wider than tall, instead of a
        fixed height that could end up taller than the column is wide.
-       1.8 / 1.08 ≈ 1.667: same width, ~8% taller. */
-    aspect-ratio: 1.667 / 1;
+       1.8 / 1.08 / 1.03 ≈ 1.618: same width, ~8% then another ~3% taller. */
+    aspect-ratio: 1.618 / 1;
     height: auto;
     border-radius: 14px;
     border-width: 1px;
