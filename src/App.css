@@ -2137,33 +2137,41 @@
     max-width: 220px;
   }
 
-  /* Pin the numeric keypad to the bottom of the phone screen instead of
-     wherever it lands in normal flow — on a tall question card that meant
-     scrolling down just to reach it. .question-card reserves matching
-     bottom padding so the feedback message underneath never hides behind
-     the fixed bar. */
+  /* Instead of pinning the keypad to the viewport with position:fixed,
+     let the gameplay card itself stretch down to the bottom of the phone
+     screen — the card grows to fill the space app-shell's flex layout
+     leaves for it, question-card grows to fill the card, and the keypad
+     (a normal, in-flow part of question-card) gets pushed to the bottom
+     of that space via margin-top:auto. No overlay, no separate
+     background/shadow — it's just part of the same card. */
+  .game-shell:has(.gameplay) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .gameplay {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
   .question-card:has(.numeric-keypad) {
-    padding-bottom: calc(470px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
   .numeric-keypad {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 20;
+    margin-top: auto;
+    margin-inline: auto;
     max-width: 340px;
-    margin: 0 auto;
     gap: 11px;
-    background: var(--card-bg);
-    border-top: 1px solid var(--border);
-    border-radius: 18px 18px 0 0;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
   }
 
   .keypad-btn {
     font-size: 21px;
+    aspect-ratio: 6 / 5;
   }
 }
 
