@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
 import Results from './Results'
 import { OPERATIONS } from './logic'
 
-export default function CirclePartsGame({ onExit }) {
+export default function CirclePartsGame({ onExit, onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [settings, setSettings] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
+
+  useEffect(() => {
+    onPhaseChange?.(stage === 'setup' ? 'inline' : 'full')
+  }, [stage])
 
   function handleSetupComplete(newSettings) {
     setSettings(newSettings)

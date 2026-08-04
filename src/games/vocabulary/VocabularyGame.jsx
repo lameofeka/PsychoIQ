@@ -46,7 +46,7 @@ function refreshWords(list) {
   })
 }
 
-export default function VocabularyGame({ onExit }) {
+export default function VocabularyGame({ onExit, onPhaseChange }) {
   const [ready, setReady] = useState(false)
   const [stage, setStage] = useState('groupSelect')
   const [practiceWords, setPracticeWords] = useState([])
@@ -66,6 +66,10 @@ export default function VocabularyGame({ onExit }) {
       setReady(true)
     })
   }, [])
+
+  useEffect(() => {
+    onPhaseChange?.(stage === 'groupSelect' ? 'inline' : 'full')
+  }, [stage])
 
   function startRound(words, label) {
     recordedThisChainRef.current = new Set()

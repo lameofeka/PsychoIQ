@@ -61,75 +61,77 @@ export default function SetupWizard({ initialSettings, onComplete, onExit, onPra
     (rangeType === RANGE_TYPES.SINGLE ? n === singleBase : rangeType === RANGE_TYPES.RANGE && n >= rangeLo && n <= rangeHi)
 
   return (
-    <div className="wizard setup-compact">
-      <div className="wizard-topbar">
-        <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-          →
-        </button>
-      </div>
-
-      <h2>בחר/י תרגול</h2>
-
-      <div className="setup-section">
-        <div className="setup-section-title">איזה תרגול תרצה?</div>
-        <div className="operation-row">
-          {OPERATION_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              className={`operation-cube ${operation === opt.value ? 'selected' : ''}`}
-              onClick={() => setOperation(opt.value)}
-            >
-              <span className="option-icon">{opt.icon}</span>
-              <span>{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="setup-section">
-        <div className="setup-section-title-row">
-          <div className="setup-section-title">על אילו בסיסים לתרגל?</div>
-          <button
-            type="button"
-            className="in-order-toggle"
-            onClick={() => setInOrder((v) => !v)}
-            title="מצב שרשרת"
-          >
-            <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
-            <span>לפי הסדר</span>
+    <div className="wizard-stack">
+      <div className="wizard setup-compact">
+        <div className="wizard-topbar">
+          <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
+            →
           </button>
         </div>
-        <div className="option-grid">
-          <div className="option-card number-pick-card selected">
-            <div className="option-radio-row">
-              <span className="option-card-label">{PICK_LABEL}</span>
-              <button type="button" className="select-all-btn" onClick={selectAll}>
-                {SELECT_ALL_LABEL}
+
+        <h2>בחר/י תרגול</h2>
+
+        <div className="setup-section">
+          <div className="setup-section-title">איזה תרגול תרצה?</div>
+          <div className="operation-row">
+            {OPERATION_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                className={`operation-cube ${operation === opt.value ? 'selected' : ''}`}
+                onClick={() => setOperation(opt.value)}
+              >
+                <span className="option-icon">{opt.icon}</span>
+                <span>{opt.label}</span>
               </button>
-            </div>
-            <div className="inline-number-picker">
-              {BASES.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  className={`number-chip ${isBasePicked(n) ? 'selected' : ''}`}
-                  onClick={() => pickBase(n)}
-                >
-                  {n}
+            ))}
+          </div>
+        </div>
+
+        <div className="setup-section">
+          <div className="setup-section-title-row">
+            <div className="setup-section-title">על אילו בסיסים לתרגל?</div>
+            <button
+              type="button"
+              className="in-order-toggle"
+              onClick={() => setInOrder((v) => !v)}
+              title="מצב שרשרת"
+            >
+              <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
+              <span>לפי הסדר</span>
+            </button>
+          </div>
+          <div className="option-grid">
+            <div className="option-card number-pick-card selected">
+              <div className="option-radio-row">
+                <span className="option-card-label">{PICK_LABEL}</span>
+                <button type="button" className="select-all-btn" onClick={selectAll}>
+                  {SELECT_ALL_LABEL}
                 </button>
-              ))}
+              </div>
+              <div className="inline-number-picker">
+                {BASES.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    className={`number-chip ${isBasePicked(n) ? 'selected' : ''}`}
+                    onClick={() => pickBase(n)}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
+
+        {canStart && <p className="summary-line">{describeSettings(previewSettings)}</p>}
+
+        <button className="primary-btn big" disabled={!canStart} onClick={start}>
+          התחל תרגול
+        </button>
       </div>
 
-      {canStart && <p className="summary-line">{describeSettings(previewSettings)}</p>}
-
-      <button className="primary-btn big" disabled={!canStart} onClick={start}>
-        התחל תרגול
-      </button>
-
-      <div className="setup-progress-section">
+      <div className="wizard setup-compact">
         <ProgressMap onPracticeWeak={onPracticeWeak} />
       </div>
     </div>

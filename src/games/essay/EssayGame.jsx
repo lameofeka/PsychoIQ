@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TemplateGame from './TemplateGame'
 import SynonymsGame from './SynonymsGame'
 
@@ -19,9 +19,13 @@ const ACTIVITIES = [
   },
 ]
 
-export default function EssayGame({ onExit }) {
+export default function EssayGame({ onExit, onPhaseChange }) {
   const [activity, setActivity] = useState(null)
   const [initialStage, setInitialStage] = useState('practice')
+
+  useEffect(() => {
+    onPhaseChange?.(activity === null ? 'inline' : 'full')
+  }, [activity])
 
   function open(id, stage) {
     setInitialStage(stage)

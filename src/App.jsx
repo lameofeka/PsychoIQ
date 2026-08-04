@@ -34,143 +34,117 @@ const GAMES = [
     id: 'multiplication',
     category: 'quantitative',
     title: 'לוח הכפל',
-    description: 'תרגול כפל, חילוק ולוח הכפל בקצב שלך',
-    icon: '×÷',
+    Component: MultiplicationGame,
   },
   {
     id: 'powers',
     category: 'quantitative',
     title: 'חזקות',
-    description: 'תרגול חזקות ושורשים מהנפוצים בבחינה',
-    icon: 'xⁿ',
+    Component: PowersGame,
   },
   {
     id: 'factorial',
     category: 'quantitative',
     title: 'עצרת',
-    description: 'תרגול חישובי עצרת בעל פה למספרים 1 עד 6',
-    icon: 'n!',
+    Component: FactorialGame,
   },
   {
     id: 'primes',
     category: 'quantitative',
     title: 'מספרים ראשוניים',
-    description: 'שרשרת המספרים הראשוניים בעל פה, לפי הסדר',
-    icon: '2·3·5',
+    Component: PrimesGame,
   },
   {
     id: 'circleParts',
     category: 'quantitative',
     title: 'חלקי מעגל',
-    description: 'תרגול המרה בין מעלות לשברים מהמעגל',
-    icon: '◔',
+    Component: CirclePartsGame,
   },
   {
     id: 'vocabulary',
     category: 'verbal',
     title: 'אוצר מילים',
-    description: 'תרגול פירושי מילים מתוך מילון אישי',
-    icon: 'Aa',
+    Component: VocabularyGame,
   },
   {
     id: 'essay',
     category: 'verbal',
     title: 'חיבור',
-    description: 'תרגול טמפלייט ומילים נרדפות לחיבור',
-    icon: '¶',
+    Component: EssayGame,
   },
 ]
 
 function App() {
-  const [activeGame, setActiveGame] = useState(null)
   const [category, setCategory] = useState('quantitative')
+  const [selectedGameId, setSelectedGameId] = useState(null)
+  // 'inline' = the game's landing/setup screen, shown under the pill row
+  // alongside the header. 'full' = actual gameplay/results, which takes
+  // over the whole screen like before (header + pills hidden).
+  const [phase, setPhase] = useState('inline')
 
-  if (activeGame === 'multiplication') {
-    return (
-      <div className="app-shell">
-        <MultiplicationGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
+  function selectCategory(value) {
+    setCategory(value)
+    setSelectedGameId(null)
   }
 
-  if (activeGame === 'powers') {
-    return (
-      <div className="app-shell">
-        <PowersGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
+  function togglePill(gameId) {
+    if (gameId === selectedGameId) {
+      setSelectedGameId(null)
+      return
+    }
+    setSelectedGameId(gameId)
+    setPhase('inline')
   }
 
-  if (activeGame === 'factorial') {
-    return (
-      <div className="app-shell">
-        <FactorialGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
+  function collapseToHome() {
+    setSelectedGameId(null)
   }
 
-  if (activeGame === 'primes') {
-    return (
-      <div className="app-shell">
-        <PrimesGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
-  }
-
-  if (activeGame === 'circleParts') {
-    return (
-      <div className="app-shell">
-        <CirclePartsGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
-  }
-
-  if (activeGame === 'vocabulary') {
-    return (
-      <div className="app-shell">
-        <VocabularyGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
-  }
-
-  if (activeGame === 'essay') {
-    return (
-      <div className="app-shell">
-        <EssayGame onExit={() => setActiveGame(null)} />
-      </div>
-    )
-  }
+  const selectedGame = GAMES.find((g) => g.id === selectedGameId)
+  const showChrome = !selectedGame || phase === 'inline'
 
   return (
     <div className="app-shell">
-      <header className="app-header">
-        <h1>PsychoIQ</h1>
-        <p>תרגול לפסיכומטרי</p>
-      </header>
+      {showChrome && (
+        <>
+          <header className="app-header">
+            <h1>PsychoIQ</h1>
+            <p>תרגול לפסיכומטרי</p>
+          </header>
 
-      <div className="category-switch">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c.value}
-            type="button"
-            className={`mode-switch-btn ${category === c.value ? 'active' : ''}`}
-            onClick={() => setCategory(c.value)}
-          >
-            <c.Icon />
-            {c.label}
-          </button>
-        ))}
-      </div>
+          <div className="category-switch">
+            {CATEGORIES.map((c) => (
+              <button
+                key={c.value}
+                type="button"
+                className={`mode-switch-btn ${category === c.value ? 'active' : ''}`}
+                onClick={() => selectCategory(c.value)}
+              >
+                <c.Icon />
+                {c.label}
+              </button>
+            ))}
+          </div>
 
-      <div className="game-menu">
-        {GAMES.filter((game) => game.category === category).map((game) => (
-          <button key={game.id} className="game-card" onClick={() => setActiveGame(game.id)}>
-            <span className="game-card-icon">{game.icon}</span>
-            <span className="game-card-title">{game.title}</span>
-            <span className="game-card-desc">{game.description}</span>
-          </button>
-        ))}
-      </div>
+          <div className="game-pill-row">
+            {GAMES.filter((game) => game.category === category).map((game) => (
+              <button
+                key={game.id}
+                type="button"
+                className={`game-pill ${selectedGameId === game.id ? 'selected' : ''}`}
+                onClick={() => togglePill(game.id)}
+              >
+                {game.title}
+                {selectedGameId === game.id && <span className="game-pill-close">×</span>}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {selectedGame && (
+        <selectedGame.Component key={selectedGame.id} onExit={collapseToHome} onPhaseChange={setPhase} />
+      )}
     </div>
   )
 }

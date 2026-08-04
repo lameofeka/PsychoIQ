@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
 import Results from './Results'
 
-export default function PrimesGame({ onExit }) {
+export default function PrimesGame({ onExit, onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
+
+  useEffect(() => {
+    onPhaseChange?.(stage === 'setup' ? 'inline' : 'full')
+  }, [stage])
 
   function handleStart() {
     setStage('playing')
