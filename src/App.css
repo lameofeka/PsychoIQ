@@ -3,7 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 16px 48px;
+  padding: calc(32px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(48px + env(safe-area-inset-bottom))
+    calc(16px + env(safe-area-inset-left));
 }
 
 .app-header {
@@ -152,6 +153,35 @@
 
 .primary-btn:hover {
   background: var(--accent-dark);
+}
+
+/* Native-app-style press feedback: a quick scale-down on tap instead of
+   relying on :hover, which touch devices don't have. */
+.primary-btn,
+.secondary-btn,
+.game-card,
+.option-card,
+.operation-cube,
+.number-chip,
+.group-chip,
+.dict-action-btn,
+.keypad-btn,
+.mode-switch-btn {
+  transition-property: border-color, background, color, transform, box-shadow;
+  transition-duration: 0.15s;
+}
+
+.primary-btn:active,
+.secondary-btn:active,
+.game-card:active,
+.option-card:active,
+.operation-cube:active,
+.number-chip:active,
+.group-chip:active,
+.dict-action-btn:active,
+.keypad-btn:active,
+.mode-switch-btn:active {
+  transform: scale(0.96);
 }
 
 .primary-btn.big {
@@ -2130,6 +2160,62 @@
   .mode-switch-btn {
     padding: 7px 12px;
     font-size: 13px;
+  }
+
+  /* App-style bottom tab bar for the top-level category switch (כמותי/מילולי),
+     replacing the top segmented pill on phones. Reserve room for it via
+     app-shell's own padding-bottom instead of an extra wrapper. */
+  .app-shell:has(> .category-switch) {
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
+  .category-switch {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    width: 100%;
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    background: var(--card-bg);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -6px 20px rgba(28, 26, 36, 0.08);
+  }
+
+  .category-switch .mode-switch-btn {
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0 8px;
+    font-size: 12px;
+    border-radius: 0;
+  }
+
+  .category-switch .mode-switch-btn + .mode-switch-btn {
+    border-inline-start: none;
+  }
+
+  .category-switch .mode-switch-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .category-switch .mode-switch-btn.active {
+    background: none;
+    color: var(--accent);
+  }
+
+  /* Bigger touch targets for small icon-only controls once fingers, not a
+     mouse cursor, are doing the tapping. */
+  .icon-back-btn {
+    padding: 10px 14px;
+  }
+
+  .group-nav-arrow {
+    padding: 8px 10px;
   }
 }
 

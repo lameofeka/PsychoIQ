@@ -8,9 +8,25 @@ import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
 import './App.css'
 
+function QuantitativeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19V10M12 19V5M20 19v-7" />
+    </svg>
+  )
+}
+
+function VerbalIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 6h11M4 12h16M4 18h8" />
+    </svg>
+  )
+}
+
 const CATEGORIES = [
-  { value: 'quantitative', label: 'כמותי' },
-  { value: 'verbal', label: 'מילולי' },
+  { value: 'quantitative', label: 'כמותי', Icon: QuantitativeIcon },
+  { value: 'verbal', label: 'מילולי', Icon: VerbalIcon },
 ]
 
 const GAMES = [
@@ -140,6 +156,7 @@ function App() {
             className={`mode-switch-btn ${category === c.value ? 'active' : ''}`}
             onClick={() => setCategory(c.value)}
           >
+            <c.Icon />
             {c.label}
           </button>
         ))}
