@@ -54,12 +54,16 @@ function persist(words) {
     .then(async (res) => {
       if (res.ok) return
       // The server refuses saves that would shrink the dictionary a lot
-      // (see vite.config.js) — that means THIS tab's copy is stale. Surface
-      // it loudly: the in-memory change still applies here, but it did NOT
-      // reach words.data.json, and reloading is required to get back in
-      // sync before making further edits.
+      // (see vite.config.js) — that means THIS tab's copy is stale. The
+      // rejected edit is already reflected in this tab's local state (it was
+      // applied optimistically before we knew the save would fail), so
+      // leaving it as-is would make the dictionary look like it lost words
+      // even though the real file on disk is untouched. Reload immediately
+      // so this tab re-syncs to the real data instead of staying stuck on a
+      // stale, now-misleading view.
       const body = await res.text().catch(() => '')
-      alert(`שמירת המילון נכשלה ולא נשמרה בפועל! רענן/י את הדף ונסה/י שוב.\n\n${body}`)
+      alert(`השמירה נדחתה ולא בוצעה בפועל בקובץ! ייתכן שהטאב הזה אינו מסונכרן. הדף ייטען מחדש כעת.\n\n${body}`)
+      window.location.reload()
     })
     .catch(() => {
       // dev server unreachable — the in-memory change still applies for this
