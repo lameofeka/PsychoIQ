@@ -41,6 +41,32 @@ function vocabularyApiPlugin() {
             try {
               const words = JSON.parse(body)
               if (!Array.isArray(words)) throw new Error('expected an array')
+
+              // Guard against a stale client (an old browser tab, or a
+              // second `npm run dev` left running from an earlier session)
+              // silently clobbering the real dictionary with a smaller
+              // snapshot it loaded long ago. A legitimate bulk deletion of
+              // more than half the dictionary in one save is rare enough to
+              // be worth forcing an explicit retry instead of risking data
+              // loss — this has already happened twice.
+              let existingCount = 0
+              try {
+                const existing = JSON.parse(await readFile(wordsFilePath, 'utf-8'))
+                if (Array.isArray(existing)) existingCount = existing.length
+              } catch {
+                // no existing file / unreadable — nothing to protect
+              }
+              if (existingCount > 5 && words.length < existingCount / 2) {
+                res.statusCode = 409
+                res.setHeader('Content-Type', 'application/json')
+                res.end(
+                  JSON.stringify({
+                    error: `refusing to overwrite ${existingCount} words with only ${words.length} — this looks like a stale save from an old tab or a second dev server. Reload the page and retry.`,
+                  }),
+                )
+                return
+              }
+
               await writeFile(wordsFilePath, JSON.stringify(words, null, 2) + '\n', 'utf-8')
               res.statusCode = 200
               res.end('ok')

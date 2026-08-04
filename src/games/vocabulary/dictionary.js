@@ -50,10 +50,21 @@ function persist(words) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(words),
-  }).catch(() => {
-    // dev server unreachable — the in-memory change still applies for this
-    // session, it just won't be saved back to words.data.json
   })
+    .then(async (res) => {
+      if (res.ok) return
+      // The server refuses saves that would shrink the dictionary a lot
+      // (see vite.config.js) — that means THIS tab's copy is stale. Surface
+      // it loudly: the in-memory change still applies here, but it did NOT
+      // reach words.data.json, and reloading is required to get back in
+      // sync before making further edits.
+      const body = await res.text().catch(() => '')
+      alert(`שמירת המילון נכשלה ולא נשמרה בפועל! רענן/י את הדף ונסה/י שוב.\n\n${body}`)
+    })
+    .catch(() => {
+      // dev server unreachable — the in-memory change still applies for this
+      // session, it just won't be saved back to words.data.json
+    })
 }
 
 function saveWords(words) {
