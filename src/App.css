@@ -392,7 +392,7 @@
 .number-chip {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 50%;
+  border-radius: 28%;
   border: 1.5px solid var(--border);
   background: var(--card-bg);
   font-size: 13px;
@@ -932,7 +932,8 @@
 }
 
 .setup-compact .setup-section-title-row {
-  margin-bottom: 6px;
+  margin-top: 6px;
+  margin-bottom: 0;
 }
 
 .setup-compact .setup-section-title-row .setup-section-title {
@@ -1164,19 +1165,19 @@
 }
 
 .group-chip.level-green {
-  background: var(--success);
+  background: var(--success-bg);
 }
 
 .group-chip.level-yellow {
-  background: var(--warning);
+  background: var(--warning-bg);
 }
 
 .group-chip.level-red {
-  background: var(--danger);
+  background: var(--danger-bg);
 }
 
 .group-chip.selected {
-  background: var(--accent);
+  background: var(--accent-bg);
 }
 
 .group-chip-title {
@@ -1185,11 +1186,20 @@
   color: var(--text-h);
 }
 
-.group-chip.level-green .group-chip-title,
-.group-chip.level-yellow .group-chip-title,
-.group-chip.level-red .group-chip-title,
+.group-chip.level-green .group-chip-title {
+  color: var(--success);
+}
+
+.group-chip.level-yellow .group-chip-title {
+  color: var(--warning);
+}
+
+.group-chip.level-red .group-chip-title {
+  color: var(--danger);
+}
+
 .group-chip.selected .group-chip-title {
-  color: #fff;
+  color: var(--accent-dark);
 }
 
 /* --- Vocabulary: mistakes list --- */
@@ -1394,7 +1404,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .setup-section-title-row .setup-section-title {

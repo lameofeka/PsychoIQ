@@ -79,17 +79,6 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
         </div>
 
         <div className="setup-section">
-          <div className="setup-section-title-row">
-            <button
-              type="button"
-              className="in-order-toggle"
-              onClick={() => setInOrder((v) => !v)}
-              title="מצב שרשרת"
-            >
-              <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
-              <span>לפי הסדר</span>
-            </button>
-          </div>
           <div className="option-grid">
             <div className="option-card number-pick-card selected">
               <div className="option-radio-row">
@@ -111,6 +100,18 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="setup-section-title-row">
+            <button
+              type="button"
+              className="in-order-toggle"
+              onClick={() => setInOrder((v) => !v)}
+              title="מצב שרשרת"
+            >
+              <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
+              <span>לפי הסדר</span>
+            </button>
           </div>
         </div>
 
