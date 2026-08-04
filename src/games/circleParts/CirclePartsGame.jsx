@@ -4,7 +4,7 @@ import GamePlay from './GamePlay'
 import Results from './Results'
 import { OPERATIONS } from './logic'
 
-export default function CirclePartsGame({ onExit, onPhaseChange }) {
+export default function CirclePartsGame({ onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [settings, setSettings] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
@@ -54,7 +54,6 @@ export default function CirclePartsGame({ onExit, onPhaseChange }) {
         <SetupWizard
           initialSettings={settings}
           onComplete={handleSetupComplete}
-          onExit={onExit}
           onPracticeWeak={handlePracticeWeak}
         />
       )}

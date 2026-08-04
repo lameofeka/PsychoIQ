@@ -19,7 +19,7 @@ const ACTIVITIES = [
   },
 ]
 
-export default function EssayGame({ onExit, onPhaseChange }) {
+export default function EssayGame({ onPhaseChange }) {
   const [activity, setActivity] = useState(null)
   const [initialStage, setInitialStage] = useState('practice')
 
@@ -42,12 +42,6 @@ export default function EssayGame({ onExit, onPhaseChange }) {
 
   return (
     <div className="wizard">
-      <div className="wizard-topbar">
-        <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-          →
-        </button>
-      </div>
-
       <h2>חיבור</h2>
 
       <div className="game-menu essay-activity-menu">

@@ -3,7 +3,7 @@ import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
 import Results from './Results'
 
-export default function PrimesGame({ onExit, onPhaseChange }) {
+export default function PrimesGame({ onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
@@ -32,7 +32,7 @@ export default function PrimesGame({ onExit, onPhaseChange }) {
 
   return (
     <div className="game-shell">
-      {stage === 'setup' && <SetupWizard onStart={handleStart} onExit={onExit} />}
+      {stage === 'setup' && <SetupWizard onStart={handleStart} />}
       {stage === 'playing' && <GamePlay key={roundKey} onFinish={handleFinish} onExitQuiz={handleNewSettings} />}
       {stage === 'results' && (
         <Results

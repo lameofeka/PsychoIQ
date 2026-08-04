@@ -4,7 +4,7 @@ import GamePlay from './GamePlay'
 import Results from './Results'
 import { OPERATIONS, RANGE_TYPES } from './logic'
 
-export default function PowersGame({ onExit, onPhaseChange }) {
+export default function PowersGame({ onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [settings, setSettings] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
@@ -54,7 +54,6 @@ export default function PowersGame({ onExit, onPhaseChange }) {
         <SetupWizard
           initialSettings={settings}
           onComplete={handleSetupComplete}
-          onExit={onExit}
           onPracticeWeak={handlePracticeWeak}
         />
       )}

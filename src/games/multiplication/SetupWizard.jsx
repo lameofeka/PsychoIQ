@@ -13,7 +13,7 @@ const SELECT_ALL_LABEL = 'בחר הכל'
 
 const NUMBERS = Array.from({ length: MAX_NUM - MIN_NUM + 1 }, (_, i) => MIN_NUM + i)
 
-export default function SetupWizard({ initialSettings, onComplete, onExit, onPracticeWeak }) {
+export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak }) {
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.MULTIPLY)
   const initialRangeType =
     initialSettings?.rangeType === RANGE_TYPES.WEAK ? RANGE_TYPES.ALL : initialSettings?.rangeType
@@ -62,12 +62,6 @@ export default function SetupWizard({ initialSettings, onComplete, onExit, onPra
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
-        <div className="wizard-topbar">
-          <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-            →
-          </button>
-        </div>
-
         <h2>בחר/י תרגול</h2>
 
         <div className="setup-section">

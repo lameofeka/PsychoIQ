@@ -3,7 +3,7 @@ import { getWords, getGroups } from './dictionary'
 import { getGroupLevel, getLastPracticedGroup, rankWeakWords } from './stats'
 import ModeSwitch from './ModeSwitch'
 
-export default function GroupSelect({ onExit, onManageDictionary, onStart, onOpenMistakes }) {
+export default function GroupSelect({ onManageDictionary, onStart, onOpenMistakes }) {
   const words = useMemo(() => getWords(), [])
   const groups = useMemo(() => getGroups(words), [words])
   const lastGroupIndex = useMemo(() => getLastPracticedGroup(), [])
@@ -39,9 +39,6 @@ export default function GroupSelect({ onExit, onManageDictionary, onStart, onOpe
   return (
     <div className="wizard">
       <div className="wizard-topbar">
-        <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-          →
-        </button>
         <ModeSwitch mode="practice" onChange={(m) => m === 'dictionary' && onManageDictionary()} />
       </div>
 

@@ -176,7 +176,6 @@ export default function VocabularyGame({ onExit, onPhaseChange }) {
     <div className={`game-shell ${stage === 'manageDictionary' ? 'wide' : ''}`}>
       {stage === 'groupSelect' && (
         <GroupSelect
-          onExit={onExit}
           onManageDictionary={() => setStage('manageDictionary')}
           onStart={handleStart}
           onOpenMistakes={() => setStage('mistakesList')}

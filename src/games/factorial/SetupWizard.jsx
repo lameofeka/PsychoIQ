@@ -8,7 +8,7 @@ const OPERATION_OPTIONS = [
   { value: OPERATIONS.COMBINED, label: 'משולב', icon: '±' },
 ]
 
-export default function SetupWizard({ initialSettings, onComplete, onExit, onPracticeWeak }) {
+export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak }) {
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.CALCULATE)
 
   const canStart = Boolean(operation)
@@ -22,12 +22,6 @@ export default function SetupWizard({ initialSettings, onComplete, onExit, onPra
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
-        <div className="wizard-topbar">
-          <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-            →
-          </button>
-        </div>
-
         <h2>בחר/י תרגול עצרת</h2>
 
         <div className="setup-section">
