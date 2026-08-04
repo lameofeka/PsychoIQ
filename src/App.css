@@ -1151,6 +1151,12 @@
   color: var(--accent-dark);
 }
 
+/* The כמותי/מילולי switch keeps the tinted background as its "active" cue
+   but not the purple text/icon - overrides the shared style above. */
+.category-switch .mode-switch-btn.active {
+  color: var(--text-h);
+}
+
 /* --- Vocabulary: group select --- */
 
 .group-actions {
@@ -2317,8 +2323,8 @@
   }
 
   .category-switch .mode-switch-btn.active {
-    background: none;
-    color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--text-h);
   }
 
   /* Bigger touch targets for small icon-only controls once fingers, not a
