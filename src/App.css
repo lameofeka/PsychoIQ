@@ -2117,6 +2117,16 @@
     justify-content: center;
   }
 
+  /* .mode-switch is itself the bordered pill (border + border-radius +
+     overflow:hidden), unlike .quiz-group-nav which is borderless — so
+     width:100% would stretch the visible border across the full row
+     while the centered buttons leave dead space inside it. Let it hug
+     its own content and center that instead. */
+  .mode-switch {
+    width: fit-content;
+    margin-inline: auto;
+  }
+
   .mode-switch-btn {
     padding: 7px 12px;
     font-size: 13px;
