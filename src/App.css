@@ -2185,18 +2185,21 @@
   }
 
   .numeric-keypad {
+    /* Combined horizontal padding of .gameplay (12px) + .question-card
+       (16px) + .app-shell (8px) that sits between the keypad's natural
+       position and the true viewport edge: 12+16+8 = 36px. To make the
+       final on-screen gap between the keypad and the viewport edge equal
+       to --keypad-gap (the gap between the button columns), bleed the
+       keypad outward by everything except --keypad-gap itself:
+       margin-inline = --keypad-gap - 36px, width = 100% + 2*(36px - --keypad-gap).
+       Tune spacing by changing --keypad-gap alone — margin-inline/width
+       derive from it automatically, no manual recomputation needed. */
+    --keypad-gap: 16px;
     margin-top: auto;
-    /* Bleed most of the way past .gameplay's (12px) + .question-card's
-       (16px) own horizontal padding so the keypad reaches almost to the
-       screen edges, but hold back 4px of that bleed on each side so the
-       buttons end up exactly `gap` (12px) away from .app-shell's outer
-       edge — 8px app-shell padding + 4px held-back inset — matching the
-       12px gap between the buttons themselves, rather than sitting flush
-       against the card edge with an uneven 8px gap. */
-    margin-inline: -24px;
-    width: calc(100% + 48px);
+    margin-inline: calc(var(--keypad-gap) - 36px);
+    width: calc(100% + 72px - 2 * var(--keypad-gap));
     max-width: none;
-    gap: 12px;
+    gap: var(--keypad-gap);
   }
 
   .keypad-btn {
