@@ -7,6 +7,15 @@ const DEGREES_LIST = CIRCLE_FACTS.map((fact) => fact.degrees)
 // CIRCLE_FACTS's own (unsorted) declaration order.
 const SORTED_FACTS = [...CIRCLE_FACTS].sort((a, b) => a.degrees - b.degrees)
 
+// Split into two rows instead of one long row of 11 columns, so each
+// column — and the cell/text inside it — can render bigger while still
+// fitting the compact setup card.
+const ROW_COUNT = 2
+const CHUNK_SIZE = Math.ceil(SORTED_FACTS.length / ROW_COUNT)
+const FACT_ROWS = Array.from({ length: ROW_COUNT }, (_, i) =>
+  SORTED_FACTS.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
+)
+
 export default function ProgressMap({ onBack, onPracticeWeak }) {
   const weakDegrees = getWeakNumbers(DEGREES_LIST)
   const weakFacts = CIRCLE_FACTS.filter((fact) => weakDegrees.includes(fact.degrees))
@@ -24,24 +33,31 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       <h2>מפת התקדמות</h2>
       <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בחלק המעגל הזה</p>
 
-      <div className="progress-grid" style={{ gridTemplateColumns: `repeat(${CIRCLE_FACTS.length}, 1fr)` }}>
-        {SORTED_FACTS.map((fact) => (
-          <Fragment key={fact.degrees}>
-            <div className="grid-header">{fact.degrees}°</div>
+      <div
+        className="progress-grid circle-progress-grid"
+        style={{ gridTemplateColumns: `repeat(${CHUNK_SIZE}, 1fr)` }}
+      >
+        {FACT_ROWS.map((rowFacts, i) => (
+          <Fragment key={`row-${i}`}>
+            {rowFacts.map((fact) => (
+              <div key={`h-${fact.degrees}`} className="grid-header">
+                {fact.degrees}°
+              </div>
+            ))}
+            {rowFacts.map((fact) => {
+              const level = getFactLevel(fact.degrees)
+              return (
+                <div
+                  key={fact.degrees}
+                  className={`grid-cell level-${level}`}
+                  title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator}`}
+                >
+                  {fact.numerator}/{fact.denominator}
+                </div>
+              )
+            })}
           </Fragment>
         ))}
-        {SORTED_FACTS.map((fact) => {
-          const level = getFactLevel(fact.degrees)
-          return (
-            <div
-              key={fact.degrees}
-              className={`grid-cell level-${level}`}
-              title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator}`}
-            >
-              {fact.numerator}/{fact.denominator}
-            </div>
-          )
-        })}
       </div>
 
       <div className="legend">

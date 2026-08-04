@@ -10,6 +10,7 @@ const OPERATION_OPTIONS = [
 
 const PICK_LABEL = 'מספר או טווח'
 const SELECT_ALL_LABEL = 'בחר הכל'
+const CLEAR_ALL_LABEL = 'נקה הכל'
 
 const NUMBERS = Array.from({ length: MAX_NUM - MIN_NUM + 1 }, (_, i) => MIN_NUM + i)
 
@@ -82,7 +83,7 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
               <div className="option-radio-row">
                 <span className="option-card-label">{PICK_LABEL}</span>
                 <button type="button" className="select-all-btn" onClick={selectAll}>
-                  {SELECT_ALL_LABEL}
+                  {rangeType === RANGE_TYPES.ALL ? CLEAR_ALL_LABEL : SELECT_ALL_LABEL}
                 </button>
               </div>
               <div className="inline-number-picker">

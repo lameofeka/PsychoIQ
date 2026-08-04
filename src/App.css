@@ -1120,12 +1120,29 @@
 }
 
 .setup-compact .grid-cell {
-  font-size: 9px;
+  font-size: 10.5px;
   border-radius: 4px;
 }
 
 .setup-compact .grid-header {
   font-size: 11px;
+}
+
+/* Circle-parts progress map: fewer columns (facts wrap onto a second row)
+   than the other games' single-row grids, so each cell — and its text —
+   can render noticeably bigger than the shared .setup-compact sizing above
+   while still fitting the compact card width. */
+.setup-compact .circle-progress-grid {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.setup-compact .circle-progress-grid .grid-cell {
+  font-size: 14px;
+}
+
+.setup-compact .circle-progress-grid .grid-header {
+  font-size: 13px;
 }
 
 .setup-compact .legend {
@@ -2369,19 +2386,37 @@
   .group-nav-arrow {
     padding: 8px 10px;
   }
+
+  /* The quiz screen (question card, keypad, progress bar) fills the whole
+     viewport on mobile instead of floating as a card with margins on every
+     side — a native full-screen quiz feel. Scoped to .gameplay specifically
+     (not the setup wizard or results card), matching where the user is
+     "inside" the quiz. */
+  .app-shell:has(> .game-shell > .gameplay) {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .game-shell:has(> .gameplay) {
+    max-width: none;
+    display: flex;
+    flex: 1;
+  }
+
+  .gameplay {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  }
 }
 
 @media (max-width: 480px) {
   .app-shell {
     padding: 24px 8px 40px;
-  }
-
-  /* When the numeric keypad is showing, let the card sink closer to the
-     screen edge — only a small gap to the viewport bottom — instead of
-     the normal 40px app-shell padding. The gap between the card and the
-     keypad itself (question-card's own padding) is untouched. */
-  .app-shell:has(.numeric-keypad) {
-    padding-bottom: 6px;
   }
 
   .app-header h1 {
@@ -2393,7 +2428,6 @@
   }
 
   .wizard,
-  .gameplay,
   .results {
     padding: 20px 12px;
   }
@@ -2415,25 +2449,12 @@
     max-width: 220px;
   }
 
-  /* Instead of pinning the keypad to the viewport with position:fixed,
-     let the gameplay card itself stretch down to the bottom of the phone
-     screen — the card grows to fill the space app-shell's flex layout
-     leaves for it, question-card grows to fill the card, and the keypad
-     (a normal, in-flow part of question-card) gets pushed to the bottom
-     of that space via margin-top:auto. No overlay, no separate
-     background/shadow — it's just part of the same card. */
-  .game-shell:has(.gameplay) {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  .gameplay {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
+  /* Instead of pinning the keypad to the viewport with position:fixed, let
+     the question-card itself stretch down to the bottom of the phone screen
+     (.gameplay and .game-shell already fill the viewport via the full-bleed
+     rules above) and the keypad (a normal, in-flow part of question-card)
+     gets pushed to the bottom of that space via margin-top:auto. No overlay,
+     no separate background/shadow — it's just part of the same card. */
   .question-card:has(.numeric-keypad) {
     display: flex;
     flex-direction: column;
@@ -2453,19 +2474,20 @@
 
   .numeric-keypad {
     order: 2;
-    /* Combined horizontal padding of .gameplay (12px) + .question-card
-       (16px) + .app-shell (8px) that sits between the keypad's natural
-       position and the true viewport edge: 12+16+8 = 36px. To make the
-       final on-screen gap between the keypad and the viewport edge equal
-       to --keypad-gap (the gap between the button columns), bleed the
-       keypad outward by everything except --keypad-gap itself:
-       margin-inline = --keypad-gap - 36px, width = 100% + 2*(36px - --keypad-gap).
+    /* Combined horizontal padding of .gameplay (16px) + .question-card
+       (16px) — .app-shell contributes none now that it's edge-to-edge
+       during gameplay — that sits between the keypad's natural position
+       and the true viewport edge: 16+16 = 32px. To make the final on-screen
+       gap between the keypad and the viewport edge equal to --keypad-gap
+       (the gap between the button columns), bleed the keypad outward by
+       everything except --keypad-gap itself:
+       margin-inline = --keypad-gap - 32px, width = 100% + 2*(32px - --keypad-gap).
        Tune spacing by changing --keypad-gap alone — margin-inline/width
        derive from it automatically, no manual recomputation needed. */
     --keypad-gap: 16px;
     margin-top: auto;
-    margin-inline: calc(var(--keypad-gap) - 36px);
-    width: calc(100% + 72px - 2 * var(--keypad-gap));
+    margin-inline: calc(var(--keypad-gap) - 32px);
+    width: calc(100% + 64px - 2 * var(--keypad-gap));
     max-width: none;
     gap: var(--keypad-gap);
     /* Trim each column narrower without touching the column gap itself:
