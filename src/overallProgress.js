@@ -45,26 +45,33 @@ function vocabularyCounts() {
   return { green, total: groups.length }
 }
 
+function percentOf(parts) {
+  const total = parts.reduce((sum, p) => sum + p.total, 0)
+  if (total === 0) return 0
+  const green = parts.reduce((sum, p) => sum + p.green, 0)
+  return Math.round((green / total) * 100)
+}
+
 // Aggregates "green" (mastered) vs total across every quiz that tracks a
 // mastery level - both quantitative (fact-based) and verbal (vocabulary
-// groups) - into one platform-wide percentage. Vocabulary's word list loads
-// asynchronously, so this resolves only once it's available rather than
-// undercounting it as empty.
-export async function getOverallMasteryPercent() {
+// groups) - into one platform-wide percentage, plus the same split by
+// category. Vocabulary's word list loads asynchronously, so this resolves
+// only once it's available rather than undercounting it as empty.
+export async function getMasteryBreakdown() {
   await loadDictionary()
 
-  const parts = [
+  const quantitativeParts = [
     multiplicationCounts(),
     powersCounts(),
     factorialCounts(),
     primesCounts(),
     circlePartsCounts(),
-    vocabularyCounts(),
   ]
+  const verbalParts = [vocabularyCounts()]
 
-  const total = parts.reduce((sum, p) => sum + p.total, 0)
-  if (total === 0) return 0
-
-  const green = parts.reduce((sum, p) => sum + p.green, 0)
-  return Math.round((green / total) * 100)
+  return {
+    overall: percentOf([...quantitativeParts, ...verbalParts]),
+    quantitative: percentOf(quantitativeParts),
+    verbal: percentOf(verbalParts),
+  }
 }

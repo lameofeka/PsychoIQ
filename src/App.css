@@ -60,17 +60,21 @@
   height: 14px;
 }
 
-.mastery-badge {
+.mastery-badge-wrap {
   /* Mirrors .streak-badge on the header's opposite (right) edge. */
   position: absolute;
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
   z-index: 20;
+}
+
+.mastery-badge {
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 5px 10px;
+  border: none;
   border-radius: 999px;
   background: var(--success-bg);
   color: var(--success);
@@ -85,6 +89,35 @@
 .mastery-check svg {
   width: 14px;
   height: 14px;
+}
+
+.mastery-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  min-width: 140px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 20px rgba(28, 26, 36, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mastery-popover-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.mastery-popover-row span:last-child {
+  font-weight: 700;
+  color: var(--success);
 }
 
 /* --- Game menu --- */

@@ -7,7 +7,7 @@ import CirclePartsGame from './games/circleParts/CirclePartsGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
 import { recordVisitAndGetStreak } from './streak'
-import { getOverallMasteryPercent } from './overallProgress'
+import { getMasteryBreakdown } from './overallProgress'
 import './App.css'
 
 function FlameIcon() {
@@ -102,7 +102,8 @@ function firstGameIdForCategory(cat) {
 
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
-  const [masteryPercent, setMasteryPercent] = useState(null)
+  const [mastery, setMastery] = useState(null)
+  const [showMasteryDetail, setShowMasteryDetail] = useState(false)
   const [category, setCategory] = useState('quantitative')
   const [selectedGameId, setSelectedGameId] = useState(() => firstGameIdForCategory('quantitative'))
   // 'inline' = the game's landing/setup screen, shown under the pill row
@@ -116,13 +117,22 @@ function App() {
   useEffect(() => {
     if (phase !== 'inline') return
     let cancelled = false
-    getOverallMasteryPercent().then((pct) => {
-      if (!cancelled) setMasteryPercent(pct)
+    getMasteryBreakdown().then((breakdown) => {
+      if (!cancelled) setMastery(breakdown)
     })
     return () => {
       cancelled = true
     }
   }, [phase])
+
+  useEffect(() => {
+    if (!showMasteryDetail) return
+    function handleOutsideClick(e) {
+      if (!e.target.closest('.mastery-badge-wrap')) setShowMasteryDetail(false)
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [showMasteryDetail])
 
   function selectCategory(value) {
     setCategory(value)
@@ -158,12 +168,31 @@ function App() {
             )}
             <h1>PsychoIQ</h1>
             <p>תרגול לפסיכומטרי</p>
-            {masteryPercent !== null && (
-              <div className="mastery-badge" title="אחוז שליטה כולל בכל הפלטפורמה">
-                <span className="mastery-check">
-                  <ProgressIcon />
-                </span>
-                <span>{masteryPercent}%</span>
+            {mastery !== null && (
+              <div className="mastery-badge-wrap">
+                <button
+                  type="button"
+                  className="mastery-badge"
+                  onClick={() => setShowMasteryDetail((v) => !v)}
+                  title="אחוז שליטה כולל בכל הפלטפורמה"
+                >
+                  <span className="mastery-check">
+                    <ProgressIcon />
+                  </span>
+                  <span>{mastery.overall}%</span>
+                </button>
+                {showMasteryDetail && (
+                  <div className="mastery-popover">
+                    <div className="mastery-popover-row">
+                      <span>כמותי</span>
+                      <span>{mastery.quantitative}%</span>
+                    </div>
+                    <div className="mastery-popover-row">
+                      <span>מילולי</span>
+                      <span>{mastery.verbal}%</span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </header>
