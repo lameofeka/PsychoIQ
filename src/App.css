@@ -538,7 +538,7 @@
   justify-content: center;
   gap: 6px;
   background: none;
-  border: 2px solid color-mix(in srgb, var(--border) 30%, var(--card-bg));
+  border: 2px solid color-mix(in srgb, var(--border) 42%, var(--card-bg));
   border-radius: 14px;
   font-size: 15px;
   font-weight: 700;
@@ -561,7 +561,7 @@
   width: auto;
   /* Light gray until selected, instead of the base .option-icon accent
      tint (which colored every option's icon regardless of selection). */
-  color: color-mix(in srgb, var(--border) 70%, var(--card-bg));
+  color: color-mix(in srgb, var(--border) 85%, var(--card-bg));
 }
 
 .operation-cube.selected .option-icon {
