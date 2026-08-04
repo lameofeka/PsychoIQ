@@ -75,12 +75,6 @@
   box-shadow: 0 2px 8px rgba(28, 26, 36, 0.12);
 }
 
-.game-pill-close {
-  font-size: 12px;
-  line-height: 1;
-  opacity: 0.6;
-}
-
 .game-menu {
   display: flex;
   flex-wrap: wrap;

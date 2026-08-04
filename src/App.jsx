@@ -74,9 +74,16 @@ const GAMES = [
   },
 ]
 
+// The page in RTL flows right-to-left, so the first game per category in
+// GAMES lands as the rightmost pill — matching that as the always-on
+// default keeps a selection pressed at all times, never an empty switch.
+function firstGameIdForCategory(cat) {
+  return GAMES.find((g) => g.category === cat)?.id
+}
+
 function App() {
   const [category, setCategory] = useState('quantitative')
-  const [selectedGameId, setSelectedGameId] = useState(null)
+  const [selectedGameId, setSelectedGameId] = useState(() => firstGameIdForCategory('quantitative'))
   // 'inline' = the game's landing/setup screen, shown under the pill row
   // alongside the header. 'full' = actual gameplay/results, which takes
   // over the whole screen like before (header + pills hidden).
@@ -84,24 +91,22 @@ function App() {
 
   function selectCategory(value) {
     setCategory(value)
-    setSelectedGameId(null)
+    setSelectedGameId(firstGameIdForCategory(value))
+    setPhase('inline')
   }
 
-  function togglePill(gameId) {
-    if (gameId === selectedGameId) {
-      setSelectedGameId(null)
-      return
-    }
+  function selectPill(gameId) {
     setSelectedGameId(gameId)
     setPhase('inline')
   }
 
   function collapseToHome() {
-    setSelectedGameId(null)
+    setSelectedGameId(firstGameIdForCategory(category))
+    setPhase('inline')
   }
 
   const selectedGame = GAMES.find((g) => g.id === selectedGameId)
-  const showChrome = !selectedGame || phase === 'inline'
+  const showChrome = phase === 'inline'
 
   return (
     <div className="app-shell">
@@ -132,10 +137,9 @@ function App() {
                 key={game.id}
                 type="button"
                 className={`game-pill ${selectedGameId === game.id ? 'selected' : ''}`}
-                onClick={() => togglePill(game.id)}
+                onClick={() => selectPill(game.id)}
               >
                 {game.title}
-                {selectedGameId === game.id && <span className="game-pill-close">×</span>}
               </button>
             ))}
           </div>
