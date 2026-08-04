@@ -839,7 +839,7 @@
 .grid-cell.level-unseen {
   background: var(--bg);
   color: var(--text);
-  border: 1px solid var(--border);
+  border: none;
 }
 
 .grid-cell.blank {
@@ -902,6 +902,13 @@
 
 .setup-compact {
   padding: 18px 16px;
+}
+
+/* Give the progress-map card a bit more inner width so its grid cells can
+   render slightly larger, since their size is 1fr of the card's own
+   width (a fixed column count, unlike the auto-fill number picker). */
+.setup-compact:has(> .progress-map) {
+  padding-inline: 8px;
 }
 
 .setup-compact .wizard-topbar {
@@ -984,7 +991,7 @@
 }
 
 .setup-compact .inline-number-picker {
-  grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
   gap: 6px;
 }
 
@@ -1017,12 +1024,12 @@
 }
 
 .setup-compact .grid-cell {
-  font-size: 8px;
+  font-size: 9px;
   border-radius: 4px;
 }
 
 .setup-compact .grid-header {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .setup-compact .legend {
