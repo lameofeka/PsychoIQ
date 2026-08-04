@@ -20,12 +20,19 @@ export function loadDictionary() {
   if (!loadPromise) {
     if (import.meta.env.DEV) {
       loadPromise = fetch(API_URL)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error(`GET ${API_URL} failed: ${res.status}`)
+          return res.json()
+        })
         .then((words) => {
           wordsCache = Array.isArray(words) ? words : staticWords
           return wordsCache
         })
         .catch(() => {
+          // Server read failed or returned something unusable — fall back to
+          // the bundled snapshot rather than an empty list, so a transient
+          // error can't masquerade as "the dictionary is empty" and get an
+          // add/edit persisted on top of it, wiping the real file.
           wordsCache = staticWords
           return wordsCache
         })

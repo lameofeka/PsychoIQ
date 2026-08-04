@@ -19,9 +19,15 @@ function vocabularyApiPlugin() {
             const raw = await readFile(wordsFilePath, 'utf-8')
             res.setHeader('Content-Type', 'application/json')
             res.end(raw)
-          } catch {
+          } catch (err) {
+            // Must NOT fall back to "[]" here — the client treats any array
+            // response (including an empty one) as the real dictionary and
+            // will happily persist new words on top of it, permanently
+            // wiping the file on the next save. A failed read has to look
+            // like a failure, not like "the dictionary is empty".
+            res.statusCode = 500
             res.setHeader('Content-Type', 'application/json')
-            res.end('[]')
+            res.end(JSON.stringify({ error: String(err) }))
           }
           return
         }
