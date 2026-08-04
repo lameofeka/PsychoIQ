@@ -44,8 +44,11 @@
   flex-wrap: wrap;
   gap: 2px;
   justify-content: center;
-  width: 100%;
-  max-width: 480px;
+  /* Hug the pills themselves instead of always stretching to the same
+     480px track — a category with 2 games (מילולי) shouldn't show a
+     border that runs to a width sized for 5 (כמותי). */
+  width: fit-content;
+  max-width: min(480px, 100%);
   margin-bottom: 20px;
   background: color-mix(in srgb, var(--border) 60%, var(--bg));
   border-radius: 16px;
