@@ -1120,7 +1120,7 @@
 
 .group-chip {
   position: relative;
-  background: var(--border);
+  background: color-mix(in srgb, var(--border) 55%, var(--bg));
   border: none;
   border-radius: 14px;
   padding: 14px;
@@ -1166,7 +1166,7 @@
 .group-chip-title {
   font-size: 18px;
   font-weight: 400;
-  color: var(--text-h);
+  color: var(--text);
 }
 
 .group-chip.level-green .group-chip-title {
