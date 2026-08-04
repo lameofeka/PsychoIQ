@@ -8,6 +8,8 @@
 }
 
 .app-header {
+  position: relative;
+  width: 100%;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -25,9 +27,15 @@
 }
 
 .streak-badge {
-  position: fixed;
-  top: calc(16px + env(safe-area-inset-top));
-  left: calc(16px + env(safe-area-inset-left));
+  /* Anchored to .app-header (title + subtitle) rather than the viewport, so
+     top: 50% always lands between the two lines regardless of font-size
+     per breakpoint, and left: 0 sits at the header's own left edge - which,
+     since the header is full-width, is the screen's left edge (inset by
+     .app-shell's own padding, same as everything else in the layout). */
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
   z-index: 20;
   display: flex;
   align-items: center;
@@ -470,7 +478,7 @@
   justify-content: center;
   gap: 6px;
   background: none;
-  border: 2px solid var(--border);
+  border: 2px solid color-mix(in srgb, var(--border) 50%, var(--card-bg));
   border-radius: 14px;
   font-size: 15px;
   font-weight: 700;
