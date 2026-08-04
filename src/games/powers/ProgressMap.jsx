@@ -70,7 +70,7 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       </div>
 
       <button className="secondary-btn" disabled={weakPairs.length === 0} onClick={() => onPracticeWeak(weakPairs)}>
-        {weakPairs.length === 0 ? 'שלטת בהכל!' : `תרגל/י את החולשות שלי (${weakPairs.length})`}
+        {weakPairs.length === 0 ? 'מושלם' : `תרגול חולשות (${weakPairs.length})`}
       </button>
     </div>
   )
