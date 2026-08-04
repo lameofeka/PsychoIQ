@@ -568,33 +568,13 @@
   color: var(--accent-dark);
 }
 
-/* Experiment #2: no card chrome between the setup screen's two sections
-   (setup options, progress map) - just a dashed rule in the middle of the
-   gap instead of separate white cards. If this reads as ugly, revert to
-   background/border/box-shadow on .wizard-stack .wizard and gap: 16px
-   with no border-top/margin-top/padding-top on the + .wizard rule (also
-   revert .grid-cell.level-unseen's background change alongside it - see
-   its own comment for why that one has to move together with this). */
+/* Setup screens split into separate stacked white cards (setup options,
+   progress map) rather than one card with an internal divider. */
 .wizard-stack {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;
   width: 100%;
-}
-
-.wizard-stack .wizard {
-  background: none;
-  border: none;
-  box-shadow: none;
-}
-
-.wizard-stack .wizard + .wizard {
-  /* var(--border) alone is nearly invisible against var(--bg) - the two
-     are barely a shade apart - so the divider needs real contrast mixed
-     in to actually read as a line instead of vanishing. */
-  border-top: 1px dashed color-mix(in srgb, var(--border) 40%, var(--text));
-  margin-top: 16px;
-  padding-top: 16px;
 }
 
 .summary-line {
@@ -954,11 +934,7 @@
 }
 
 .grid-cell.level-unseen {
-  /* Was var(--bg) - fine while the progress-map card behind it was white,
-     but with .wizard-stack .wizard now transparent (see its comment) that
-     made unseen cells blend invisibly into the page. A faint border tint
-     keeps them visible as actual cells either way. */
-  background: color-mix(in srgb, var(--border) 20%, var(--bg));
+  background: var(--bg);
   border: none;
 }
 
