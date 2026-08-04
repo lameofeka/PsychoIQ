@@ -8,7 +8,6 @@
 }
 
 .app-header {
-  position: relative;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -26,9 +25,10 @@
 }
 
 .streak-badge {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: fixed;
+  top: calc(16px + env(safe-area-inset-top));
+  left: calc(16px + env(safe-area-inset-left));
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -2217,28 +2217,6 @@
 /* --- Mobile responsiveness --- */
 
 @media (max-width: 600px) {
-  /* Instead of pinning the streak badge to the header's top-left corner
-     (where it sits flush against the title on phones), lay the header out
-     as a 3-column grid: badge / title-block / empty spacer. The equal
-     outer columns keep the title truly centered, and centering the badge
-     within its own column puts it in the middle of the gap between the
-     screen edge and the title, rather than right on top of it. */
-  .app-header {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-  }
-
-  .streak-badge {
-    position: static;
-    grid-column: 1;
-    justify-self: center;
-  }
-
-  .app-header-title {
-    grid-column: 2;
-  }
-
   /* The mode-switch / quiz-group-nav are absolutely centered over
      .wizard-topbar so they can sit alongside the back button on wide
      screens. On narrow phones there isn't room for both without overlap,

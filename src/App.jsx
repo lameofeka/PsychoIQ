@@ -131,10 +131,8 @@ function App() {
                 <span>{streak}</span>
               </div>
             )}
-            <div className="app-header-title">
-              <h1>PsychoIQ</h1>
-              <p>תרגול לפסיכומטרי</p>
-            </div>
+            <h1>PsychoIQ</h1>
+            <p>תרגול לפסיכומטרי</p>
           </header>
 
           <div className="category-switch">
