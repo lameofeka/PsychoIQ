@@ -49,6 +49,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     setInput((prev) => prev.slice(0, -1))
   }
 
+  function handleClear() {
+    if (feedback) return
+    setInput('')
+  }
+
   function handleInputKeyDown(e) {
     if (feedback) return
     if (/^[0-9]$/.test(e.key)) {
@@ -181,12 +186,12 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           ))}
           <button
             type="button"
-            className="keypad-btn keypad-submit"
-            onClick={() => submitAnswer(input)}
-            disabled={!!feedback || input.trim() === ''}
-            aria-label="בדוק תשובה"
+            className="keypad-btn keypad-clear"
+            onClick={handleClear}
+            disabled={!!feedback || input === ''}
+            aria-label="נקה"
           >
-            ✓
+            נקה
           </button>
           <button type="button" className="keypad-btn" onClick={() => appendDigit('0')} disabled={!!feedback}>
             0
@@ -198,7 +203,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             disabled={!!feedback}
             aria-label="מחיקת ספרה"
           >
-            ⌫
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 4H8l-6 8 6 8h13a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
+              <line x1="17" y1="9" x2="11" y2="15" />
+              <line x1="11" y1="9" x2="17" y2="15" />
+            </svg>
           </button>
         </div>
 

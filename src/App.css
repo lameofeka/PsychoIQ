@@ -561,22 +561,29 @@
 }
 
 .keypad-action {
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text);
 }
 
-.keypad-submit {
-  background: var(--accent);
+.keypad-action svg {
+  width: 22px;
+  height: 22px;
+}
+
+.keypad-clear {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.keypad-clear:hover {
   border-color: var(--accent);
-  color: white;
+  color: var(--accent);
 }
 
-.keypad-submit:hover {
-  background: var(--accent-dark);
-  border-color: var(--accent-dark);
-}
-
-.keypad-submit:disabled {
+.keypad-clear:disabled {
   opacity: 0.5;
 }
 
@@ -2179,23 +2186,40 @@
 
   .numeric-keypad {
     margin-top: auto;
-    margin-inline: auto;
-    max-width: 320px;
+    /* Bleed most of the way past .gameplay's (12px) + .question-card's
+       (16px) own horizontal padding so the keypad reaches almost to the
+       screen edges, but hold back 4px of that bleed on each side so the
+       buttons end up exactly `gap` (12px) away from .app-shell's outer
+       edge — 8px app-shell padding + 4px held-back inset — matching the
+       12px gap between the buttons themselves, rather than sitting flush
+       against the card edge with an uneven 8px gap. */
+    margin-inline: -24px;
+    width: calc(100% + 48px);
+    max-width: none;
     gap: 12px;
   }
 
   .keypad-btn {
-    aspect-ratio: auto;
-    height: 64px;
+    /* width comes from the grid column (now much wider thanks to the
+       bleed above); aspect-ratio derives height from it directly so
+       buttons are always noticeably wider than tall, instead of a
+       fixed height that could end up taller than the column is wide. */
+    aspect-ratio: 1.8 / 1;
+    height: auto;
     border-radius: 14px;
     border-width: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 600;
   }
 
-  .keypad-submit {
-    font-size: 26px;
+  .keypad-clear {
+    font-size: 20px;
+  }
+
+  .keypad-action svg {
+    width: 24px;
+    height: 24px;
   }
 }
 
