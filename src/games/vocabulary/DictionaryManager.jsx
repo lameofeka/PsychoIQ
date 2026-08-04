@@ -32,7 +32,7 @@ function ExportIcon() {
   )
 }
 
-export default function DictionaryManager({ onBack, onExit }) {
+export default function DictionaryManager({ onBack }) {
   const [words, setWords] = useState(() => getWords())
   const [newWord, setNewWord] = useState('')
   const [newDef, setNewDef] = useState('')
@@ -263,9 +263,6 @@ export default function DictionaryManager({ onBack, onExit }) {
         </button>
       )}
       <div className="wizard-topbar">
-        <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט הראשי">
-          →
-        </button>
         <ModeSwitch mode="dictionary" onChange={(m) => m === 'practice' && onBack()} />
       </div>
 

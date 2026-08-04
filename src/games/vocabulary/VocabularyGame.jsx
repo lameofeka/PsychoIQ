@@ -46,7 +46,7 @@ function refreshWords(list) {
   })
 }
 
-export default function VocabularyGame({ onExit, onPhaseChange }) {
+export default function VocabularyGame({ onPhaseChange }) {
   const [ready, setReady] = useState(false)
   const [stage, setStage] = useState('groupSelect')
   const [practiceWords, setPracticeWords] = useState([])
@@ -185,7 +185,7 @@ export default function VocabularyGame({ onExit, onPhaseChange }) {
         />
       )}
       {stage === 'manageDictionary' && (
-        <DictionaryManager onBack={() => setStage('groupSelect')} onExit={onExit} />
+        <DictionaryManager onBack={() => setStage('groupSelect')} />
       )}
       {stage === 'mistakesList' && (
         <MistakesList onBack={() => setStage('groupSelect')} onStartPractice={handleStartMistakes} />
