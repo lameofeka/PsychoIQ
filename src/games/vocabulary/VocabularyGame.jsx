@@ -68,7 +68,10 @@ export default function VocabularyGame({ onExit, onPhaseChange }) {
   }, [])
 
   useEffect(() => {
-    onPhaseChange?.(stage === 'groupSelect' ? 'inline' : 'full')
+    // Dictionary management is still menu-browsing, not gameplay - keep the
+    // header/switch visible and render it in place of the group menu rather
+    // than taking over the full screen like playing/results do.
+    onPhaseChange?.(stage === 'groupSelect' || stage === 'manageDictionary' ? 'inline' : 'full')
   }, [stage])
 
   function startRound(words, label) {
