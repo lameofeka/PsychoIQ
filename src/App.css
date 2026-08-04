@@ -979,7 +979,7 @@
 }
 
 .setup-compact .grid-header {
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .setup-compact .legend {
@@ -2244,6 +2244,9 @@
   .gameplay,
   .results {
     padding: 20px 12px;
+    background: none;
+    border: none;
+    border-radius: 0;
   }
 
   .question-text {
