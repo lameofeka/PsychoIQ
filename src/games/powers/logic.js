@@ -100,7 +100,8 @@ export function getRoundQuestions(settings) {
       return { id, operation, text: `${base}${toSuperscript(exponent)}`, answer: value, a: base, b: exponent }
     }
 
-    return { id, operation, text: `${toSuperscript(exponent)}√${value}`, answer: base, a: base, b: exponent }
+    const rootIndex = exponent === 2 ? '' : toSuperscript(exponent)
+    return { id, operation, text: `${rootIndex}√${value}`, answer: base, a: base, b: exponent }
   })
 
   return settings.inOrder ? questions : shuffle(questions)

@@ -2132,6 +2132,35 @@
     width: 100%;
     max-width: 220px;
   }
+
+  /* Pin the numeric keypad to the bottom of the phone screen instead of
+     wherever it lands in normal flow — on a tall question card that meant
+     scrolling down just to reach it. .question-card reserves matching
+     bottom padding so the feedback message underneath never hides behind
+     the fixed bar. */
+  .question-card:has(.numeric-keypad) {
+    padding-bottom: calc(400px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .numeric-keypad {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    max-width: 300px;
+    margin: 0 auto;
+    gap: 8px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .keypad-btn {
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 360px) {
