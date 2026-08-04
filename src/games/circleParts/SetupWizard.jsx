@@ -22,10 +22,7 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
-        <h2>בחר/י תרגול חלקי מעגל</h2>
-
         <div className="setup-section">
-          <div className="setup-section-title">איזה תרגול תרצה?</div>
           <div className="operation-row">
             {OPERATION_OPTIONS.map((opt) => (
               <button

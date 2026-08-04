@@ -63,10 +63,7 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
-        <h2>בחר/י תרגול</h2>
-
         <div className="setup-section">
-          <div className="setup-section-title">איזה תרגול תרצה?</div>
           <div className="operation-row">
             {OPERATION_OPTIONS.map((opt) => (
               <button
@@ -83,7 +80,6 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
 
         <div className="setup-section">
           <div className="setup-section-title-row">
-            <div className="setup-section-title">על אילו בסיסים לתרגל?</div>
             <button
               type="button"
               className="in-order-toggle"
