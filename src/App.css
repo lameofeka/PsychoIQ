@@ -2128,6 +2128,14 @@
     padding: 24px 8px 40px;
   }
 
+  /* When the numeric keypad is showing, let the card sink closer to the
+     screen edge — only a small gap to the viewport bottom — instead of
+     the normal 40px app-shell padding. The gap between the card and the
+     keypad itself (question-card's own padding) is untouched. */
+  .app-shell:has(.numeric-keypad) {
+    padding-bottom: 12px;
+  }
+
   .app-header h1 {
     font-size: 32px;
   }
@@ -2200,6 +2208,11 @@
     width: calc(100% + 72px - 2 * var(--keypad-gap));
     max-width: none;
     gap: var(--keypad-gap);
+    /* Trim each column ~5% narrower without touching the column gap
+       itself: eating into the content box with inline padding shrinks
+       only the 1fr columns, since `gap` is a fixed length, not a
+       fraction of the available width. */
+    padding-inline: 2.5%;
   }
 
   .keypad-btn {
