@@ -439,14 +439,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: 14px;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-h);
-  transition: border-color 0.15s, background 0.15s;
+  box-shadow: 0 1px 3px rgba(28, 26, 36, 0.05);
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
 .operation-cube:hover {
@@ -457,11 +458,27 @@
   border-color: var(--accent);
   background: var(--accent-bg);
   color: var(--accent-dark);
+  box-shadow: 0 4px 14px rgba(124, 77, 255, 0.22);
 }
 
 .operation-cube .option-icon {
-  font-size: 28px;
-  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.operation-cube.selected .option-icon {
+  background: var(--accent);
+  color: #fff;
 }
 
 /* Setup screens split into separate stacked white cards (setup options,
@@ -930,12 +947,14 @@
 
 .setup-compact .operation-cube {
   aspect-ratio: 1.8;
-  gap: 4px;
+  gap: 6px;
   font-size: 12px;
 }
 
 .setup-compact .operation-cube .option-icon {
-  font-size: 20px;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
 }
 
 .setup-compact .option-grid {
