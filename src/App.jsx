@@ -148,11 +148,6 @@ function App() {
       {showChrome && (
         <>
           <header className="app-header">
-            <h1>PsychoIQ</h1>
-            <p>תרגול לפסיכומטרי</p>
-          </header>
-
-          <div className="category-switch">
             {streak > 0 && (
               <div className="streak-badge" title={`רצף של ${streak} ${streak === 1 ? 'יום' : 'ימים'}`}>
                 <span className="streak-flame">
@@ -161,6 +156,19 @@ function App() {
                 <span>{streak}</span>
               </div>
             )}
+            <h1>PsychoIQ</h1>
+            <p>תרגול לפסיכומטרי</p>
+            {masteryPercent !== null && (
+              <div className="mastery-badge" title="אחוז שליטה כולל בכל הפלטפורמה">
+                <span className="mastery-check">
+                  <ProgressIcon />
+                </span>
+                <span>{masteryPercent}%</span>
+              </div>
+            )}
+          </header>
+
+          <div className="category-switch">
             {CATEGORIES.map((c) => (
               <button
                 key={c.value}
@@ -172,14 +180,6 @@ function App() {
                 {c.label}
               </button>
             ))}
-            {masteryPercent !== null && (
-              <div className="mastery-badge" title="אחוז שליטה כולל בכל הפלטפורמה">
-                <span className="mastery-check">
-                  <ProgressIcon />
-                </span>
-                <span>{masteryPercent}%</span>
-              </div>
-            )}
           </div>
 
           <div className="game-pill-row">

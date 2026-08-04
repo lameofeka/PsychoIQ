@@ -8,6 +8,8 @@
 }
 
 .app-header {
+  position: relative;
+  width: 100%;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -25,13 +27,17 @@
 }
 
 .streak-badge {
-  /* Anchored to .category-switch itself (not a guessed pixel offset) so it
-     sits exactly above the switch's own left edge - its "end" in RTL -
-     regardless of how wide the switch renders. */
+  /* Anchored to .app-header (title + subtitle) so top: 50% always lands
+     between the two lines regardless of font-size per breakpoint, and
+     left: 0 sits at the header's own left edge - the screen's left edge,
+     since the header is full-width. Unlike .category-switch, the header
+     stays put at the top on both desktop and the mobile layout (where the
+     switch itself becomes the bottom tab bar), so anchoring here keeps the
+     badge next to the title on every screen size. */
   position: absolute;
-  bottom: 100%;
-  left: 0;
-  margin-bottom: 8px;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
   z-index: 20;
   display: flex;
   align-items: center;
@@ -55,12 +61,11 @@
 }
 
 .mastery-badge {
-  /* Mirrors .streak-badge on the opposite side - the switch's own right
-     edge (its "start" in RTL) - same anchoring logic, no guessed offset. */
+  /* Mirrors .streak-badge on the header's opposite (right) edge. */
   position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 8px;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
   z-index: 20;
   display: flex;
   align-items: center;
@@ -85,24 +90,11 @@
 /* --- Game menu --- */
 
 .category-switch {
-  position: relative;
   display: inline-flex;
   border: 1px solid var(--border);
   border-radius: 10px;
+  overflow: hidden;
   margin-bottom: 28px;
-}
-
-/* overflow: hidden on .category-switch would clip .streak-badge (anchored
-   to it, positioned above its own box) - round the outer buttons directly
-   instead so an edge .active fill still respects the pill's corners. */
-.category-switch .mode-switch-btn:first-child {
-  border-top-right-radius: 9px;
-  border-bottom-right-radius: 9px;
-}
-
-.category-switch .mode-switch-btn:last-child {
-  border-top-left-radius: 9px;
-  border-bottom-left-radius: 9px;
 }
 
 /* --- Game pill nav: replaces the home-screen game-card grid. Tapping a
@@ -513,7 +505,7 @@
   justify-content: center;
   gap: 6px;
   background: none;
-  border: 2px solid color-mix(in srgb, var(--border) 50%, var(--card-bg));
+  border: 2px solid color-mix(in srgb, var(--border) 30%, var(--card-bg));
   border-radius: 14px;
   font-size: 15px;
   font-weight: 700;
@@ -534,10 +526,13 @@
 .operation-cube .option-icon {
   font-size: 28px;
   width: auto;
-  /* Follow the cube's own text color (accent only once selected) instead
-     of the base .option-icon accent tint, which colored every option's
-     icon regardless of whether it was picked. */
-  color: inherit;
+  /* Light gray until selected, instead of the base .option-icon accent
+     tint (which colored every option's icon regardless of selection). */
+  color: color-mix(in srgb, var(--border) 70%, var(--card-bg));
+}
+
+.operation-cube.selected .option-icon {
+  color: var(--accent-dark);
 }
 
 /* Setup screens split into separate stacked white cards (setup options,
@@ -2303,9 +2298,7 @@
     box-shadow: 0 -6px 20px rgba(28, 26, 36, 0.08);
   }
 
-  .category-switch .mode-switch-btn,
-  .category-switch .mode-switch-btn:first-child,
-  .category-switch .mode-switch-btn:last-child {
+  .category-switch .mode-switch-btn {
     flex: 1;
     flex-direction: column;
     gap: 4px;
