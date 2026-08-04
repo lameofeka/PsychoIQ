@@ -565,6 +565,21 @@
   color: var(--text);
 }
 
+.keypad-submit {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.keypad-submit:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.keypad-submit:disabled {
+  opacity: 0.5;
+}
+
 .feedback-msg {
   margin-top: 16px;
   font-size: 17px;
@@ -2172,10 +2187,15 @@
   .keypad-btn {
     aspect-ratio: auto;
     height: 64px;
-    border-radius: 12px;
+    border-radius: 14px;
+    border-width: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     font-size: 24px;
     font-weight: 600;
+  }
+
+  .keypad-submit {
+    font-size: 26px;
   }
 }
 

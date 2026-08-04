@@ -64,11 +64,6 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
     setInput((prev) => prev.slice(0, -1))
   }
 
-  function handleClear() {
-    if (feedback) return
-    setInput('')
-  }
-
   function handleInputKeyDown(e) {
     if (feedback) return
     if (/^[0-9]$/.test(e.key)) {
@@ -224,11 +219,12 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
           ))}
           <button
             type="button"
-            className="keypad-btn keypad-action"
-            onClick={handleClear}
-            disabled={!!feedback}
+            className="keypad-btn keypad-submit"
+            onClick={() => submitAnswer(input)}
+            disabled={!!feedback || input.trim() === ''}
+            aria-label="בדוק תשובה"
           >
-            נקה
+            ✓
           </button>
           <button type="button" className="keypad-btn" onClick={() => appendDigit('0')} disabled={!!feedback}>
             0
