@@ -439,15 +439,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  background: var(--card-bg);
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
+  gap: 6px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 14px;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-h);
-  box-shadow: 0 1px 3px rgba(28, 26, 36, 0.05);
-  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s, transform 0.15s;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .operation-cube:hover {
@@ -458,19 +457,18 @@
   border-color: var(--accent);
   background: var(--accent-bg);
   color: var(--accent-dark);
-  box-shadow: 0 4px 14px rgba(124, 77, 255, 0.22);
 }
 
 .operation-cube .option-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--accent-bg);
+  background: var(--card-bg);
   color: var(--accent);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1;
   transition: background 0.15s, color 0.15s;
