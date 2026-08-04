@@ -3,6 +3,9 @@ import { CIRCLE_FACTS } from './logic'
 import { getFactLevel, getWeakNumbers } from './stats'
 
 const DEGREES_LIST = CIRCLE_FACTS.map((fact) => fact.degrees)
+// Rendered left-to-right in ascending degree order, independent of
+// CIRCLE_FACTS's own (unsorted) declaration order.
+const SORTED_FACTS = [...CIRCLE_FACTS].sort((a, b) => a.degrees - b.degrees)
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
   const weakDegrees = getWeakNumbers(DEGREES_LIST)
@@ -22,12 +25,12 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בחלק המעגל הזה</p>
 
       <div className="progress-grid" style={{ gridTemplateColumns: `repeat(${CIRCLE_FACTS.length}, 1fr)` }}>
-        {CIRCLE_FACTS.map((fact) => (
+        {SORTED_FACTS.map((fact) => (
           <Fragment key={fact.degrees}>
             <div className="grid-header">{fact.degrees}°</div>
           </Fragment>
         ))}
-        {CIRCLE_FACTS.map((fact) => {
+        {SORTED_FACTS.map((fact) => {
           const level = getFactLevel(fact.degrees)
           return (
             <div
