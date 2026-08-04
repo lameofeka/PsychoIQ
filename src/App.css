@@ -535,13 +535,28 @@
   color: var(--accent-dark);
 }
 
-/* Setup screens split into separate stacked white cards (setup options,
-   progress map) rather than one card with an internal divider. */
+/* Experiment: no card chrome between the setup screen's two sections
+   (setup options, progress map) - just a dashed rule in the middle of the
+   gap instead of separate white cards. If this reads as ugly, revert to
+   background/border/box-shadow on .wizard-stack .wizard and gap: 16px
+   with no border-top/margin-top/padding-top on the + .wizard rule. */
 .wizard-stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   width: 100%;
+}
+
+.wizard-stack .wizard {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.wizard-stack .wizard + .wizard {
+  border-top: 1px dashed var(--border);
+  margin-top: 16px;
+  padding-top: 16px;
 }
 
 .summary-line {
