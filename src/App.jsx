@@ -51,13 +51,13 @@ const GAMES = [
   {
     id: 'primes',
     category: 'quantitative',
-    title: 'מספרים ראשוניים',
+    title: 'ראשוניים',
     Component: PrimesGame,
   },
   {
     id: 'circleParts',
     category: 'quantitative',
-    title: 'חלקי מעגל',
+    title: 'מעגל',
     Component: CirclePartsGame,
   },
   {
