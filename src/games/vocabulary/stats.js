@@ -199,7 +199,7 @@ export function runMistakeLockMigrationOnce(words) {
     if (word.word === LOCK_MIGRATION_EXCLUDED_WORD || word.def === LOCK_MIGRATION_EXCLUDED_WORD) continue
     ids.add(word.id)
   }
-  saveLockedMistakeIds(ids)
+  saveIdSet(LOCKED_MISTAKES_KEY, ids)
   try {
     localStorage.setItem(LOCK_MIGRATION_FLAG_KEY, '1')
   } catch {
