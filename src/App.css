@@ -443,7 +443,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: var(--bg);
+  background: none;
   border: 2px solid var(--border);
   border-radius: 14px;
   font-size: 15px;
