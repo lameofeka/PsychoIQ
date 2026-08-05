@@ -172,7 +172,9 @@ function App() {
               <div className="mastery-badge-wrap">
                 <button
                   type="button"
-                  className="mastery-badge"
+                  className={`mastery-badge mastery-badge--${
+                    mastery.overall < 25 ? 'low' : mastery.overall <= 50 ? 'mid' : 'high'
+                  }`}
                   onClick={() => setShowMasteryDetail((v) => !v)}
                   title="אחוז שליטה כולל בכל הפלטפורמה"
                 >

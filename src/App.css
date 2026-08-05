@@ -94,10 +94,23 @@
   padding: 5px 10px;
   border: none;
   border-radius: 999px;
-  background: var(--success-bg);
-  color: var(--success);
   font-size: 13px;
   font-weight: 700;
+}
+
+.mastery-badge--low {
+  background: var(--muted-bg);
+  color: var(--muted);
+}
+
+.mastery-badge--mid {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.mastery-badge--high {
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .mastery-check {

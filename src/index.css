@@ -11,6 +11,8 @@
   --success-bg: rgba(34, 165, 89, 0.08);
   --warning: #d99a1b;
   --warning-bg: rgba(217, 154, 27, 0.1);
+  --muted: #8a8594;
+  --muted-bg: rgba(138, 133, 148, 0.1);
   --danger: #e5484d;
   --danger-bg: rgba(229, 72, 77, 0.08);
 
