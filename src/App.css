@@ -2497,12 +2497,11 @@
   /* Stretches the progress-map card down to the bottom of the screen (just
      above the category-switch tab bar reserved by app-shell's own
      padding-bottom above), instead of leaving blank page background below
-     a card shorter than the viewport. Covers both the two-card
-     .wizard-stack games (map is the 2nd card) and primes, whose single
-     combined card doubles as the map. The settings card above it keeps
-     its natural content height — only the map card grows. */
-  .game-shell:has(.primes-grid),
-  .game-shell:has(> .wizard-stack) {
+     a card shorter than the viewport. Two-card .wizard-stack games only
+     (map is the 2nd card) — factorial and primes stay normal (unstretched)
+     per request. The settings card above the map keeps its natural
+     content height — only the map card grows. */
+  .game-shell:has(> .wizard-stack):not(:has(.factorial-progress-grid)) {
     display: flex;
     flex: 1;
   }
@@ -2511,8 +2510,7 @@
     flex: 1;
   }
 
-  .wizard-stack > .wizard:last-child,
-  .wizard:has(> .primes-grid) {
+  .wizard-stack:not(:has(.factorial-progress-grid)) > .wizard:last-child {
     flex: 1;
   }
 
