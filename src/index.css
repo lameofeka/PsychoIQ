@@ -4,6 +4,13 @@
   --bg: #f6f4fb;
   --card-bg: #ffffff;
   --border: #e3e0ec;
+  /* Design experiment: the big "section" cards (setup wizard, progress map,
+     gameplay, results) get a faint warm cream tint instead of flat white —
+     a small, delicate contrast against the page's cool lavender --bg.
+     Small controls (buttons, chips, inputs) keep --card-bg untouched so
+     they stay crisp against this softer fill. */
+  --section-bg: color-mix(in srgb, var(--warning) 8%, white);
+  --section-border: color-mix(in srgb, var(--warning) 15%, var(--border));
   --accent: #7c4dff;
   --accent-dark: #5e2fe0;
   --accent-bg: rgba(124, 77, 255, 0.08);
