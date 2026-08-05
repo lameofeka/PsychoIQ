@@ -2584,8 +2584,18 @@
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
   }
 
-  /* Pushes the play-again/mistakes-only buttons to the bottom of the
-     now-full-height card, at the same inset as the card's own padding. */
+  /* Now that .results fills the screen, the h2-through-time-line summary
+     block would otherwise clump at the top with a big empty gap above the
+     bottom-pinned buttons. Giving the h2 a matching auto top margin splits
+     the leftover space evenly between "above the summary" and "above the
+     buttons" (auto margins on a flex axis divide free space equally
+     between however many of them there are) — the summary block ends up
+     vertically centered in the space between the topbar and the buttons,
+     filling the screen instead of leaving it empty. */
+  .results h2 {
+    margin-top: auto;
+  }
+
   .results-actions {
     margin-top: auto;
   }
