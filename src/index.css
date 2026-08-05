@@ -4,16 +4,17 @@
   --bg: #f6f4fb;
   --card-bg: #ffffff;
   --border: #e3e0ec;
-  /* Design experiment: the big "section" cards (setup wizard, progress map,
-     gameplay, results) get a barely-there beige instead of flat white — a
-     very small, delicate warmth, not a strong tint. Small controls
-     (buttons, chips, inputs) keep --card-bg untouched so they stay crisp
-     against this softer fill. */
-  --section-bg: #fbf9f5;
-  --section-border: color-mix(in srgb, var(--warning) 15%, var(--border));
   --accent: #7c4dff;
   --accent-dark: #5e2fe0;
   --accent-bg: rgba(124, 77, 255, 0.08);
+  /* Design experiment: the big "section" cards (setup wizard, progress map,
+     gameplay, results) get a soft accent-derived tint instead of flat
+     white — drawn straight from --accent (the app's own signature color)
+     rather than an unrelated hue, so it reads as part of the existing
+     palette. Small controls (buttons, chips, inputs) keep --card-bg
+     untouched so they stay crisp against this softer fill. */
+  --section-bg: color-mix(in srgb, var(--accent) 10%, white);
+  --section-border: color-mix(in srgb, var(--warning) 15%, var(--border));
   --success: #22a559;
   --success-bg: rgba(34, 165, 89, 0.08);
   --warning: #d99a1b;
