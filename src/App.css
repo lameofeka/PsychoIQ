@@ -2621,6 +2621,15 @@
     order: 1;
   }
 
+  /* Chain-mode wrong answers (primes, and powers/circleParts "לפי הסדר")
+     stack both .feedback-msg AND .chain-actions above the keypad here,
+     taller than the plain feedback-msg-only case — enough on some phones
+     to overflow the fixed-height card and crowd the keypad. Trim the gap
+     above the buttons to claim back a few px of breathing room. */
+  .question-card:has(.numeric-keypad) .chain-actions {
+    margin-top: 8px;
+  }
+
   .numeric-keypad {
     order: 2;
     /* Combined horizontal padding of .gameplay (16px) + .question-card
