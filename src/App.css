@@ -2510,6 +2510,17 @@
     flex: 1;
   }
 
+  /* Same treatment for vocabulary's group-select screen — a single card
+     (no .wizard-stack) that should stretch flush to the tab bar too. */
+  .game-shell:has(> .wizard.group-select) {
+    display: flex;
+    flex: 1;
+  }
+
+  .wizard.group-select {
+    flex: 1;
+  }
+
   .wizard-stack:not(:has(.factorial-progress-grid)) > .wizard:last-child {
     flex: 1;
   }

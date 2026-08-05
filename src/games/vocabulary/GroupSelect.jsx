@@ -37,7 +37,7 @@ export default function GroupSelect({ onManageDictionary, onStart, onOpenMistake
     .flatMap((g) => g.words.map((w) => ({ ...w, groupIndex: g.index })))
 
   return (
-    <div className="wizard">
+    <div className="wizard group-select">
       <div className="wizard-topbar">
         <ModeSwitch mode="practice" onChange={(m) => m === 'dictionary' && onManageDictionary()} />
       </div>
