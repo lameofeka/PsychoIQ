@@ -757,8 +757,12 @@
   transition: border-color 0.03s, background 0.03s;
 }
 
-.keypad-btn:hover {
-  border-color: var(--accent);
+/* Scoped to real pointer hover only — touchscreens simulate :hover on tap,
+   which would otherwise flash this same purple border on every press. */
+@media (hover: hover) {
+  .keypad-btn:hover {
+    border-color: var(--accent);
+  }
 }
 
 /* Press indicator: driven by JS (stays lit for a beat after release or
