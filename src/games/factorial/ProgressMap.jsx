@@ -20,7 +20,10 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       <h2>מפת התקדמות</h2>
       <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בעצרת של אותו מספר</p>
 
-      <div className="progress-grid" style={{ gridTemplateColumns: `repeat(${NUMBERS.length}, 1fr)` }}>
+      <div
+        className="progress-grid factorial-progress-grid"
+        style={{ gridTemplateColumns: `repeat(${NUMBERS.length}, 1fr)` }}
+      >
         {NUMBERS.map((n) => (
           <Fragment key={n}>
             <div className="grid-header">{n}!</div>

@@ -999,8 +999,10 @@
 }
 
 .setup-compact .primes-grid {
-  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
-  gap: 5px;
+  /* 5% bigger cells — fewer fit per row, so the grid wraps to an extra
+     row, which is fine. */
+  grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+  gap: 5.3px;
 }
 
 .legend {
@@ -1177,8 +1179,20 @@
   border-radius: 4px;
 }
 
+.setup-compact .primes-grid .grid-cell {
+  font-size: 11px;
+}
+
 .setup-compact .grid-header {
   font-size: 11px;
+}
+
+.setup-compact .factorial-progress-grid .grid-cell {
+  font-size: 11px;
+}
+
+.setup-compact .factorial-progress-grid .grid-header {
+  font-size: 11.6px;
 }
 
 /* Circle-parts progress map: fewer columns (facts wrap onto a second row)
@@ -1606,15 +1620,16 @@
 }
 
 .setup-compact .in-order-toggle {
-  font-size: 12.6px;
+  /* Another 10% on top of the earlier 5% bump. */
+  font-size: 13.9px;
   gap: 5px;
   margin-left: 14px;
 }
 
 .setup-compact .checkbox-dot {
-  width: 16.8px;
-  height: 16.8px;
-  font-size: 11.6px;
+  width: 18.5px;
+  height: 18.5px;
+  font-size: 12.8px;
 }
 
 .dict-search,
