@@ -761,9 +761,11 @@
   border-color: var(--accent);
 }
 
-.keypad-btn:active {
-  background: var(--accent-bg);
-  border-color: var(--accent);
+/* Press indicator: driven by JS (stays lit for a beat after release or
+   until another key is pressed), not the native :active pseudo-class,
+   which would clear the instant the finger lifts. */
+.keypad-btn.pressed {
+  background: var(--muted-bg);
 }
 
 .keypad-btn:disabled {
@@ -2485,14 +2487,14 @@
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
   }
 
-  /* ~10% larger than the base 40px/34px so the question itself reads more
-     easily on a phone screen. */
+  /* ~26.5% larger than the base 40px/34px (10% then another 15% on top)
+     so the question itself reads more easily on a phone screen. */
   .question-text {
-    font-size: 44px;
+    font-size: 51px;
   }
 
   .vocab-word {
-    font-size: 37px;
+    font-size: 43px;
   }
 
   /* .category-switch is a fixed 78px-tall bottom tab bar on mobile (see
@@ -2524,7 +2526,7 @@
   }
 
   .question-text {
-    font-size: 40px;
+    font-size: 46px;
   }
 
   .quiz-progress-track {
@@ -2532,7 +2534,7 @@
   }
 
   .vocab-word {
-    font-size: 31px;
+    font-size: 36px;
   }
 
   .game-card {

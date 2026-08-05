@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound } from './logic'
 import { recordFactResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
+import { useKeypadPress } from '../../utils/useKeypadPress'
 
 const FEEDBACK_DELAY_MS = 900
 const MAX_ANSWER_DIGITS = 3
@@ -14,6 +15,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [firstAttempts, setFirstAttempts] = useState(() => new Map())
   const [resolvedIds, setResolvedIds] = useState(() => new Set())
+  const [pressedKey, press] = useKeypadPress()
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
 
@@ -146,8 +148,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             <button
               key={digit}
               type="button"
-              className="keypad-btn"
-              onClick={() => appendDigit(digit)}
+              className={`keypad-btn ${pressedKey === digit ? 'pressed' : ''}`}
+              onClick={() => {
+                press(digit)
+                appendDigit(digit)
+              }}
               disabled={!!feedback}
             >
               {digit}
@@ -155,20 +160,34 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           ))}
           <button
             type="button"
-            className="keypad-btn keypad-clear"
-            onClick={handleClear}
+            className={`keypad-btn keypad-clear ${pressedKey === 'clear' ? 'pressed' : ''}`}
+            onClick={() => {
+              press('clear')
+              handleClear()
+            }}
             disabled={!!feedback || input === ''}
             aria-label="נקה"
           >
             נקה
           </button>
-          <button type="button" className="keypad-btn" onClick={() => appendDigit('0')} disabled={!!feedback}>
+          <button
+            type="button"
+            className={`keypad-btn ${pressedKey === '0' ? 'pressed' : ''}`}
+            onClick={() => {
+              press('0')
+              appendDigit('0')
+            }}
+            disabled={!!feedback}
+          >
             0
           </button>
           <button
             type="button"
-            className="keypad-btn keypad-action"
-            onClick={handleBackspace}
+            className={`keypad-btn keypad-action ${pressedKey === 'backspace' ? 'pressed' : ''}`}
+            onClick={() => {
+              press('backspace')
+              handleBackspace()
+            }}
             disabled={!!feedback}
             aria-label="מחיקת ספרה"
           >
