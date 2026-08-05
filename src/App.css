@@ -298,7 +298,7 @@
 .wizard,
 .gameplay,
 .results {
-  background: var(--section-bg);
+  background: var(--card-bg);
   border: none;
   border-radius: 14px;
   padding: 28px 24px;
@@ -2522,10 +2522,10 @@
   .app-shell:has(> .game-shell > .gameplay) {
     padding: 0;
     align-items: stretch;
-    /* The fill now lives here instead of on .gameplay itself, so there's
+    /* The white now lives here instead of on .gameplay itself, so there's
        no separate "card fill" beneath the full-bleed quiz screen — just one
-       flat surface. */
-    background: var(--section-bg);
+       flat white surface. */
+    background: #fff;
   }
 
   .game-shell:has(> .gameplay) {
