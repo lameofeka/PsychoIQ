@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound } from './logic'
 import { recordFactResult } from './stats'
+import { vibrateSuccess } from '../../utils/haptics'
 
 const FEEDBACK_DELAY_MS = 900
 const MAX_ANSWER_DIGITS = 3
@@ -68,6 +69,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     const isCorrect = userAnswer === current.answer
     recordFactResult(current.n, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) vibrateSuccess()
 
     const isFirstAttempt = !firstAttempts.has(current.id)
     const nextFirstAttempts = isFirstAttempt

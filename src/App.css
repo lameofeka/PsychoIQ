@@ -754,7 +754,7 @@
   font-size: 22px;
   font-weight: 700;
   color: var(--text-h);
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.03s, background 0.03s;
 }
 
 .keypad-btn:hover {
@@ -2462,6 +2462,10 @@
   .app-shell:has(> .game-shell > .gameplay) {
     padding: 0;
     align-items: stretch;
+    /* The white now lives here instead of on .gameplay itself, so there's
+       no separate "card fill" beneath the full-bleed quiz screen — just one
+       flat white surface. */
+    background: #fff;
   }
 
   .game-shell:has(> .gameplay) {
@@ -2475,9 +2479,20 @@
     flex-direction: column;
     flex: 1;
     width: 100%;
+    background: none;
     border: none;
     border-radius: 0;
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  /* ~10% larger than the base 40px/34px so the question itself reads more
+     easily on a phone screen. */
+  .question-text {
+    font-size: 44px;
+  }
+
+  .vocab-word {
+    font-size: 37px;
   }
 
   /* .category-switch is a fixed 78px-tall bottom tab bar on mobile (see
@@ -2509,7 +2524,7 @@
   }
 
   .question-text {
-    font-size: 36px;
+    font-size: 40px;
   }
 
   .quiz-progress-track {
@@ -2517,7 +2532,7 @@
   }
 
   .vocab-word {
-    font-size: 28px;
+    font-size: 31px;
   }
 
   .game-card {

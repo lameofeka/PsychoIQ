@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound, checkAnswer } from './logic'
 import { updateWord } from './dictionary'
 import { excludeMistake } from './stats'
+import { vibrateSuccess } from '../../utils/haptics'
 
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
@@ -63,6 +64,7 @@ export default function GamePlay({
 
   function submitAnswer(isCorrect, userAnswer) {
     setVerdict(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) vibrateSuccess()
 
     if (bufferedRetry) {
       const word = current

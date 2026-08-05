@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { wordsMatch } from './logic'
+import { vibrateSuccess } from '../../utils/haptics'
 
 export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const questions = sets
@@ -48,6 +49,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
       setFilledIds((prev) => new Set(prev).add(match.id))
       setCorrectTotal((c) => c + 1)
       setInput('')
+      vibrateSuccess()
     } else {
       setWrongTotal((c) => c + 1)
       setWrongFlash(true)

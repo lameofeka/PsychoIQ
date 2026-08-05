@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { PRIMES } from './logic'
 import { recordPrimeResult } from './stats'
+import { vibrateSuccess } from '../../utils/haptics'
 
 const FEEDBACK_DELAY_MS = 900
 const MAX_ANSWER_DIGITS = 2
@@ -93,6 +94,7 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
     const isCorrect = Number(value) === current
     recordPrimeResult(current, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) vibrateSuccess()
 
     if (!attemptedRef.current.has(currentIndex)) {
       attemptedRef.current.add(currentIndex)

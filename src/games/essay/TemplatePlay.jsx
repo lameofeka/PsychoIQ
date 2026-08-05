@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { sentencesMatch } from './logic'
+import { vibrateSuccess } from '../../utils/haptics'
 
 export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
   const [index, setIndex] = useState(0)
@@ -38,6 +39,7 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
     if (status === 'broken' || input.trim() === '') return
 
     if (sentencesMatch(input, current.text)) {
+      vibrateSuccess()
       if (index + 1 < total) {
         setIndex((i) => i + 1)
         setInput('')

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound, OPERATIONS } from './logic'
 import { recordFactResult } from './stats'
+import { vibrateSuccess } from '../../utils/haptics'
 
 const FEEDBACK_DELAY_MS = 900
 // Longest possible answer is "112" (fraction 1/12 typed as two boxes with
@@ -83,6 +84,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     const isCorrect = value === question.answer
     recordFactResult(question.fact.degrees, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect) vibrateSuccess()
 
     const isFirstAttempt = !firstAttemptsRef.current.has(question.id)
     let requeue
