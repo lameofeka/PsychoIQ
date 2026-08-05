@@ -18,7 +18,7 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.POWER)
   const initialRangeType =
     initialSettings?.rangeType === RANGE_TYPES.WEAK ? RANGE_TYPES.ALL : initialSettings?.rangeType
-  const [rangeType, setRangeType] = useState(initialRangeType ?? RANGE_TYPES.ALL)
+  const [rangeType, setRangeType] = useState(initialRangeType ?? null)
   const [singleBase, setSingleBase] = useState(initialSettings?.singleBase ?? 2)
   const [rangeStart, setRangeStart] = useState(initialSettings?.rangeStart ?? 2)
   const [rangeEnd, setRangeEnd] = useState(initialSettings?.rangeEnd ?? 5)
