@@ -13,8 +13,26 @@ export const GROUP_SIZE = 10
 // Vercel, so production instead uses words.data.json baked straight into the
 // build. Editing the dictionary from a deployed site won't persist — edit it
 // locally (npm run dev) and redeploy to update what's shown in production.
-let wordsCache = []
-let loadPromise = null
+// Vite HMR re-executes this module (resetting module-level state) whenever a
+// dev edit touches anything in its import chain, even though the React
+// components that import it keep their state across the same hot update and
+// never re-run their load-on-mount effect. Without this, going "back" out of
+// a quiz after any HMR reload during the dev session shows an empty
+// dictionary, since getWords() returns the freshly-reset cache with nothing
+// left to re-fetch it. Stashing the cache in import.meta.hot.data survives
+// the re-execution; self-accepting keeps the update local instead of forcing
+// a full remount up the tree. No-op in production, where import.meta.hot is
+// stripped entirely.
+let wordsCache = import.meta.hot?.data.wordsCache ?? []
+let loadPromise = import.meta.hot?.data.loadPromise ?? null
+
+if (import.meta.hot) {
+  import.meta.hot.accept()
+  import.meta.hot.dispose((data) => {
+    data.wordsCache = wordsCache
+    data.loadPromise = loadPromise
+  })
+}
 
 export function loadDictionary() {
   if (!loadPromise) {

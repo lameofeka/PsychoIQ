@@ -79,11 +79,11 @@
    to the logo no matter how wide the window gets. */
 @media (min-width: 601px) {
   .streak-badge {
-    left: calc(50% - 180px);
+    left: calc(50% - 200px);
   }
 
   .mastery-badge-wrap {
-    right: calc(50% - 180px);
+    right: calc(50% - 200px);
   }
 }
 
@@ -2465,6 +2465,15 @@
     border: none;
     border-radius: 0;
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  /* .category-switch is a fixed 78px-tall bottom tab bar on mobile (see
+     app-shell:has(> .category-switch) above), and the dictionary manager
+     stays in the 'inline' phase (chrome, including that tab bar, visible)
+     the whole time it's open — so the scroll-jump button's desktop
+     bottom:24px would land inside the tab bar instead of above it. */
+  .scroll-jump-btn {
+    bottom: calc(78px + env(safe-area-inset-bottom) + 16px);
   }
 }
 
