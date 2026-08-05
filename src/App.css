@@ -2658,6 +2658,15 @@
     padding: 20px 12px;
   }
 
+  /* Keeps the stretched map/group-select card's bottom clearance matching
+     this breakpoint's smaller 20px padding, so the visible gap above the
+     tab bar (padding-bottom minus the bar's own height) still equals the
+     gap above the title instead of the wider 28px from the ≤600px rule. */
+  .wizard.group-select,
+  .wizard-stack:not(:has(.factorial-progress-grid)) > .wizard:last-child {
+    padding-bottom: calc(20px + 78px + env(safe-area-inset-bottom));
+  }
+
   .question-text {
     font-size: 51px;
   }
