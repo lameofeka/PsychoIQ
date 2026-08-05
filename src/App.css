@@ -2528,12 +2528,21 @@
     flex: 1;
   }
 
+  /* flex:1 grows the card's border box all the way to the true bottom of
+     the screen now (app-shell reserves nothing above), but the fixed tab
+     bar physically overlaps that last ~78px + safe-area strip. Extra
+     bottom padding keeps the card's real content (buttons, grid, legend)
+     from rendering underneath it, while the card's own background still
+     runs the full height behind the bar — exactly where one ends is where
+     the other begins, no gap and nothing hidden. */
   .wizard.group-select {
     flex: 1;
+    padding-bottom: calc(28px + 78px + env(safe-area-inset-bottom));
   }
 
   .wizard-stack:not(:has(.factorial-progress-grid)) > .wizard:last-child {
     flex: 1;
+    padding-bottom: calc(28px + 78px + env(safe-area-inset-bottom));
   }
 
   /* The quiz screen (question card, keypad, progress bar) fills the whole
