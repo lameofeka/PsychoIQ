@@ -198,11 +198,10 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
         </form>
 
         {feedback === 'correct' && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
-        {feedback === 'wrong' && (
-          <div className="feedback-msg wrong">
-            לא נכון. המספר הראשוני הבא הוא {current}
-          </div>
-        )}
+        {/* No "לא נכון" message on wrong here (unlike other quizzes) — the
+            chain-mode continue/restart buttons already need every bit of
+            vertical room they can get above the keypad on mobile; the next
+            prime is right there on screen once the user continues anyway. */}
         {feedback === 'wrong' && (
           <div className="results-actions chain-actions">
             <button className="primary-btn" onClick={continueChain}>
