@@ -37,27 +37,42 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
         className="progress-grid circle-progress-grid"
         style={{ gridTemplateColumns: `repeat(${CHUNK_SIZE}, 1fr)` }}
       >
-        {FACT_ROWS.map((rowFacts, i) => (
-          <Fragment key={`row-${i}`}>
-            {rowFacts.map((fact) => (
-              <div key={`h-${fact.degrees}`} className="grid-header">
-                {fact.degrees}°
-              </div>
-            ))}
-            {rowFacts.map((fact) => {
-              const level = getFactLevel(fact.degrees)
-              return (
-                <div
-                  key={fact.degrees}
-                  className={`grid-cell level-${level}`}
-                  title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator}`}
-                >
-                  {fact.numerator}/{fact.denominator}
+        {FACT_ROWS.map((rowFacts, i) => {
+          // Rows can come up short of CHUNK_SIZE (11 facts don't split evenly
+          // into 2 rows of 6) — pad with blanks so every row still contributes
+          // exactly CHUNK_SIZE headers + CHUNK_SIZE cells. Otherwise the grid's
+          // auto-placement doesn't know where the intended row break is and
+          // bleeds the last row's cells into the wrong columns.
+          const padCount = CHUNK_SIZE - rowFacts.length
+          const pads = Array.from({ length: padCount }, (_, p) => p)
+          return (
+            <Fragment key={`row-${i}`}>
+              {rowFacts.map((fact) => (
+                <div key={`h-${fact.degrees}`} className="grid-header">
+                  {fact.degrees}°
                 </div>
-              )
-            })}
-          </Fragment>
-        ))}
+              ))}
+              {pads.map((p) => (
+                <div key={`h-pad-${i}-${p}`} className="grid-header" />
+              ))}
+              {rowFacts.map((fact) => {
+                const level = getFactLevel(fact.degrees)
+                return (
+                  <div
+                    key={fact.degrees}
+                    className={`grid-cell level-${level}`}
+                    title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator}`}
+                  >
+                    {fact.numerator}/{fact.denominator}
+                  </div>
+                )
+              })}
+              {pads.map((p) => (
+                <div key={`c-pad-${i}-${p}`} className="grid-cell blank" />
+              ))}
+            </Fragment>
+          )
+        })}
       </div>
 
       <div className="legend">

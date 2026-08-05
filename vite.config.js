@@ -33,12 +33,17 @@ function vocabularyApiPlugin() {
         }
 
         if (req.method === 'PUT') {
-          let body = ''
+          const chunks = []
           req.on('data', (chunk) => {
-            body += chunk
+            chunks.push(chunk)
           })
           req.on('end', async () => {
             try {
+              // Buffer.concat before decoding — decoding each chunk on its own
+              // (e.g. `body += chunk`) corrupts any multi-byte UTF-8 character
+              // (Hebrew is 2 bytes/char) that a chunk boundary happens to split,
+              // replacing it with U+FFFD on both sides of the split.
+              const body = Buffer.concat(chunks).toString('utf-8')
               const words = JSON.parse(body)
               if (!Array.isArray(words)) throw new Error('expected an array')
 

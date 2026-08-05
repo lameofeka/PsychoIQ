@@ -29,11 +29,14 @@
 .streak-badge {
   /* Anchored to .app-header (title + subtitle) so top: 50% always lands
      between the two lines regardless of font-size per breakpoint, and
-     left: 0 sits at the header's own left edge - the screen's left edge,
+     left: 5% sits near the header's own left edge - the screen's left edge,
      since the header is full-width. Unlike .category-switch, the header
      stays put at the top on both desktop and the mobile layout (where the
      switch itself becomes the bottom tab bar), so anchoring here keeps the
-     badge next to the title on every screen size. */
+     badge next to the title on every screen size. On phones the header is
+     narrow enough that 5% already sits close to the title; on wide desktop
+     viewports it drifts out to the screen edge, so the min-width query
+     below pulls it back to a fixed distance from the centered logo instead. */
   position: absolute;
   top: 50%;
   left: 5%;
@@ -67,6 +70,21 @@
   right: 5%;
   transform: translateY(-50%);
   z-index: 20;
+}
+
+/* Desktop only (mobile keeps the 5%-from-edge anchoring above): the header
+   spans the full viewport with no max-width, so on wide screens 5% pushes
+   the badges far past the centered title/logo out toward the screen edges.
+   Pin them to a fixed distance from center instead, so they stay snug next
+   to the logo no matter how wide the window gets. */
+@media (min-width: 601px) {
+  .streak-badge {
+    left: calc(50% - 180px);
+  }
+
+  .mastery-badge-wrap {
+    right: calc(50% - 180px);
+  }
 }
 
 .mastery-badge {
