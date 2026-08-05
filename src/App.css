@@ -539,7 +539,7 @@
   background: var(--card-bg);
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-h);
+  color: color-mix(in srgb, var(--text-h) 80%, transparent);
   transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s;
 }
 
