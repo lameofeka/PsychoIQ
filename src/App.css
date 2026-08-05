@@ -79,11 +79,11 @@
    to the logo no matter how wide the window gets. */
 @media (min-width: 601px) {
   .streak-badge {
-    left: calc(50% - 200px);
+    left: calc(50% - 200px - 3%);
   }
 
   .mastery-badge-wrap {
-    right: calc(50% - 200px);
+    right: calc(50% - 200px - 3%);
   }
 }
 
