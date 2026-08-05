@@ -100,6 +100,10 @@ function firstGameIdForCategory(cat) {
   return GAMES.find((g) => g.category === cat)?.id
 }
 
+function masteryTier(percent) {
+  return percent < 25 ? 'low' : percent <= 50 ? 'mid' : 'high'
+}
+
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
   const [mastery, setMastery] = useState(null)
@@ -172,9 +176,7 @@ function App() {
               <div className="mastery-badge-wrap">
                 <button
                   type="button"
-                  className={`mastery-badge mastery-badge--${
-                    mastery.overall < 25 ? 'low' : mastery.overall <= 50 ? 'mid' : 'high'
-                  }`}
+                  className={`mastery-badge mastery-badge--${masteryTier(mastery.overall)}`}
                   onClick={() => setShowMasteryDetail((v) => !v)}
                   title="אחוז שליטה כולל בכל הפלטפורמה"
                 >
@@ -187,11 +189,15 @@ function App() {
                   <div className="mastery-popover">
                     <div className="mastery-popover-row">
                       <span>כמותי</span>
-                      <span>{mastery.quantitative}%</span>
+                      <span className={`mastery-popover-value mastery-popover-value--${masteryTier(mastery.quantitative)}`}>
+                        {mastery.quantitative}%
+                      </span>
                     </div>
                     <div className="mastery-popover-row">
                       <span>מילולי</span>
-                      <span>{mastery.verbal}%</span>
+                      <span className={`mastery-popover-value mastery-popover-value--${masteryTier(mastery.verbal)}`}>
+                        {mastery.verbal}%
+                      </span>
                     </div>
                   </div>
                 )}

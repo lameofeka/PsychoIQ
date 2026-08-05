@@ -146,8 +146,19 @@
   color: var(--text-h);
 }
 
-.mastery-popover-row span:last-child {
+.mastery-popover-value {
   font-weight: 700;
+}
+
+.mastery-popover-value--low {
+  color: var(--muted);
+}
+
+.mastery-popover-value--mid {
+  color: var(--warning);
+}
+
+.mastery-popover-value--high {
   color: var(--success);
 }
 
@@ -1077,15 +1088,16 @@
 }
 
 .setup-compact .operation-cube {
-  /* 5% bigger: width is fixed by the 3-column grid, so the extra size
-     comes from height (a lower aspect-ratio) plus the larger text/icon. */
-  aspect-ratio: 1.714;
+  /* Another 5% on top of the earlier 5% bump: width is fixed by the
+     3-column grid, so the extra size comes from height (a lower
+     aspect-ratio) plus the larger text/icon. */
+  aspect-ratio: 1.632;
   gap: 4px;
-  font-size: 12.6px;
+  font-size: 13.2px;
 }
 
 .setup-compact .operation-cube .option-icon {
-  font-size: 21px;
+  font-size: 22px;
 }
 
 .setup-compact .option-grid {
@@ -1109,7 +1121,7 @@
 }
 
 .setup-compact .select-all-btn {
-  font-size: 12px;
+  font-size: 12.6px;
 }
 
 .setup-compact .radio-dot {
@@ -1122,7 +1134,7 @@
 }
 
 .setup-compact .option-card-label {
-  font-size: 13px;
+  font-size: 13.7px;
 }
 
 .setup-compact .inline-number-picker {
@@ -1594,15 +1606,15 @@
 }
 
 .setup-compact .in-order-toggle {
-  font-size: 12px;
+  font-size: 12.6px;
   gap: 5px;
   margin-left: 14px;
 }
 
 .setup-compact .checkbox-dot {
-  width: 16px;
-  height: 16px;
-  font-size: 11px;
+  width: 16.8px;
+  height: 16.8px;
+  font-size: 11.6px;
 }
 
 .dict-search,
@@ -1957,7 +1969,9 @@
 .quiz-progress-row {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  /* 10% bigger: also grows the ✔/✘ score text, which inherits this
+     instead of setting its own size. */
+  font-size: 14.3px;
   color: var(--text);
   margin-bottom: 6px;
 }
@@ -2509,6 +2523,37 @@
     font-size: 43px;
   }
 
+  /* Same full-bleed treatment as .gameplay above, but the results card
+     keeps its own white fill (unlike .gameplay's, which was moved up to
+     .app-shell) — the results screen never removes its card background,
+     it just stretches it to the bottom of the viewport. */
+  .app-shell:has(> .game-shell > .results) {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .game-shell:has(> .results) {
+    max-width: none;
+    display: flex;
+    flex: 1;
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  /* Pushes the play-again/mistakes-only buttons to the bottom of the
+     now-full-height card, at the same inset as the card's own padding. */
+  .results-actions {
+    margin-top: auto;
+  }
+
   /* .category-switch is a fixed 78px-tall bottom tab bar on mobile (see
      app-shell:has(> .category-switch) above), and the dictionary manager
      stays in the 'inline' phase (chrome, including that tab bar, visible)
@@ -2532,8 +2577,7 @@
     font-size: 16px;
   }
 
-  .wizard,
-  .results {
+  .wizard {
     padding: 20px 12px;
   }
 
