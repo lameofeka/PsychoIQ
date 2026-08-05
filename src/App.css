@@ -1123,7 +1123,7 @@
 }
 
 .setup-compact .select-all-btn {
-  font-size: 12.6px;
+  font-size: 13.9px;
 }
 
 .setup-compact .radio-dot {
@@ -1136,18 +1136,19 @@
 }
 
 .setup-compact .option-card-label {
-  font-size: 13.7px;
+  font-size: 15.1px;
 }
 
 .setup-compact .inline-number-picker {
-  /* 5% bigger: min chip width up from 30px, which (aspect-ratio:1 on
-     .number-chip) grows both dimensions together. */
-  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+  /* Another 10% on top of the earlier 5% bump: min chip width up from
+     30px, which (aspect-ratio:1 on .number-chip) grows both dimensions
+     together. */
+  grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
   gap: 6px;
 }
 
 .setup-compact .number-chip {
-  font-size: 11.6px;
+  font-size: 12.8px;
 }
 
 .setup-compact .summary-line {
@@ -1620,16 +1621,16 @@
 }
 
 .setup-compact .in-order-toggle {
-  /* Another 5% on top of the earlier 5%-then-10% bumps. */
-  font-size: 14.6px;
+  /* Another 10% on top of the earlier 5%-then-10%-then-5% bumps. */
+  font-size: 16.1px;
   gap: 5px;
   margin-left: 14px;
 }
 
 .setup-compact .checkbox-dot {
-  width: 19.4px;
-  height: 19.4px;
-  font-size: 13.4px;
+  width: 21.3px;
+  height: 21.3px;
+  font-size: 14.7px;
 }
 
 .dict-search,
