@@ -256,7 +256,7 @@ export default function GamePlay({
         <div className="quiz-progress-row">
           <span>{bufferedRetry ? `${firstCorrectCount} / ${totalWords}` : `${index + 1} / ${questions.length}`}</span>
           <span className="quiz-progress-score">
-            <span className="correct">✔ {correctCount}</span>
+            <span className="correct">✔︎ {correctCount}</span>
             <span className="wrong">✘ {wrongCount}</span>
           </span>
         </div>

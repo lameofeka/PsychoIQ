@@ -81,7 +81,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
             {qIndex + 1} / {questions.length}
           </span>
           <span className="quiz-progress-score">
-            <span className="correct">✔ {correctTotal}</span>
+            <span className="correct">✔︎ {correctTotal}</span>
             <span className="wrong">✘ {wrongTotal}</span>
           </span>
         </div>

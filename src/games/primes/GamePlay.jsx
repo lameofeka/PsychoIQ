@@ -158,7 +158,7 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
         <div className="quiz-progress-row">
           <span>{currentIndex} / {total}</span>
           <span className="quiz-progress-score">
-            <span className="correct">✔ {correctCount}</span>
+            <span className="correct">✔︎ {correctCount}</span>
             <span className="wrong">✘ {wrongCount}</span>
           </span>
         </div>

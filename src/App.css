@@ -1969,9 +1969,9 @@
 .quiz-progress-row {
   display: flex;
   justify-content: space-between;
-  /* 10% bigger: also grows the ✔/✘ score text, which inherits this
-     instead of setting its own size. */
-  font-size: 14.3px;
+  /* Another 10% on top of the earlier 10% bump: also grows the ✔/✘
+     score text, which inherits this instead of setting its own size. */
+  font-size: 15.7px;
   color: var(--text);
   margin-bottom: 6px;
 }
