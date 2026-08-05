@@ -2491,10 +2491,14 @@
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
   }
 
-  /* ~26.5% larger than the base 40px/34px (10% then another 15% on top)
-     so the question itself reads more easily on a phone screen. */
+  /* ~39% larger than the base 40px (10%, then another 15%, then another
+     10% on top) so the question itself reads more easily on a phone screen. */
   .question-text {
-    font-size: 51px;
+    font-size: 56px;
+    /* Shifts the question + answer field down ~5% of the screen height,
+       independent of the keypad, which stays pinned to the bottom via its
+       own margin-top:auto (see .question-card:has(.numeric-keypad) below). */
+    margin-top: 5vh;
   }
 
   .vocab-word {
@@ -2530,7 +2534,7 @@
   }
 
   .question-text {
-    font-size: 46px;
+    font-size: 51px;
   }
 
   .quiz-progress-track {
