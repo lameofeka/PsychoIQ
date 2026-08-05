@@ -7,6 +7,13 @@
   --accent: #7c4dff;
   --accent-dark: #5e2fe0;
   --accent-bg: rgba(124, 77, 255, 0.08);
+  /* Design experiment: the big "section" cards (setup wizard, progress map,
+     gameplay, results) get a faint accent tint instead of flat white, so
+     they read as a soft, palette-matched surface rather than a stark card
+     floating on the page. Small controls (buttons, chips, inputs) keep
+     --card-bg untouched so they stay crisp against this softer fill. */
+  --section-bg: color-mix(in srgb, var(--accent) 15%, white);
+  --section-border: color-mix(in srgb, var(--accent) 28%, var(--border));
   --success: #22a559;
   --success-bg: rgba(34, 165, 89, 0.08);
   --warning: #d99a1b;
