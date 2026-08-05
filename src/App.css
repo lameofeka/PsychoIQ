@@ -2494,13 +2494,24 @@
     padding: 8px 10px;
   }
 
-  /* Stretches the progress-map card down to the bottom of the screen (just
-     above the category-switch tab bar reserved by app-shell's own
-     padding-bottom above), instead of leaving blank page background below
-     a card shorter than the viewport. Two-card .wizard-stack games only
-     (map is the 2nd card) — factorial and primes stay normal (unstretched)
-     per request. The settings card above the map keeps its natural
-     content height — only the map card grows. */
+  /* Stretches the progress-map card down to the bottom of the screen,
+     instead of leaving blank page background below a card shorter than
+     the viewport. flex:1 alone only fills app-shell's CONTENT box though —
+     app-shell:has(> .category-switch) above still reserves its own
+     padding-bottom for the tab bar, and padding sits outside the content
+     box, so that reserved strip stayed empty regardless. Canceling it here
+     lets the card's own background run the full remaining height; the tab
+     bar (fixed, opaque, higher z-index) still sits cleanly on top of it,
+     and the card's real content (grid, legend, buttons) stays wherever it
+     naturally falls, well above the tab bar's edge. Two-card .wizard-stack
+     games only (map is the 2nd card) — factorial and primes stay normal
+     (unstretched) per request. The settings card above the map keeps its
+     natural content height — only the map card grows. */
+  .app-shell:has(> .game-shell > .wizard-stack):not(:has(.factorial-progress-grid)),
+  .app-shell:has(> .game-shell > .wizard.group-select) {
+    padding-bottom: 0;
+  }
+
   .game-shell:has(> .wizard-stack):not(:has(.factorial-progress-grid)) {
     display: flex;
     flex: 1;
