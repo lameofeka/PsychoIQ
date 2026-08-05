@@ -1230,6 +1230,11 @@
   font-size: 13px;
 }
 
+.setup-compact .progress-map .secondary-btn {
+  padding: 9.2px 16.1px;
+  font-size: 15px;
+}
+
 /* --- Vocabulary: mode switch --- */
 
 .mode-switch {
