@@ -1143,12 +1143,12 @@
   /* Another 10% on top of the earlier 5% bump: min chip width up from
      30px, which (aspect-ratio:1 on .number-chip) grows both dimensions
      together. */
-  grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(38.5px, 1fr));
+  gap: 6.6px;
 }
 
 .setup-compact .number-chip {
-  font-size: 12.8px;
+  font-size: 14.1px;
 }
 
 .setup-compact .summary-line {
@@ -1157,8 +1157,8 @@
 }
 
 .setup-compact .primary-btn.big {
-  padding: 11px 18px;
-  font-size: 15px;
+  padding: 12.1px 19.8px;
+  font-size: 16.5px;
 }
 
 .setup-compact .progress-map h2 {
