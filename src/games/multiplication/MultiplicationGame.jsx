@@ -4,7 +4,7 @@ import GamePlay from './GamePlay'
 import Results from './Results'
 import { OPERATIONS, RANGE_TYPES } from './logic'
 
-export default function MultiplicationGame({ onPhaseChange }) {
+export default function MultiplicationGame({ onPhaseChange, onExit }) {
   const [stage, setStage] = useState('setup')
   const [settings, setSettings] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
@@ -68,6 +68,7 @@ export default function MultiplicationGame({ onPhaseChange }) {
           onPlayAgain={handlePlayAgain}
           onNewSettings={handleNewSettings}
           onMistakesOnly={handleMistakesOnly}
+          onExit={onExit}
         />
       )}
     </div>

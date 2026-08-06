@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { describeSettings } from './logic'
 
-export default function Results({ settings, answers, elapsedMs, onPlayAgain, onNewSettings, onMistakesOnly }) {
+export default function Results({ settings, answers, elapsedMs, onPlayAgain, onNewSettings, onMistakesOnly, onExit }) {
   const correctCount = answers.filter((a) => a.isCorrect).length
   const total = answers.length
   const percent = Math.round((correctCount / total) * 100)
@@ -50,6 +50,11 @@ export default function Results({ settings, answers, elapsedMs, onPlayAgain, onN
         {mistakes.length > 0 && (
           <button className="secondary-btn" onClick={onMistakesOnly}>
             תרגול רק טעויות
+          </button>
+        )}
+        {onExit && (
+          <button className="link-btn" onClick={onExit}>
+            חזרה לדף הבית
           </button>
         )}
       </div>

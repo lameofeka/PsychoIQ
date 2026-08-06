@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { PRIMES } from './logic'
 
-export default function Results({ correctCount, elapsedMs, onPlayAgain, onNewSettings }) {
+export default function Results({ correctCount, elapsedMs, onPlayAgain, onNewSettings, onExit }) {
   const total = PRIMES.length
   const percent = Math.round((correctCount / total) * 100)
   const seconds = Math.round(elapsedMs / 1000)
@@ -44,6 +44,11 @@ export default function Results({ correctCount, elapsedMs, onPlayAgain, onNewSet
         <button className="primary-btn" onClick={onPlayAgain}>
           שחק/י שוב
         </button>
+        {onExit && (
+          <button className="link-btn" onClick={onExit}>
+            חזרה לדף הבית
+          </button>
+        )}
       </div>
     </div>
   )

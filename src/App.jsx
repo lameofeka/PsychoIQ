@@ -131,9 +131,16 @@ function App() {
 
   // Home/setup screens tint the iOS status bar to match the app background;
   // full-screen quizzes (phase 'full') keep it white, matching their own
-  // white/edge-to-edge chrome.
+  // white/edge-to-edge chrome. iOS Safari is unreliable about noticing a
+  // plain setAttribute() on the existing tag — swapping in a freshly
+  // inserted <meta> node is the workaround that actually gets picked up.
   useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', phase === 'inline' ? '#f6f4fb' : '#ffffff')
+    const color = phase === 'inline' ? '#f6f4fb' : '#ffffff'
+    document.querySelector('meta[name="theme-color"]')?.remove()
+    const meta = document.createElement('meta')
+    meta.name = 'theme-color'
+    meta.content = color
+    document.head.appendChild(meta)
   }, [phase])
 
   useEffect(() => {

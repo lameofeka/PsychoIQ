@@ -3,7 +3,7 @@ import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
 import Results from './Results'
 
-export default function PrimesGame({ onPhaseChange }) {
+export default function PrimesGame({ onPhaseChange, onExit }) {
   const [stage, setStage] = useState('setup')
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
@@ -40,6 +40,7 @@ export default function PrimesGame({ onPhaseChange }) {
           elapsedMs={roundResult.elapsedMs}
           onPlayAgain={handlePlayAgain}
           onNewSettings={handleNewSettings}
+          onExit={onExit}
         />
       )}
     </div>
