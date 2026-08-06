@@ -1078,7 +1078,8 @@
 
 .grid-cell-fraction {
   font-weight: 700;
-  color: var(--muted);
+  color: var(--text-h);
+  font-variant-numeric: tabular-nums;
 }
 
 /* The cell is small enough already - keep the stacked fraction at the
@@ -1089,16 +1090,21 @@
   margin: 0 2px;
 }
 
+.grid-cell-fraction .frac-num {
+  border-bottom-width: 1.75px;
+}
+
 .grid-cell-arrow {
   font-size: 0.6em;
   line-height: 1;
-  opacity: 0.35;
+  opacity: 0.5;
 }
 
 .grid-cell-percent {
   font-size: 1em;
-  font-weight: 500;
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--accent-dark);
+  font-variant-numeric: tabular-nums;
 }
 
 .primes-grid {
