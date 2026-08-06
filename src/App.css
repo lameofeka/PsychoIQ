@@ -736,6 +736,15 @@
   direction: ltr;
 }
 
+/* Once the main answer is confirmed, the percent boxes take over that same
+   spot inline in .question-text (see .inline-fraction above) instead of
+   opening a separate row below it. */
+.question-text .percent-input.inline-percent {
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0 0 0 10px;
+}
+
 .percent-input .fraction-input.mini-fraction {
   margin-bottom: 0;
   gap: 4px;

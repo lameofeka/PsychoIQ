@@ -38,16 +38,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const totalQuestions = questions.length
   const progressPercent = Math.round((correctCount / totalQuestions) * 100)
   const isMainStage = stage === 'main'
-  // Boxes replace the plain blank for the fraction answer regardless of
-  // whether it's still being typed or already answered (and the percent
-  // stage below is now active) — the fact itself never leaves the question line.
   const showsFractionBoxes = current?.operation === OPERATIONS.DEGREES_TO_FRACTION
   const isPercentStage = stage === 'percent'
   const percentHasFraction = isPercentStage && current.percent.fracNumerator != null
   const activeAnswer = isMainStage ? current?.answer : current?.percent.answer
   const activeDisplayAnswer = isMainStage ? current?.displayAnswer : current?.percent.displayAnswer
-
-  const percentReached = isPercentStage || !!percentResultRef.current
 
   // The numerator box is done after this many digits, then typing jumps
   // straight into the denominator box — no separate "field focus" state
@@ -248,44 +243,54 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
       <div className={`question-card ${feedback ?? ''}`}>
         <div className="question-text">
-          {current.prefix}
-          {showsFractionBoxes ? (
-            <div className="fraction-input inline-fraction">
-              <div className={`fraction-box ${isMainStage && input.length < numeratorLen ? 'active' : ''}`}>
-                {numeratorDisplay || ' '}
-              </div>
-              <div className="fraction-line" />
-              <div className={`fraction-box ${isMainStage && input.length >= numeratorLen ? 'active' : ''}`}>
-                {denominatorDisplay || ' '}
-              </div>
-            </div>
-          ) : (
+          {isMainStage ? (
             <>
-              <span className="answer-blank">{mainResultRef.current ? current.displayAnswer : ' '}</span>
-              {current.suffix}
+              {current.prefix}
+              {showsFractionBoxes ? (
+                <div className="fraction-input inline-fraction">
+                  <div className={`fraction-box ${input.length < numeratorLen ? 'active' : ''}`}>
+                    {numeratorDisplay || ' '}
+                  </div>
+                  <div className="fraction-line" />
+                  <div className={`fraction-box ${input.length >= numeratorLen ? 'active' : ''}`}>
+                    {denominatorDisplay || ' '}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <span className="answer-blank">{mainResultRef.current ? current.displayAnswer : ' '}</span>
+                  {current.suffix}
+                </>
+              )}
+            </>
+          ) : (
+            // The confirmed main answer (right or wrong, we always show the
+            // correct one) takes over the spot the given value used to sit
+            // in - turning "90° = ___" into "1/4 = ___%", a running chain
+            // instead of a fresh line for the percent question.
+            <>
+              {current.displayAnswer}
+              {current.suffix} ={' '}
+              <div className="percent-input inline-percent">
+                <div className={`fraction-box ${input.length < wholeLen ? 'active' : ''}`}>
+                  {wholeDisplay || ' '}
+                </div>
+                {percentHasFraction && (
+                  <div className="fraction-input mini-fraction">
+                    <div className={`fraction-box ${input.length >= wholeLen && input.length < wholeLen + fracNumLen ? 'active' : ''}`}>
+                      {fracNumDisplay || ' '}
+                    </div>
+                    <div className="fraction-line" />
+                    <div className={`fraction-box ${input.length >= wholeLen + fracNumLen ? 'active' : ''}`}>
+                      {fracDenDisplay || ' '}
+                    </div>
+                  </div>
+                )}
+                <span className="percent-sign">%</span>
+              </div>
             </>
           )}
         </div>
-
-        {percentReached && (
-          <div className="percent-input">
-            <div className={`fraction-box ${input.length < wholeLen ? 'active' : ''}`}>
-              {wholeDisplay || ' '}
-            </div>
-            {percentHasFraction && (
-              <div className="fraction-input mini-fraction">
-                <div className={`fraction-box ${input.length >= wholeLen && input.length < wholeLen + fracNumLen ? 'active' : ''}`}>
-                  {fracNumDisplay || ' '}
-                </div>
-                <div className="fraction-line" />
-                <div className={`fraction-box ${input.length >= wholeLen + fracNumLen ? 'active' : ''}`}>
-                  {fracDenDisplay || ' '}
-                </div>
-              </div>
-            )}
-            <span className="percent-sign">%</span>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className={(isMainStage && showsFractionBoxes) || isPercentStage ? 'fraction-form' : ''}>
           <input
