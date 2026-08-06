@@ -220,6 +220,24 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     setQueue(questions)
   }
 
+  const percentBoxes = (
+    <div className="percent-input inline-percent">
+      <div className={`fraction-box ${input.length < wholeLen ? 'active' : ''}`}>{wholeDisplay || ' '}</div>
+      {percentHasFraction && (
+        <div className="fraction-input mini-fraction">
+          <div className={`fraction-box ${input.length >= wholeLen && input.length < wholeLen + fracNumLen ? 'active' : ''}`}>
+            {fracNumDisplay || ' '}
+          </div>
+          <div className="fraction-line" />
+          <div className={`fraction-box ${input.length >= wholeLen + fracNumLen ? 'active' : ''}`}>
+            {fracDenDisplay || ' '}
+          </div>
+        </div>
+      )}
+      <span className="percent-sign">%</span>
+    </div>
+  )
+
   return (
     <div className="gameplay">
       <div className="wizard-topbar">
@@ -263,31 +281,23 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
                 </>
               )}
             </>
-          ) : (
-            // The confirmed main answer (right or wrong, we always show the
-            // correct one) takes over the spot the given value used to sit
-            // in - turning "90° = ___" into "1/4 = ___%", a running chain
-            // instead of a fresh line for the percent question.
+          ) : showsFractionBoxes ? (
+            // Degrees -> fraction direction: the confirmed fraction (right
+            // or wrong, we always show the correct one) takes over the spot
+            // the degrees prefix used to sit in, and percent takes over
+            // where the fraction was - "90° = ___" becomes "1/4 = ___%".
             <>
               {current.displayAnswer}
               {current.suffix} ={' '}
-              <div className="percent-input inline-percent">
-                <div className={`fraction-box ${input.length < wholeLen ? 'active' : ''}`}>
-                  {wholeDisplay || ' '}
-                </div>
-                {percentHasFraction && (
-                  <div className="fraction-input mini-fraction">
-                    <div className={`fraction-box ${input.length >= wholeLen && input.length < wholeLen + fracNumLen ? 'active' : ''}`}>
-                      {fracNumDisplay || ' '}
-                    </div>
-                    <div className="fraction-line" />
-                    <div className={`fraction-box ${input.length >= wholeLen + fracNumLen ? 'active' : ''}`}>
-                      {fracDenDisplay || ' '}
-                    </div>
-                  </div>
-                )}
-                <span className="percent-sign">%</span>
-              </div>
+              {percentBoxes}
+            </>
+          ) : (
+            // Fraction -> degrees direction: the given fraction prefix
+            // never moves - percent simply takes over the spot the degrees
+            // answer used to sit in, in place - "1/4 = ___" becomes "1/4 = ___%".
+            <>
+              {current.prefix}
+              {percentBoxes}
             </>
           )}
         </div>
