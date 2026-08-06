@@ -97,7 +97,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     const question = current
     const userAnswer = Number(value)
     const isCorrect = userAnswer === question.answer
-    recordFactResult(question.a, question.b, isCorrect)
+    // Chain mode is a drilled, retry-until-correct practice run, not a
+    // diagnostic pass — keep it out of the weak/strong progress-map stats.
+    if (!settings.inOrder) recordFactResult(question.a, question.b, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
