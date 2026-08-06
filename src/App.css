@@ -660,14 +660,6 @@
   direction: ltr;
 }
 
-.percent-question-text {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-h);
-  margin-bottom: 20px;
-  direction: rtl;
-}
-
 .answer-blank {
   display: inline-block;
   min-width: 1.5em;
@@ -693,6 +685,15 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+/* Sits inline inside .question-text, right after "240° = ", instead of
+   the plain answer-blank — the fraction boxes themselves are the answer
+   slot for this operation. */
+.question-text .fraction-input.inline-fraction {
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0 0 0 10px;
 }
 
 .fraction-box {

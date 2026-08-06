@@ -16,18 +16,10 @@ const MAX_ANSWER_LEN = 4
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
 
-// Which sub-answer opens first depends on which quantity the question
-// already shows: shown degrees → fraction first (as before), shown a
-// fraction → percent first, degrees second (the "place" for the fact's
-// own conversion only opens once the percent is answered).
-function firstStageFor(question) {
-  return question?.operation === OPERATIONS.FRACTION_TO_DEGREES ? 'percent' : 'main'
-}
-
 export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const questions = useMemo(() => generateRound(settings), [settings])
   const [queue, setQueue] = useState(questions)
-  const [stage, setStage] = useState(() => firstStageFor(questions[0])) // 'main' | 'percent'
+  const [stage, setStage] = useState('main') // 'main' | 'percent' — main always opens first, percent second
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [correctCount, setCorrectCount] = useState(0)
@@ -46,21 +38,26 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const totalQuestions = questions.length
   const progressPercent = Math.round((correctCount / totalQuestions) * 100)
   const isMainStage = stage === 'main'
-  const isFractionAnswer = isMainStage && current?.operation === OPERATIONS.DEGREES_TO_FRACTION
+  // Boxes replace the plain blank for the fraction answer regardless of
+  // whether it's still being typed or already answered (and the percent
+  // stage below is now active) — the fact itself never leaves the question line.
+  const showsFractionBoxes = current?.operation === OPERATIONS.DEGREES_TO_FRACTION
   const isPercentStage = stage === 'percent'
   const percentHasFraction = isPercentStage && current.percent.fracNumerator != null
   const activeAnswer = isMainStage ? current?.answer : current?.percent.answer
   const activeDisplayAnswer = isMainStage ? current?.displayAnswer : current?.percent.displayAnswer
 
-  const mainReached = isMainStage || !!mainResultRef.current
   const percentReached = isPercentStage || !!percentResultRef.current
 
   // The numerator box is done after this many digits, then typing jumps
   // straight into the denominator box — no separate "field focus" state
   // needed, it's derived purely from how many digits have been typed so far.
-  const numeratorLen = isFractionAnswer ? String(current.fact.numerator).length : 0
-  const numeratorDisplay = isFractionAnswer ? input.slice(0, numeratorLen) : ''
-  const denominatorDisplay = isFractionAnswer ? input.slice(numeratorLen) : ''
+  // Once the main stage is behind us, fall back to the digits it was
+  // answered with (`input` has since been repurposed for the percent stage).
+  const mainDigits = isMainStage ? input : mainResultRef.current?.value ?? ''
+  const numeratorLen = showsFractionBoxes ? String(current.fact.numerator).length : 0
+  const numeratorDisplay = showsFractionBoxes ? mainDigits.slice(0, numeratorLen) : ''
+  const denominatorDisplay = showsFractionBoxes ? mainDigits.slice(numeratorLen) : ''
 
   const wholeLen = isPercentStage ? String(current.percent.whole).length : 0
   const fracNumLen = percentHasFraction ? String(current.percent.fracNumerator).length : 0
@@ -174,7 +171,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     }
     setInput('')
     setFeedback(null)
-    setStage(firstStageFor(rest[0]))
+    setStage('main')
     mainResultRef.current = null
     percentResultRef.current = null
 
@@ -210,7 +207,17 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       <div className={`question-card ${feedback ?? ''}`}>
         <div className="question-text">
           {current.prefix}
-          {mainReached && (
+          {showsFractionBoxes ? (
+            <div className="fraction-input inline-fraction">
+              <div className={`fraction-box ${isMainStage && input.length < numeratorLen ? 'active' : ''}`}>
+                {numeratorDisplay || ' '}
+              </div>
+              <div className="fraction-line" />
+              <div className={`fraction-box ${isMainStage && input.length >= numeratorLen ? 'active' : ''}`}>
+                {denominatorDisplay || ' '}
+              </div>
+            </div>
+          ) : (
             <>
               <span className="answer-blank">{mainResultRef.current ? current.displayAnswer : ' '}</span>
               {current.suffix}
@@ -219,25 +226,6 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         </div>
 
         {percentReached && (
-          <div className="percent-question-text">
-            וכמה אחוזים זה מהמעגל?{' '}
-            <span className="answer-blank">{percentResultRef.current ? current.percent.displayAnswer : ' '}</span>
-          </div>
-        )}
-
-        {isFractionAnswer && (
-          <div className="fraction-input">
-            <div className={`fraction-box ${input.length < numeratorLen ? 'active' : ''}`}>
-              {numeratorDisplay || ' '}
-            </div>
-            <div className="fraction-line" />
-            <div className={`fraction-box ${input.length >= numeratorLen ? 'active' : ''}`}>
-              {denominatorDisplay || ' '}
-            </div>
-          </div>
-        )}
-
-        {isPercentStage && (
           <div className="percent-input">
             <div className={`fraction-box ${input.length < wholeLen ? 'active' : ''}`}>
               {wholeDisplay || ' '}
@@ -257,7 +245,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className={isFractionAnswer || isPercentStage ? 'fraction-form' : ''}>
+        <form onSubmit={handleSubmit} className={(isMainStage && showsFractionBoxes) || isPercentStage ? 'fraction-form' : ''}>
           <input
             ref={inputRef}
             type="text"
@@ -268,13 +256,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             onKeyDown={handleInputKeyDown}
             placeholder="התשובה שלך"
             autoFocus
-            className={isFractionAnswer || isPercentStage ? 'sr-only-input' : ''}
+            className={(isMainStage && showsFractionBoxes) || isPercentStage ? 'sr-only-input' : ''}
           />
-          {!feedback && (
-            <button type="submit" className="primary-btn">
-              בדוק
-            </button>
-          )}
         </form>
 
         <div className="numeric-keypad">
