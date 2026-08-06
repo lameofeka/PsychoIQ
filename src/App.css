@@ -2627,29 +2627,28 @@
     font-size: 43px;
   }
 
-  /* Vocabulary quiz specifically: pin the whole page to exactly one screen,
-     never letting it grow taller and scroll top-to-bottom. .gameplay already
-     fills the viewport via the full-bleed rules above; capping .app-shell's
-     own height (it was only min-height) and hiding overflow there is the
-     backstop that keeps the page itself fixed. A definition/hint too long
-     to fit scrolls inside the question card instead (see .question-card
-     rule below), so nothing is ever lost — it just doesn't move the page. */
-  .app-shell:has(> .game-shell > .gameplay:has(.vocab-word)) {
+  /* Vocabulary quiz specifically: lock the whole page to exactly one screen
+     with no scrolling at all, in either direction — the top stays at the
+     top and the layout simply ends at the bottom of the viewport. Matched
+     on .vocab-gameplay (set directly in GamePlay.jsx, that file being
+     vocab-only) rather than :has(.vocab-word), so this doesn't depend on
+     :has() support for the ancestor chain working everywhere. */
+  .app-shell:has(> .game-shell > .vocab-gameplay) {
     height: 100dvh;
     overflow: hidden;
   }
 
-  .gameplay:has(.vocab-word) {
+  .vocab-gameplay {
     min-height: 0;
     overflow: hidden;
   }
 
-  .gameplay:has(.vocab-word) .question-card {
+  .vocab-gameplay .question-card {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   /* Same full-bleed treatment as .gameplay above, but the results card

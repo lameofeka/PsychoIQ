@@ -219,7 +219,7 @@ export default function GamePlay({
   })
 
   return (
-    <div className="gameplay">
+    <div className="gameplay vocab-gameplay">
       {(onExitQuiz || groupLabel) && (
         <div className="wizard-topbar">
           {onExitQuiz && (
