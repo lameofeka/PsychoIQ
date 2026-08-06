@@ -2632,7 +2632,32 @@
      top and the layout simply ends at the bottom of the viewport. Matched
      on .vocab-gameplay (set directly in GamePlay.jsx, that file being
      vocab-only) rather than :has(.vocab-word), so this doesn't depend on
-     :has() support for the ancestor chain working everywhere. */
+     :has() support for the ancestor chain working everywhere.
+
+     html/body themselves also need pinning: `100dvh` describes the layout
+     viewport, which on iOS Safari does NOT shrink when the on-screen
+     keyboard opens (only the visual viewport does) — so while the keyboard
+     is up, the browser thinks there's still off-screen content below the
+     fold and auto-scrolls the page to keep the focused answer field
+     visible above the keyboard. That scroll is what was still showing up
+     here. `position: fixed` on body removes it from the browser's
+     "scroll to reveal the focused element" path entirely (fixed elements
+     can't be scrolled into view), so the keyboard opening/closing can only
+     ever resize the visual viewport, never move the page. Scoped to
+     :has(.vocab-gameplay) so it doesn't affect any other screen. */
+  html:has(.vocab-gameplay) {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body:has(.vocab-gameplay) {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
   .app-shell:has(> .game-shell > .vocab-gameplay) {
     height: 100dvh;
     overflow: hidden;
