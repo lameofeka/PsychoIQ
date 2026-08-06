@@ -66,6 +66,12 @@ function buildPercent(fact) {
   }
 }
 
+// Exposed so the progress map can show each fact's percent equivalent
+// without duplicating the mixed-number math.
+export function percentForFact(fact) {
+  return buildPercent(fact)
+}
+
 function buildQuestion(fact, operation) {
   const id = `${fact.degrees}-${operation}`
   const percent = buildPercent(fact)

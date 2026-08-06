@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { CIRCLE_FACTS } from './logic'
+import { CIRCLE_FACTS, percentForFact } from './logic'
 import { getFactLevel, getWeakNumbers } from './stats'
 
 const DEGREES_LIST = CIRCLE_FACTS.map((fact) => fact.degrees)
@@ -57,13 +57,17 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
               ))}
               {rowFacts.map((fact) => {
                 const level = getFactLevel(fact.degrees)
+                const percent = percentForFact(fact)
                 return (
                   <div
                     key={fact.degrees}
                     className={`grid-cell level-${level}`}
-                    title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator}`}
+                    title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator} = ${percent.displayAnswer}`}
                   >
-                    {fact.numerator}/{fact.denominator}
+                    <span className="grid-cell-fraction">
+                      {fact.numerator}/{fact.denominator}
+                    </span>
+                    <span className="grid-cell-percent">{percent.displayAnswer}</span>
                   </div>
                 )
               })}

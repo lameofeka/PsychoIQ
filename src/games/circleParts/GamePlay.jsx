@@ -16,10 +16,18 @@ const MAX_ANSWER_LEN = 4
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
 
+// Which sub-answer opens first depends on which quantity the question
+// already shows: shown degrees → fraction first (as before), shown a
+// fraction → percent first, degrees second (the "place" for the fact's
+// own conversion only opens once the percent is answered).
+function firstStageFor(question) {
+  return question?.operation === OPERATIONS.FRACTION_TO_DEGREES ? 'percent' : 'main'
+}
+
 export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const questions = useMemo(() => generateRound(settings), [settings])
   const [queue, setQueue] = useState(questions)
-  const [stage, setStage] = useState('main') // 'main' | 'percent'
+  const [stage, setStage] = useState(() => firstStageFor(questions[0])) // 'main' | 'percent'
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [correctCount, setCorrectCount] = useState(0)
@@ -29,7 +37,10 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const [pressedKey, press] = useKeypadPress()
   const firstAttemptsRef = useRef(new Map())
   const retryPassesRef = useRef(new Map())
+  // null until that stage has been answered (correctly or not) for the
+  // current question; also doubles as "has this part been reached yet".
   const mainResultRef = useRef(null)
+  const percentResultRef = useRef(null)
 
   const current = queue[0]
   const totalQuestions = questions.length
@@ -40,6 +51,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const percentHasFraction = isPercentStage && current.percent.fracNumerator != null
   const activeAnswer = isMainStage ? current?.answer : current?.percent.answer
   const activeDisplayAnswer = isMainStage ? current?.displayAnswer : current?.percent.displayAnswer
+
+  const mainReached = isMainStage || !!mainResultRef.current
+  const percentReached = isPercentStage || !!percentResultRef.current
 
   // The numerator box is done after this many digits, then typing jumps
   // straight into the denominator box — no separate "field focus" state
@@ -53,9 +67,6 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const wholeDisplay = isPercentStage ? input.slice(0, wholeLen) : ''
   const fracNumDisplay = percentHasFraction ? input.slice(wholeLen, wholeLen + fracNumLen) : ''
   const fracDenDisplay = percentHasFraction ? input.slice(wholeLen + fracNumLen) : ''
-
-  const revealMain = isPercentStage || (isMainStage && !!feedback)
-  const revealPercent = isPercentStage && !!feedback
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -107,17 +118,20 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
-    if (isMainStage) {
-      mainResultRef.current = { value, isCorrect }
+    if (isMainStage) mainResultRef.current = { value, isCorrect }
+    else percentResultRef.current = { value, isCorrect }
+
+    if (!mainResultRef.current || !percentResultRef.current) {
+      const nextStage = isMainStage ? 'percent' : 'main'
       setTimeout(() => {
-        setStage('percent')
+        setStage(nextStage)
         setInput('')
         setFeedback(null)
       }, FEEDBACK_DELAY_MS)
       return
     }
 
-    const overallCorrect = mainResultRef.current.isCorrect && isCorrect
+    const overallCorrect = mainResultRef.current.isCorrect && percentResultRef.current.isCorrect
     const isFirstAttempt = !firstAttemptsRef.current.has(question.id)
     let requeue
 
@@ -125,7 +139,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       firstAttemptsRef.current.set(question.id, {
         question,
         mainAnswer: mainResultRef.current.value,
-        percentAnswer: value,
+        percentAnswer: percentResultRef.current.value,
         isCorrect: overallCorrect,
       })
       if (overallCorrect) setCorrectCount((c) => c + 1)
@@ -160,8 +174,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     }
     setInput('')
     setFeedback(null)
-    setStage('main')
+    setStage(firstStageFor(rest[0]))
     mainResultRef.current = null
+    percentResultRef.current = null
 
     if (rest.length === 0) {
       const finalAnswers = questions.map((q) => firstAttemptsRef.current.get(q.id)).filter(Boolean)
@@ -195,14 +210,18 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       <div className={`question-card ${feedback ?? ''}`}>
         <div className="question-text">
           {current.prefix}
-          <span className="answer-blank">{revealMain ? current.displayAnswer : ' '}</span>
-          {current.suffix}
+          {mainReached && (
+            <>
+              <span className="answer-blank">{mainResultRef.current ? current.displayAnswer : ' '}</span>
+              {current.suffix}
+            </>
+          )}
         </div>
 
-        {isPercentStage && (
+        {percentReached && (
           <div className="percent-question-text">
             וכמה אחוזים זה מהמעגל?{' '}
-            <span className="answer-blank">{revealPercent ? current.percent.displayAnswer : ' '}</span>
+            <span className="answer-blank">{percentResultRef.current ? current.percent.displayAnswer : ' '}</span>
           </div>
         )}
 
