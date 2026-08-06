@@ -2123,8 +2123,14 @@
 @media (max-width: 600px) {
   .next-word-fab {
     display: flex;
-    width: 74.8px;
-    height: 74.8px;
+    width: 82.28px;
+    height: 82.28px;
+  }
+
+  /* The FAB above replaces this in-card button as the way to advance on
+     mobile, so hide the redundant center button there. */
+  .vocab-next-btn {
+    display: none;
   }
 }
 

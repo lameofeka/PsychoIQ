@@ -288,7 +288,7 @@ export default function GamePlay({
 
         {verdict && (
           <div className="vocab-reveal">
-            <div className={`feedback-msg ${verdict}`}>{verdict === 'correct' ? 'נכון ✔' : 'טעות ✘'}</div>
+            <div className={`feedback-msg ${verdict}`}>{verdict === 'correct' ? 'נכון ✔︎' : 'טעות ✘'}</div>
 
             {isEditing ? (
               <div className="vocab-edit-form">
@@ -315,7 +315,7 @@ export default function GamePlay({
                     {currentAas}
                   </div>
                 )}
-                <button className="primary-btn" onClick={goNext}>
+                <button className="primary-btn vocab-next-btn" onClick={goNext}>
                   {isLastOverall ? 'סיום' : 'לשאלה הבאה'}
                 </button>
                 <button className="link-btn edit-word-btn" onClick={startEditWord}>
