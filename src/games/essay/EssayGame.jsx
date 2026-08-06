@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import TemplateGame from './TemplateGame'
 import SynonymsGame from './SynonymsGame'
+import { loadTemplateData, loadSynonymData } from './storage'
 
 const ACTIVITIES = [
   {
@@ -20,8 +21,13 @@ const ACTIVITIES = [
 ]
 
 export default function EssayGame({ onPhaseChange }) {
+  const [ready, setReady] = useState(false)
   const [activity, setActivity] = useState(null)
   const [initialStage, setInitialStage] = useState('practice')
+
+  useEffect(() => {
+    Promise.all([loadTemplateData(), loadSynonymData()]).then(() => setReady(true))
+  }, [])
 
   useEffect(() => {
     onPhaseChange?.(activity === null ? 'inline' : 'full')
@@ -30,6 +36,14 @@ export default function EssayGame({ onPhaseChange }) {
   function open(id, stage) {
     setInitialStage(stage)
     setActivity(id)
+  }
+
+  if (!ready) {
+    return (
+      <div className="wizard">
+        <p className="summary-line">טוען...</p>
+      </div>
+    )
   }
 
   if (activity === 'template') {
