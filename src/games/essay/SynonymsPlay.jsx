@@ -28,6 +28,39 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     }
   }, [wrongFlash])
 
+  // Lock the whole page to one screen for the duration of the quiz, same as
+  // the vocabulary quiz — see GamePlay.jsx's identical effect for the full
+  // rationale (iOS keyboard-pan cancelling + --app-vh sizing off
+  // window.innerHeight instead of visualViewport.height).
+  useEffect(() => {
+    const root = document.documentElement
+    const body = document.body
+    root.classList.add('vocab-quiz-lock')
+    body.classList.add('vocab-quiz-lock')
+
+    function syncHeight() {
+      root.style.setProperty('--app-vh', `${window.innerHeight}px`)
+    }
+    syncHeight()
+    window.addEventListener('resize', syncHeight)
+
+    const vv = window.visualViewport
+    function cancelPan() {
+      window.scrollTo(0, 0)
+    }
+    vv?.addEventListener('resize', cancelPan)
+    vv?.addEventListener('scroll', cancelPan)
+
+    return () => {
+      root.classList.remove('vocab-quiz-lock')
+      body.classList.remove('vocab-quiz-lock')
+      root.style.removeProperty('--app-vh')
+      window.removeEventListener('resize', syncHeight)
+      vv?.removeEventListener('resize', cancelPan)
+      vv?.removeEventListener('scroll', cancelPan)
+    }
+  }, [])
+
   useEffect(() => {
     function onKeyDown(e) {
       if (e.target.closest('button')) return
@@ -68,7 +101,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   }
 
   return (
-    <div className="gameplay">
+    <div className="gameplay vocab-gameplay">
       <div className="wizard-topbar">
         <button className="icon-back-btn" onClick={onExitQuiz} aria-label="יציאה מהתרגול">
           →
@@ -121,12 +154,18 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         {wordDone && (
           <div className="vocab-reveal">
             <div className="feedback-msg correct">כל המילים הנרדפות נמצאו! ✔</div>
-            <button className="primary-btn" onClick={goNext}>
+            <button className="primary-btn vocab-next-btn" onClick={goNext}>
               {qIndex + 1 < questions.length ? 'למילה הבאה' : 'סיום'}
             </button>
           </div>
         )}
       </div>
+
+      {wordDone && (
+        <button type="button" className="next-word-fab" onClick={goNext} title="למילה הבאה">
+          {qIndex + 1 < questions.length ? 'הבא' : 'סיום'}
+        </button>
+      )}
     </div>
   )
 }
