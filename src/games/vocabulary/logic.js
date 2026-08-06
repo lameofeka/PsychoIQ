@@ -105,6 +105,16 @@ function isCloseMatch(a, b) {
   return i === shorter.length
 }
 
+const MEANING_SPLIT_RE = /\s*\+\s*/
+
+// Some words carry genuinely distinct senses, marked with "+" between them
+// in the dictionary — unlike the comma/"או" alternates checkAnswer already
+// treats as restating the same sense, each "+"-separated part must be
+// answered on its own before the word counts as known.
+export function splitMeanings(def) {
+  return def.split(MEANING_SPLIT_RE).map((m) => m.trim()).filter(Boolean)
+}
+
 export function checkAnswer(userAnswer, correctDef) {
   const userNorm = normalize(userAnswer)
   if (!userNorm) return false

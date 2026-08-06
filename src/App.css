@@ -1995,6 +1995,30 @@
   text-align: center;
 }
 
+/* Already-matched senses of a multi-meaning word ("+" in its def), shown
+   while the word is still being answered — small and green so they read
+   as "done" without competing with the active input above the keypad. */
+.vocab-meanings-progress {
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.vocab-meaning-done {
+  font-size: 13px;
+  color: var(--success);
+  margin-bottom: 2px;
+}
+
+.vocab-meanings-list {
+  margin: 0;
+  padding-inline-start: 18px;
+  list-style: disc;
+}
+
+.vocab-meanings-list li.vocab-meaning-correct {
+  color: var(--success);
+}
+
 .vocab-reveal {
   margin-top: 16px;
   text-align: right;

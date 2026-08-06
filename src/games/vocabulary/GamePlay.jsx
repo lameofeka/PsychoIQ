@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { generateRound, checkAnswer } from './logic'
+import { generateRound, checkAnswer, splitMeanings } from './logic'
 import { updateWord } from './dictionary'
 import { excludeMistake } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
@@ -31,6 +31,9 @@ export default function GamePlay({
   const [isEditing, setIsEditing] = useState(false)
   const [editDef, setEditDef] = useState('')
   const [editAas, setEditAas] = useState('')
+  // Meanings already matched for the current word (only relevant when it
+  // has more than one "+"-separated sense) — reset whenever the word changes.
+  const [satisfiedMeanings, setSatisfiedMeanings] = useState([])
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
   // Per word: how many more correct answers in a row it needs before it's
@@ -44,6 +47,9 @@ export default function GamePlay({
   const override = overrides[current.id]
   const currentDef = override?.def ?? current.def
   const currentAas = override?.aas ?? current.aas
+  const meaningsList = useMemo(() => splitMeanings(currentDef), [currentDef])
+  const isMultiMeaning = meaningsList.length > 1
+  const remainingMeanings = meaningsList.filter((m) => !satisfiedMeanings.includes(m))
 
   const [removedCount, setRemovedCount] = useState(0)
   const totalWords = words.length - removedCount
@@ -165,15 +171,33 @@ export default function GamePlay({
   function handleSubmit(e) {
     e.preventDefault()
     if (verdict) return
+
+    if (isMultiMeaning && input.trim() !== '') {
+      const matched = remainingMeanings.find((m) => checkAnswer(input, m))
+      if (matched) {
+        const nextSatisfied = [...satisfiedMeanings, matched]
+        if (nextSatisfied.length < meaningsList.length) {
+          // Still more senses to go — stay on this word, no verdict pause.
+          setSatisfiedMeanings(nextSatisfied)
+          setInput('')
+          return
+        }
+        setSatisfiedMeanings(nextSatisfied)
+        submitAnswer(true, input)
+        return
+      }
+    }
+
     if (input.trim() === '') {
       submitAnswer(false, input)
       return
     }
-    submitAnswer(checkAnswer(input, currentDef), input)
+    submitAnswer(isMultiMeaning ? false : checkAnswer(input, currentDef), input)
   }
 
   function goNext() {
     setIsEditing(false)
+    setSatisfiedMeanings([])
 
     if (bufferedRetry) {
       const rest = queue.slice(1)
@@ -212,6 +236,7 @@ export default function GamePlay({
     committedIdsRef.current.delete(word.id)
     setRemovedCount((c) => c + 1)
     setIsEditing(false)
+    setSatisfiedMeanings([])
 
     const rest = queue.slice(1)
     if (rest.length === 0) {
@@ -328,6 +353,16 @@ export default function GamePlay({
       <div className={`question-card ${verdict ?? ''}`}>
         <div className="question-text vocab-word">{current.word}</div>
 
+        {isMultiMeaning && satisfiedMeanings.length > 0 && !verdict && (
+          <div className="vocab-meanings-progress">
+            {satisfiedMeanings.map((m) => (
+              <div key={m} className="vocab-meaning-done">
+                ✓ {m}
+              </div>
+            ))}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <input
             ref={inputRef}
@@ -343,7 +378,7 @@ export default function GamePlay({
             // toggling every single answer; edits are just ignored once a
             // verdict is in.
             onChange={(e) => !verdict && setInput(e.target.value)}
-            placeholder="מה הפירוש?"
+            placeholder={isMultiMeaning && satisfiedMeanings.length > 0 ? 'פירוש נוסף?' : 'מה הפירוש?'}
             autoFocus
           />
           {!verdict && (
@@ -374,7 +409,18 @@ export default function GamePlay({
               <>
                 <div className="vocab-answer">
                   <strong>פירוש: </strong>
-                  {currentDef}
+                  {isMultiMeaning ? (
+                    <ul className="vocab-meanings-list">
+                      {meaningsList.map((m) => (
+                        <li key={m} className={satisfiedMeanings.includes(m) ? 'vocab-meaning-correct' : ''}>
+                          {satisfiedMeanings.includes(m) ? '✓ ' : ''}
+                          {m}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    currentDef
+                  )}
                 </div>
                 {currentAas && (
                   <div className="vocab-aas">
