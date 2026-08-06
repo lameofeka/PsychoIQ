@@ -59,7 +59,14 @@ export default function GamePlay({
   const isLastOverall = bufferedRetry ? queue.length === 1 && !pendingRequeue : index + 1 >= questions.length
 
   useEffect(() => {
-    inputRef.current?.focus()
+    // preventScroll: true — once a question is answered the field blurs
+    // (closing the keyboard) to show the reveal, then this effect refocuses
+    // it for the next question and the keyboard reopens. Without
+    // preventScroll, the browser's own "scroll the newly-focused field into
+    // view" kicks in the instant focus() runs — synchronously, before the
+    // visualViewport pan-cancelling below even has a chance to react — and
+    // that's the jump that lands exactly on every question transition.
+    inputRef.current?.focus({ preventScroll: true })
   }, [current?.id])
 
   // Lock the whole page to one screen for the duration of the quiz, with no
