@@ -62,6 +62,43 @@ export default function GamePlay({
     inputRef.current?.focus()
   }, [current?.id])
 
+  // Lock the whole page to one screen for the duration of the quiz, with no
+  // scrolling in either direction — see the .vocab-quiz-lock rules in
+  // App.css. CSS alone (100dvh + position:fixed on body) isn't enough on
+  // iOS Safari: focusing the answer field still pans the *visual* viewport
+  // to "reveal" it above the keyboard, a native behavior that ignores
+  // position:fixed and isn't expressible in dvh units at all. Countering it
+  // needs JS: track the real, live visualViewport height in a CSS var (so
+  // the fixed-height layout always matches what's actually visible, keyboard
+  // included) and force any pan attempt back to (0, 0) the instant it happens.
+  useEffect(() => {
+    const root = document.documentElement
+    const body = document.body
+    root.classList.add('vocab-quiz-lock')
+    body.classList.add('vocab-quiz-lock')
+
+    const vv = window.visualViewport
+    function syncViewport() {
+      const height = vv?.height ?? window.innerHeight
+      root.style.setProperty('--app-vh', `${height}px`)
+      window.scrollTo(0, 0)
+    }
+    syncViewport()
+
+    vv?.addEventListener('resize', syncViewport)
+    vv?.addEventListener('scroll', syncViewport)
+    window.addEventListener('resize', syncViewport)
+
+    return () => {
+      root.classList.remove('vocab-quiz-lock')
+      body.classList.remove('vocab-quiz-lock')
+      root.style.removeProperty('--app-vh')
+      vv?.removeEventListener('resize', syncViewport)
+      vv?.removeEventListener('scroll', syncViewport)
+      window.removeEventListener('resize', syncViewport)
+    }
+  }, [])
+
   function submitAnswer(isCorrect, userAnswer) {
     setVerdict(isCorrect ? 'correct' : 'wrong')
     inputRef.current?.blur()
