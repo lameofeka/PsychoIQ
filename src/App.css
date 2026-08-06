@@ -2689,6 +2689,17 @@
     overflow: hidden;
   }
 
+  /* Once a verdict is in, the colored correct/wrong border should hug just
+     the revealed content (question, input, definition/hint, edit button) —
+     not stretch through the leftover screen space below it, which flex: 1
+     above claims regardless of how little content there is. Content
+     position is unaffected (the box was already top-aligned), so this only
+     trims the empty tail of the border/background box. */
+  .vocab-gameplay .question-card.correct,
+  .vocab-gameplay .question-card.wrong {
+    flex: 0 1 auto;
+  }
+
   /* Same full-bleed treatment as .gameplay above, but the results card
      keeps its own white fill (unlike .gameplay's, which was moved up to
      .app-shell) — the results screen never removes its card background,

@@ -129,6 +129,13 @@ function App() {
     }
   }, [phase])
 
+  // Home/setup screens tint the iOS status bar to match the app background;
+  // full-screen quizzes (phase 'full') keep it white, matching their own
+  // white/edge-to-edge chrome.
+  useEffect(() => {
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', phase === 'inline' ? '#f6f4fb' : '#ffffff')
+  }, [phase])
+
   useEffect(() => {
     if (!showMasteryDetail) return
     function handleOutsideClick(e) {
