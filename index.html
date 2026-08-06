@@ -16,10 +16,23 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
     />
     <meta name="color-scheme" content="light only" />
-    <!-- Tints the iOS Safari status bar (time/battery row). Kept in sync
-         with --bg (src/index.css) on home/setup screens; App.jsx flips it
-         to white while a quiz is actually running. -->
+    <!-- Tints Safari's own toolbar when the site is opened as a regular
+         browser tab (iOS 15+). Kept in sync with --bg (src/index.css) on
+         home/setup screens; App.jsx flips it to white while a quiz is
+         running. Irrelevant once added to the Home Screen — see below. -->
     <meta name="theme-color" content="#f6f4fb" />
+    <!-- Opened from the Home Screen, the site launches as a standalone app
+         with no Safari chrome at all, and theme-color above no longer has
+         any effect on the real iOS status bar (time/battery row) — only
+         apple-mobile-web-app-status-bar-style does, and it only accepts a
+         few fixed styles, not an arbitrary color. "black-translucent" makes
+         the status bar fully transparent instead, so whatever our own page
+         paints underneath it (the safe-area-inset-top strip — see
+         .app-shell/.gameplay/.results in App.css) shows through as its
+         color, which is how the bar ends up tracking the app's background
+         per screen without any JS involved. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
