@@ -3,8 +3,8 @@ import { OPERATIONS } from './logic'
 import ProgressMap from './ProgressMap'
 
 const OPERATION_OPTIONS = [
-  { value: OPERATIONS.DEGREES_TO_FRACTION, label: 'מעלות → שבר', icon: '°→⅓' },
-  { value: OPERATIONS.FRACTION_TO_DEGREES, label: 'שבר → מעלות', icon: '⅓→°' },
+  { value: OPERATIONS.DEGREES_TO_FRACTION, label: 'שבר → מעלות', icon: '⅓→°' },
+  { value: OPERATIONS.FRACTION_TO_DEGREES, label: 'מעלות → שבר', icon: '°→⅓' },
   { value: OPERATIONS.COMBINED, label: 'משולב', icon: '±' },
 ]
 
