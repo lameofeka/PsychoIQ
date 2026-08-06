@@ -3,6 +3,7 @@ import { generateRound, OPERATIONS } from './logic'
 import { recordFactResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
+import { FractionText, PercentText } from './FractionText'
 
 const FEEDBACK_DELAY_MS = 900
 // Longest possible answer is "112" (fraction 1/12 typed as two boxes with
@@ -42,7 +43,24 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const isPercentStage = stage === 'percent'
   const percentHasFraction = isPercentStage && current.percent.fracNumerator != null
   const activeAnswer = isMainStage ? current?.answer : current?.percent.answer
-  const activeDisplayAnswer = isMainStage ? current?.displayAnswer : current?.percent.displayAnswer
+  // A real fraction bar for the fraction stage, a mixed-number fraction bar
+  // for the percent stage - never the plain "n/d" slash string.
+  const activeDisplayAnswer = isMainStage
+    ? showsFractionBoxes
+      ? <FractionText numerator={current.fact.numerator} denominator={current.fact.denominator} />
+      : current?.displayAnswer
+    : <PercentText percent={current.percent} />
+  // The given fraction ("1/4 = ") in the fraction->degrees direction, shown
+  // as a real fraction bar instead of current.prefix's plain slash string.
+  // The degrees->fraction direction has no fraction in its prefix, so it
+  // can use current.prefix ("90° = ") as-is.
+  const prefixDisplay = showsFractionBoxes ? (
+    current.prefix
+  ) : (
+    <>
+      <FractionText numerator={current.fact.numerator} denominator={current.fact.denominator} /> ={' '}
+    </>
+  )
 
   // The numerator box is done after this many digits, then typing jumps
   // straight into the denominator box — no separate "field focus" state
@@ -124,7 +142,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
     const question = current
     const isCorrect = value === activeAnswer
-    recordFactResult(question.fact.degrees, isCorrect)
+    // Chain mode is a drilled, retry-until-correct practice run, not a
+    // diagnostic pass — keep it out of the weak/strong progress-map stats.
+    if (!settings.inOrder) recordFactResult(question.fact.degrees, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
@@ -263,7 +283,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         <div className="question-text">
           {isMainStage ? (
             <>
-              {current.prefix}
+              {prefixDisplay}
               {showsFractionBoxes ? (
                 <div className="fraction-input inline-fraction">
                   <div className={`fraction-box ${input.length < numeratorLen ? 'active' : ''}`}>
@@ -287,7 +307,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             // the degrees prefix used to sit in, and percent takes over
             // where the fraction was - "90° = ___" becomes "1/4 = ___%".
             <>
-              {current.displayAnswer}
+              <FractionText numerator={current.fact.numerator} denominator={current.fact.denominator} />
               {current.suffix} ={' '}
               {percentBoxes}
             </>
@@ -296,7 +316,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             // never moves - percent simply takes over the spot the degrees
             // answer used to sit in, in place - "1/4 = ___" becomes "1/4 = ___%".
             <>
-              {current.prefix}
+              {prefixDisplay}
               {percentBoxes}
             </>
           )}

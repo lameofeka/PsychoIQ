@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { CIRCLE_FACTS, percentForFact } from './logic'
 import { getFactLevel, getWeakNumbers } from './stats'
+import { FractionText, PercentText } from './FractionText'
 
 const DEGREES_LIST = CIRCLE_FACTS.map((fact) => fact.degrees)
 // Rendered left-to-right in ascending degree order, independent of
@@ -65,10 +66,12 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
                     title={`${fact.degrees}° = ${fact.numerator}/${fact.denominator} = ${percent.displayAnswer}`}
                   >
                     <span className="grid-cell-fraction">
-                      {fact.numerator}/{fact.denominator}
+                      <FractionText numerator={fact.numerator} denominator={fact.denominator} />
                     </span>
                     <span className="grid-cell-arrow">↓</span>
-                    <span className="grid-cell-percent">{percent.displayAnswer}</span>
+                    <span className="grid-cell-percent">
+                      <PercentText percent={percent} />
+                    </span>
                   </div>
                 )
               })}

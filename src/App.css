@@ -767,6 +767,28 @@
   color: var(--text-h);
 }
 
+/* A plain-text fraction (e.g. inside a feedback message or the progress
+   map) shown as a proper numerator-over-denominator stack with a bar,
+   instead of a "n/d" slash. */
+.frac-text {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 1px;
+  line-height: 1.15;
+  font-size: 0.72em;
+}
+
+.frac-num {
+  padding: 0 0.2em 0.05em;
+  border-bottom: 1.5px solid currentColor;
+}
+
+.frac-den {
+  padding: 0.05em 0.2em 0;
+}
+
 .sr-only-input {
   position: absolute;
   width: 1px;
@@ -1057,6 +1079,14 @@
 .grid-cell-fraction {
   font-weight: 700;
   color: var(--muted);
+}
+
+/* The cell is small enough already - keep the stacked fraction at the
+   cell's own text size instead of additionally shrinking it. */
+.grid-cell-fraction .frac-text,
+.grid-cell-percent .frac-text {
+  font-size: 1em;
+  margin: 0 2px;
 }
 
 .grid-cell-arrow {
