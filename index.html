@@ -3,7 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <!-- interactive-widget=resizes-content: on Android Chrome, an on-screen
+         keyboard's default behavior is to resize only the *visual* viewport
+         and pan/scroll the page underneath to keep the focused field
+         visible — dvh units don't shrink for it, so nothing in the CSS knows
+         to react and the page visibly scrolls. This mode makes the keyboard
+         resize the actual layout viewport instead, so 100dvh (used to pin
+         the vocab quiz to one screen) shrinks along with it and the flex
+         layout reflows in place — no pan, no scroll. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <meta name="color-scheme" content="light only" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
