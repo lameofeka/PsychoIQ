@@ -64,6 +64,7 @@ export default function GamePlay({
 
   function submitAnswer(isCorrect, userAnswer) {
     setVerdict(isCorrect ? 'correct' : 'wrong')
+    inputRef.current?.blur()
     if (isCorrect) vibrateSuccess()
 
     if (bufferedRetry) {
