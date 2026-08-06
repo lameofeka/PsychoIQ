@@ -1322,7 +1322,7 @@
 .group-chip {
   position: relative;
   background: color-mix(in srgb, var(--border) 18%, var(--bg));
-  border: none;
+  border: 2px solid transparent;
   border-radius: 8px;
   padding: 14px;
   display: flex;
@@ -1330,6 +1330,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s;
 }
 
 .group-chip-last-dot {
@@ -1360,8 +1361,22 @@
   background: var(--danger-bg);
 }
 
+/* Same treatment as a selected .number-chip (solid accent fill, white
+   label, slight scale-up) so a chosen group reads unambiguously against
+   the level-tinted backgrounds above instead of the previous faint tint. */
 .group-chip.selected {
-  background: rgba(136, 105, 220, 0.1);
+  border-color: var(--accent);
+  background: var(--accent);
+  transform: scale(1.06);
+}
+
+.group-chip.selected .group-chip-title {
+  color: #fff;
+}
+
+.group-chip.selected .group-chip-last-dot {
+  background: #fff;
+  opacity: 0.85;
 }
 
 .group-chip-title {
@@ -1369,7 +1384,8 @@
   font-weight: 500;
   /* Level is conveyed by the chip's background tint alone - matches the
      progress-map grid-cell numbers, which stay one neutral gray on every
-     level instead of matching it. */
+     level instead of matching it. Overridden to white when selected, see
+     .group-chip.selected .group-chip-title above. */
   color: var(--text);
 }
 
