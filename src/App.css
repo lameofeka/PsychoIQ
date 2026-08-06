@@ -2640,10 +2640,18 @@
      <html>/<body> (a plain class, not :has(), so this doesn't depend on
      that selector matching through several levels of ancestors) and keeps
      --app-vh in sync with the *real*, live visualViewport height, forcing
-     any pan attempt back to (0, 0) the instant it happens. */
+     any pan attempt back to (0, 0) the instant it happens.
+
+     --app-vh updates in discrete jumps (one per visualViewport event, not
+     one per animation frame of the keyboard's own slide), so without help
+     the container would visibly snap to its new height instead of tracking
+     the keyboard smoothly. A matching transition on height papers over
+     that — it can't be perfectly in sync with the real keyboard animation,
+     but it turns a jarring snap into a smooth resize instead. */
   html.vocab-quiz-lock {
     height: var(--app-vh, 100dvh);
     overflow: hidden;
+    transition: height 0.25s ease;
   }
 
   body.vocab-quiz-lock {
@@ -2652,11 +2660,13 @@
     width: 100%;
     height: var(--app-vh, 100dvh);
     overflow: hidden;
+    transition: height 0.25s ease;
   }
 
   html.vocab-quiz-lock .app-shell {
     height: var(--app-vh, 100dvh);
     overflow: hidden;
+    transition: height 0.25s ease;
   }
 
   html.vocab-quiz-lock .game-shell {
