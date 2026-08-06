@@ -1078,8 +1078,9 @@
 
 .grid-cell-fraction {
   font-weight: 700;
-  color: var(--text-h);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
+  font-size: 0.9em;
 }
 
 /* The cell is small enough already - keep the stacked fraction at the
@@ -1101,9 +1102,9 @@
 }
 
 .grid-cell-percent {
-  font-size: 1em;
+  font-size: 0.9em;
   font-weight: 700;
-  color: var(--accent-dark);
+  color: #b29ee8;
   font-variant-numeric: tabular-nums;
 }
 
