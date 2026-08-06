@@ -2110,12 +2110,22 @@
   color: white;
   font-size: 15px;
   font-weight: 700;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  box-shadow: none;
   z-index: 40;
   transition: background 0.15s, transform 0.15s;
+}
+
+/* Mobile only — hidden on web (see display: none above). Sized up 10% with
+   no drop shadow per product request. */
+@media (max-width: 600px) {
+  .next-word-fab {
+    display: flex;
+    width: 74.8px;
+    height: 74.8px;
+  }
 }
 
 .next-word-fab:hover {
