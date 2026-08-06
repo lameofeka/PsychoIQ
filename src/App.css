@@ -660,6 +660,14 @@
   direction: ltr;
 }
 
+.percent-question-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin-bottom: 20px;
+  direction: rtl;
+}
+
 .answer-blank {
   display: inline-block;
   min-width: 1.5em;
@@ -709,6 +717,37 @@
   height: 3px;
   background: var(--text-h);
   border-radius: 2px;
+}
+
+.percent-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  direction: ltr;
+}
+
+.percent-input .fraction-input.mini-fraction {
+  margin-bottom: 0;
+  gap: 4px;
+}
+
+.percent-input .mini-fraction .fraction-box {
+  min-width: 1.2em;
+  padding: 2px 10px;
+  font-size: 18px;
+}
+
+.percent-input .mini-fraction .fraction-line {
+  width: 1.4em;
+}
+
+.percent-sign {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
 }
 
 .sr-only-input {

@@ -31,8 +31,44 @@ function fractionText(fact) {
   return `${fact.numerator}/${fact.denominator}`
 }
 
+function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b)
+}
+
+// A circle fraction's percent equivalent isn't always a whole number
+// (e.g. 1/3 = 33 1/3%), so the percent answer is itself a mixed number:
+// a whole part plus an optional reduced numerator/denominator part.
+function buildPercent(fact) {
+  const rawNumerator = fact.numerator * 100
+  const whole = Math.floor(rawNumerator / fact.denominator)
+  const remainder = rawNumerator % fact.denominator
+
+  if (remainder === 0) {
+    return {
+      whole,
+      fracNumerator: null,
+      fracDenominator: null,
+      // Digits only, same concatenation convention as the main answer.
+      answer: String(whole),
+      displayAnswer: `${whole}%`,
+    }
+  }
+
+  const divisor = gcd(remainder, fact.denominator)
+  const fracNumerator = remainder / divisor
+  const fracDenominator = fact.denominator / divisor
+  return {
+    whole,
+    fracNumerator,
+    fracDenominator,
+    answer: `${whole}${fracNumerator}${fracDenominator}`,
+    displayAnswer: `${whole} ${fracNumerator}/${fracDenominator}%`,
+  }
+}
+
 function buildQuestion(fact, operation) {
   const id = `${fact.degrees}-${operation}`
+  const percent = buildPercent(fact)
 
   if (operation === OPERATIONS.DEGREES_TO_FRACTION) {
     return {
@@ -46,6 +82,7 @@ function buildQuestion(fact, operation) {
       answer: `${fact.numerator}${fact.denominator}`,
       displayAnswer: fractionText(fact),
       fact,
+      percent,
     }
   }
 
@@ -57,6 +94,7 @@ function buildQuestion(fact, operation) {
     answer: String(fact.degrees),
     displayAnswer: String(fact.degrees),
     fact,
+    percent,
   }
 }
 
