@@ -10,12 +10,13 @@ const OPERATION_OPTIONS = [
 
 export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak }) {
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.DEGREES_TO_FRACTION)
+  const [inOrder, setInOrder] = useState(initialSettings?.inOrder ?? false)
 
   const canStart = Boolean(operation)
 
   function start() {
     if (!canStart) return
-    onComplete({ operation })
+    onComplete({ operation, inOrder })
   }
 
   return (
@@ -33,6 +34,18 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
                 <span>{opt.label}</span>
               </button>
             ))}
+          </div>
+
+          <div className="setup-section-title-row">
+            <button
+              type="button"
+              className="in-order-toggle"
+              onClick={() => setInOrder((v) => !v)}
+              title="מצב שרשרת"
+            >
+              <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
+              <span>לפי הסדר</span>
+            </button>
           </div>
         </div>
 

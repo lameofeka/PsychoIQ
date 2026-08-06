@@ -120,7 +120,7 @@ export function generateRound(settings) {
     }
   }
 
-  return shuffle(questions)
+  return settings.inOrder ? questions : shuffle(questions)
 }
 
 export function describeSettings(settings) {

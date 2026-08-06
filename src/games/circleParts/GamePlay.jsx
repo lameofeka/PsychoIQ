@@ -52,22 +52,40 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   // The numerator box is done after this many digits, then typing jumps
   // straight into the denominator box — no separate "field focus" state
   // needed, it's derived purely from how many digits have been typed so far.
-  // Once the main stage is behind us, fall back to the digits it was
-  // answered with (`input` has since been repurposed for the percent stage).
-  const mainDigits = isMainStage ? input : mainResultRef.current?.value ?? ''
+  // Once a stage is answered (right or wrong), its boxes switch from the
+  // digits being typed to the correct answer, so a wrong guess doesn't just
+  // sit there in red — the right fraction/percent is shown in its place.
+  const mainDigits = isMainStage ? (feedback ? current.answer : input) : current.answer
   const numeratorLen = showsFractionBoxes ? String(current.fact.numerator).length : 0
   const numeratorDisplay = showsFractionBoxes ? mainDigits.slice(0, numeratorLen) : ''
   const denominatorDisplay = showsFractionBoxes ? mainDigits.slice(numeratorLen) : ''
 
   const wholeLen = isPercentStage ? String(current.percent.whole).length : 0
   const fracNumLen = percentHasFraction ? String(current.percent.fracNumerator).length : 0
-  const wholeDisplay = isPercentStage ? input.slice(0, wholeLen) : ''
-  const fracNumDisplay = percentHasFraction ? input.slice(wholeLen, wholeLen + fracNumLen) : ''
-  const fracDenDisplay = percentHasFraction ? input.slice(wholeLen + fracNumLen) : ''
+  const percentDigits = isPercentStage ? (feedback ? current.percent.answer : input) : ''
+  const wholeDisplay = isPercentStage ? percentDigits.slice(0, wholeLen) : ''
+  const fracNumDisplay = percentHasFraction ? percentDigits.slice(wholeLen, wholeLen + fracNumLen) : ''
+  const fracDenDisplay = percentHasFraction ? percentDigits.slice(wholeLen + fracNumLen) : ''
 
   useEffect(() => {
     inputRef.current?.focus()
   }, [current?.id, stage])
+
+  useEffect(() => {
+    if (feedback !== 'wrong' || !settings.inOrder) return
+    function onKeyDown(e) {
+      if (e.target.closest('button')) return
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        continueChain()
+      } else if (e.key === 'Backspace') {
+        e.preventDefault()
+        restartChain()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [feedback, settings.inOrder])
 
   function appendChar(ch) {
     if (feedback || input.length >= MAX_ANSWER_LEN) return
@@ -117,6 +135,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
     if (isMainStage) mainResultRef.current = { value, isCorrect }
     else percentResultRef.current = { value, isCorrect }
+
+    // Chain mode ("לפי הסדר"): a wrong answer stops the chain in place — the
+    // user picks "המשך מכאן" (retry) or "התחל מהתחלה" (restart) instead of
+    // silently moving on to the next stage/question.
+    if (settings.inOrder && !isCorrect) return
 
     if (!mainResultRef.current || !percentResultRef.current) {
       const nextStage = isMainStage ? 'percent' : 'main'
@@ -181,6 +204,25 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       return
     }
     setQueue(rest)
+  }
+
+  function continueChain() {
+    setInput('')
+    setFeedback(null)
+  }
+
+  function restartChain() {
+    firstAttemptsRef.current = new Map()
+    retryPassesRef.current = new Map()
+    mainResultRef.current = null
+    percentResultRef.current = null
+    startTimeRef.current = Date.now()
+    setCorrectCount(0)
+    setWrongCount(0)
+    setInput('')
+    setFeedback(null)
+    setStage('main')
+    setQueue(questions)
   }
 
   return (
@@ -320,6 +362,16 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         {feedback === 'wrong' && (
           <div className="feedback-msg wrong">
             לא נכון. התשובה הנכונה: {activeDisplayAnswer}
+          </div>
+        )}
+        {feedback === 'wrong' && settings.inOrder && (
+          <div className="results-actions chain-actions">
+            <button className="primary-btn" onClick={continueChain}>
+              המשך מכאן
+            </button>
+            <button className="secondary-btn" onClick={restartChain}>
+              התחל מהתחלה
+            </button>
           </div>
         )}
       </div>

@@ -67,6 +67,7 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
                     <span className="grid-cell-fraction">
                       {fact.numerator}/{fact.denominator}
                     </span>
+                    <span className="grid-cell-arrow">↓</span>
                     <span className="grid-cell-percent">{percent.displayAnswer}</span>
                   </div>
                 )
