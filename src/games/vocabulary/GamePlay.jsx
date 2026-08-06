@@ -108,7 +108,11 @@ export default function GamePlay({
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (verdict || input.trim() === '') return
+    if (verdict) return
+    if (input.trim() === '') {
+      submitAnswer(false, input)
+      return
+    }
     submitAnswer(checkAnswer(input, currentDef), input)
   }
 
@@ -177,9 +181,8 @@ export default function GamePlay({
     setIsEditing(false)
   }
 
-  // Attached to document because after an answer the (disabled) input loses
-  // focus to <body>, which sits outside this component's DOM subtree — a
-  // handler on our own container would never see the keydown bubble up.
+  // Attached to document (rather than our own container) so it still fires
+  // when focus is on a button (e.g. after clicking "לשאלה הבאה").
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === 'ArrowDown' && bufferedRetry) {
@@ -189,13 +192,14 @@ export default function GamePlay({
       }
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         // Inside a text field with content, the arrow keys must move the
-        // caret, not switch groups — but an empty field has no caret
-        // position worth preserving, so let the switch through. Unlike
-        // Tab/Enter below, this isn't gated on focus being off a <button>,
-        // since a focused button (e.g. after clicking "לשאלה הבאה") shouldn't
-        // block group nav.
+        // caret, not switch groups — but an empty field (or one that's just
+        // displaying the already-submitted answer) has no caret position
+        // worth preserving, so let the switch through. Unlike Tab/Enter
+        // below, this isn't gated on focus being off a <button>, since a
+        // focused button (e.g. after clicking "לשאלה הבאה") shouldn't block
+        // group nav.
         const tag = e.target.tagName
-        if ((tag === 'INPUT' || tag === 'TEXTAREA') && e.target.value) return
+        if ((tag === 'INPUT' || tag === 'TEXTAREA') && e.target.value && !verdict) return
         if (e.key === 'ArrowLeft' && onNextGroup) onNextGroup()
         else if (e.key === 'ArrowRight' && onPrevGroup) onPrevGroup()
         return
@@ -274,8 +278,15 @@ export default function GamePlay({
             type="text"
             className="no-caret"
             value={input}
-            disabled={!!verdict}
-            onChange={(e) => setInput(e.target.value)}
+            // Never disabled/readOnly: either would blur the field (or, for
+            // readOnly on iOS, silently drop the keyboard even while still
+            // focused) and dismiss the on-screen keyboard, which then
+            // reopens on the next question — that open/close cycle is what
+            // made the page visibly jump. Keeping it focused and editable
+            // the whole session avoids the keyboard (and the page under it)
+            // toggling every single answer; edits are just ignored once a
+            // verdict is in.
+            onChange={(e) => !verdict && setInput(e.target.value)}
             placeholder="מה הפירוש?"
             autoFocus
           />
