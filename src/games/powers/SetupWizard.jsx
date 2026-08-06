@@ -101,18 +101,20 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="setup-section-title-row">
-            <button
-              type="button"
-              className="in-order-toggle"
-              onClick={() => setInOrder((v) => !v)}
-              title="מצב שרשרת"
-            >
-              <span className={`checkbox-dot ${inOrder ? 'checked' : ''}`}>{inOrder ? '✓' : ''}</span>
-              <span>לפי הסדר</span>
-            </button>
-          </div>
+        <div className="in-order-row">
+          <span className="in-order-label">לפי הסדר</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={inOrder}
+            className={`toggle-switch ${inOrder ? 'checked' : ''}`}
+            onClick={() => setInOrder((v) => !v)}
+            title="מצב שרשרת"
+          >
+            <span className="toggle-knob" />
+          </button>
         </div>
 
         <button className="primary-btn big" disabled={!canStart} onClick={start}>

@@ -1148,15 +1148,6 @@
   margin-bottom: 6px;
 }
 
-.setup-compact .setup-section-title-row {
-  margin-top: 6px;
-  margin-bottom: 0;
-}
-
-.setup-compact .setup-section-title-row .setup-section-title {
-  margin-right: 14px;
-}
-
 .setup-compact .operation-row {
   gap: 8px;
 }
@@ -1658,72 +1649,58 @@
   cursor: pointer;
 }
 
-.setup-section-title-row {
+/* The "in order" (chain mode) toggle - sits in its own row directly above
+   the "start practice" button, styled as a switch rather than a checkbox
+   so it reads as a mode setting rather than another pickable option. */
+.in-order-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
-  margin-top: 10px;
+  margin: 2px 0 12px;
 }
 
-.setup-section-title-row .setup-section-title {
-  margin-bottom: 0;
-  /* Lines the first letter up with the start of the radio-dot below it,
-     which sits inset by the option-card's own padding. */
-  margin-right: 16px;
-}
-
-.in-order-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0;
-  /* Lines the end of "לפי הסדר" up with the start of the number-chip circles
-     in the picker below, which sit inset by the option-card's own padding. */
-  margin-left: 16px;
-  background: none;
-  border: none;
-  font-size: 13px;
+.in-order-label {
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text-h);
+  color: var(--text);
 }
 
-.checkbox-dot {
-  width: 20px;
-  height: 20px;
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 23px;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  border: 2px solid var(--border);
-  color: #fff;
-  font-size: 13px;
-  line-height: 1;
-  transition: border-color 0.15s, background 0.15s;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.18s ease;
 }
 
-.in-order-toggle:hover .checkbox-dot {
-  border-color: var(--accent);
-}
-
-.checkbox-dot.checked {
-  border-color: var(--accent);
+.toggle-switch.checked {
   background: var(--accent);
 }
 
-.setup-compact .in-order-toggle {
-  /* Another 10% on top of the earlier 5%-then-10%-then-5% bumps. */
-  font-size: 16.1px;
-  gap: 5px;
-  margin-left: 14px;
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease;
 }
 
-.setup-compact .checkbox-dot {
-  width: 21.3px;
-  height: 21.3px;
-  font-size: 14.7px;
+.toggle-switch.checked .toggle-knob {
+  transform: translateX(-17px);
+}
+
+.setup-compact .in-order-row {
+  margin: 4px 0 14px;
 }
 
 .dict-search,
