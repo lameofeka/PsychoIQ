@@ -63,39 +63,50 @@ export default function GamePlay({
   }, [current?.id])
 
   // Lock the whole page to one screen for the duration of the quiz, with no
-  // scrolling in either direction — see the .vocab-quiz-lock rules in
-  // App.css. CSS alone (100dvh + position:fixed on body) isn't enough on
-  // iOS Safari: focusing the answer field still pans the *visual* viewport
-  // to "reveal" it above the keyboard, a native behavior that ignores
-  // position:fixed and isn't expressible in dvh units at all. Countering it
-  // needs JS: track the real, live visualViewport height in a CSS var (so
-  // the fixed-height layout always matches what's actually visible, keyboard
-  // included) and force any pan attempt back to (0, 0) the instant it happens.
+  // scrolling and no visible resize jump — see the .vocab-quiz-lock rules
+  // in App.css. Two separate iOS behaviors are in play here, and they need
+  // different fixes:
+  //
+  // 1. Focusing the answer field pans the *visual* viewport to "reveal" it
+  //    above the keyboard — ignores position:fixed entirely, so it has to
+  //    be cancelled in JS by forcing scroll back to (0, 0) every time it's
+  //    attempted (via visualViewport's own resize/scroll events, the only
+  //    way to observe the pan happening at all).
+  // 2. window.innerHeight (the layout viewport) does NOT shrink for the
+  //    keyboard on iOS — only visualViewport.height does. Earlier this
+  //    effect sized --app-vh off visualViewport.height so the locked
+  //    container would "make room" for the keyboard, but that meant the
+  //    whole page resized (and visibly jumped) every time the keyboard
+  //    opened or closed. Sizing off innerHeight instead means the locked
+  //    container never resizes for the keyboard at all — the keyboard just
+  //    overlays the bottom of an already-correctly-sized screen, like a
+  //    native app, so there's nothing left to animate or jump.
   useEffect(() => {
     const root = document.documentElement
     const body = document.body
     root.classList.add('vocab-quiz-lock')
     body.classList.add('vocab-quiz-lock')
 
+    function syncHeight() {
+      root.style.setProperty('--app-vh', `${window.innerHeight}px`)
+    }
+    syncHeight()
+    window.addEventListener('resize', syncHeight)
+
     const vv = window.visualViewport
-    function syncViewport() {
-      const height = vv?.height ?? window.innerHeight
-      root.style.setProperty('--app-vh', `${height}px`)
+    function cancelPan() {
       window.scrollTo(0, 0)
     }
-    syncViewport()
-
-    vv?.addEventListener('resize', syncViewport)
-    vv?.addEventListener('scroll', syncViewport)
-    window.addEventListener('resize', syncViewport)
+    vv?.addEventListener('resize', cancelPan)
+    vv?.addEventListener('scroll', cancelPan)
 
     return () => {
       root.classList.remove('vocab-quiz-lock')
       body.classList.remove('vocab-quiz-lock')
       root.style.removeProperty('--app-vh')
-      vv?.removeEventListener('resize', syncViewport)
-      vv?.removeEventListener('scroll', syncViewport)
-      window.removeEventListener('resize', syncViewport)
+      window.removeEventListener('resize', syncHeight)
+      vv?.removeEventListener('resize', cancelPan)
+      vv?.removeEventListener('scroll', cancelPan)
     }
   }, [])
 
