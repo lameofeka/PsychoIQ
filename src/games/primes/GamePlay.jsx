@@ -104,9 +104,6 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
     if (feedback || value.trim() === '') return
 
     const isCorrect = Number(value) === current
-    recordPrimeResult(current, isCorrect)
-    setFeedback(isCorrect ? 'correct' : 'wrong')
-    if (isCorrect) vibrateSuccess()
 
     if (!attemptedRef.current.has(currentIndex)) {
       attemptedRef.current.add(currentIndex)
@@ -119,15 +116,16 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
       }
     }
 
-    // Wrong answers stop the chain in place — "המשך מכאן" / "התחל מהתחלה"
-    // take over instead of auto-continuing.
-    if (!isCorrect) return
-
-    setTimeout(() => {
+    // Correct answers advance immediately, with no feedback flash or pause —
+    // a confident user can run straight down the chain at full typing speed.
+    // Only a wrong answer stops the chain in place — "המשך מכאן" /
+    // "התחל מהתחלה" take over instead of auto-continuing.
+    if (isCorrect) {
+      recordPrimeResult(current, isCorrect)
+      vibrateSuccess()
       const nextIndex = currentIndex + 1
       inputValueRef.current = ''
       setInput('')
-      setFeedback(null)
       if (nextIndex >= total) {
         onFinish({
           correctCount: correctCountRef.current,
@@ -137,7 +135,11 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
         return
       }
       setCurrentIndex(nextIndex)
-    }, FEEDBACK_DELAY_MS)
+      return
+    }
+
+    recordPrimeResult(current, isCorrect)
+    setFeedback('wrong')
   }
 
   function continueChain() {
@@ -205,7 +207,6 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
           />
         </form>
 
-        {feedback === 'correct' && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
         {/* No "לא נכון" message on wrong here (unlike other quizzes) — the
             chain-mode continue/restart buttons already need every bit of
             vertical room they can get above the keypad on mobile; the next

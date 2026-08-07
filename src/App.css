@@ -1038,9 +1038,9 @@
 
 .chain-actions .primary-btn,
 .chain-actions .secondary-btn {
-  width: 100px;
-  height: 100px;
-  flex: none;
+  flex: 1;
+  height: 64px;
+  width: auto;
   display: flex;
   align-items: center;
   justify-content: center;
