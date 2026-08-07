@@ -3,6 +3,7 @@ import { getRoundQuestions } from './logic'
 import { recordFactResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 const FEEDBACK_DELAY_MS = 900
 const MAX_ANSWER_DIGITS = 3
@@ -13,6 +14,7 @@ const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
 
 export default function GamePlay({ settings, onFinish, onExitQuiz }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const questions = useMemo(() => getRoundQuestions(settings), [settings])
   const [queue, setQueue] = useState(questions)
   const [input, setInput] = useState('')

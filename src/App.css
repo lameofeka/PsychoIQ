@@ -2790,6 +2790,18 @@
     background: #fff;
   }
 
+  /* Same effect as the :has() rule right above, driven by a plain class
+     instead (toggled by useHtmlClassLock in each quant GamePlay component).
+     Belt-and-suspenders for the iOS status-bar color specifically — some
+     WebKit versions have been unreliable about repainting the translucent
+     status bar purely from a :has() selector reacting to a deep DOM change
+     with no page navigation. */
+  html.quant-gameplay-lock .app-shell {
+    padding: 0;
+    align-items: stretch;
+    background: #fff;
+  }
+
   .game-shell:has(> .gameplay) {
     max-width: none;
     display: flex;

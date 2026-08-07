@@ -3,11 +3,13 @@ import { PRIMES } from './logic'
 import { recordPrimeResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 const FEEDBACK_DELAY_MS = 900
 const MAX_ANSWER_DIGITS = 2
 
 export default function GamePlay({ onFinish, onExitQuiz }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
