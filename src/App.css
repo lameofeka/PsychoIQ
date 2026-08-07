@@ -2030,19 +2030,25 @@
    as "done" without competing with the active input above the keypad. */
 .vocab-meanings-progress {
   margin-bottom: 10px;
-  text-align: right;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 10px;
 }
 
 .vocab-meaning-done {
   font-size: 13px;
   color: var(--success);
-  margin-bottom: 2px;
 }
 
 .vocab-meanings-list {
   margin: 0;
   padding-inline-start: 18px;
   list-style: disc;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 14px;
 }
 
 .vocab-meanings-list li.vocab-meaning-correct {
