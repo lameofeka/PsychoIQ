@@ -19,7 +19,7 @@ export default function Results({ correctCount, elapsedMs, onPlayAgain, onNewSet
   })
 
   return (
-    <div className="results">
+    <div className="results quant-results">
       <div className="wizard-topbar">
         <button className="icon-back-btn" onClick={onNewSettings} aria-label="חזרה">
           →

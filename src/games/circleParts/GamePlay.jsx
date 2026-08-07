@@ -27,6 +27,12 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const [wrongCount, setWrongCount] = useState(0)
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
+  // Mirrors `input` synchronously — reading this instead of the `input`
+  // state closure in appendChar lets two fast keypresses (physical keyboard
+  // repeat, or a quick double-tap on the on-screen keypad) both land even if
+  // the second one fires before React re-renders and hands appendChar a
+  // fresh closure. Every setInput call below has a matching write here.
+  const inputValueRef = useRef('')
   const [pressedKey, press] = useKeypadPress()
   const firstAttemptsRef = useRef(new Map())
   const retryPassesRef = useRef(new Map())
@@ -101,8 +107,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   }, [feedback, settings.inOrder])
 
   function appendChar(ch) {
-    if (feedback || input.length >= MAX_ANSWER_LEN) return
-    const next = input + ch
+    if (feedback || inputValueRef.current.length >= MAX_ANSWER_LEN) return
+    const next = inputValueRef.current + ch
+    inputValueRef.current = next
     setInput(next)
     if (next.length >= activeAnswer.length) {
       submitAnswer(next)
@@ -111,11 +118,14 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
-    setInput((prev) => prev.slice(0, -1))
+    const next = inputValueRef.current.slice(0, -1)
+    inputValueRef.current = next
+    setInput(next)
   }
 
   function handleClear() {
     if (feedback) return
+    inputValueRef.current = ''
     setInput('')
   }
 
@@ -160,6 +170,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       const nextStage = isMainStage ? 'percent' : 'main'
       setTimeout(() => {
         setStage(nextStage)
+        inputValueRef.current = ''
         setInput('')
         setFeedback(null)
       }, FEEDBACK_DELAY_MS)
@@ -207,6 +218,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       const insertAt = Math.min(rest.length, RETRY_BUFFER)
       rest.splice(insertAt, 0, question)
     }
+    inputValueRef.current = ''
     setInput('')
     setFeedback(null)
     setStage('main')
@@ -222,6 +234,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   }
 
   function continueChain() {
+    inputValueRef.current = ''
     setInput('')
     setFeedback(null)
   }
@@ -234,6 +247,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     startTimeRef.current = Date.now()
     setCorrectCount(0)
     setWrongCount(0)
+    inputValueRef.current = ''
     setInput('')
     setFeedback(null)
     setStage('main')

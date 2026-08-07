@@ -16,6 +16,12 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
   const [pressedKey, press] = useKeypadPress()
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
+  // Mirrors `input` synchronously — reading this instead of the `input`
+  // state closure in appendDigit lets two fast keypresses (physical keyboard
+  // repeat, or a quick double-tap on the on-screen keypad) both land even if
+  // the second one fires before React re-renders and hands appendDigit a
+  // fresh closure. Every setInput call below has a matching write here.
+  const inputValueRef = useRef('')
   // First-attempt result per chain position, since the position (currentIndex)
   // gets replayed on a wrong answer's "המשך מכאן" — only the first try counts
   // for scoring. Refs so the setTimeout closure below always reads the latest
@@ -50,8 +56,9 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
   }, [feedback])
 
   function appendDigit(digit) {
-    if (feedback || input.length >= MAX_ANSWER_DIGITS) return
-    const next = input + digit
+    if (feedback || inputValueRef.current.length >= MAX_ANSWER_DIGITS) return
+    const next = inputValueRef.current + digit
+    inputValueRef.current = next
     setInput(next)
     const answer = String(current)
     // Fail fast: submit the moment the typed digits can no longer be a
@@ -64,11 +71,14 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
-    setInput((prev) => prev.slice(0, -1))
+    const next = inputValueRef.current.slice(0, -1)
+    inputValueRef.current = next
+    setInput(next)
   }
 
   function handleClear() {
     if (feedback) return
+    inputValueRef.current = ''
     setInput('')
   }
 
@@ -115,6 +125,7 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
 
     setTimeout(() => {
       const nextIndex = currentIndex + 1
+      inputValueRef.current = ''
       setInput('')
       setFeedback(null)
       if (nextIndex >= total) {
@@ -130,6 +141,7 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
   }
 
   function continueChain() {
+    inputValueRef.current = ''
     setInput('')
     setFeedback(null)
   }
@@ -142,6 +154,7 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
     setCurrentIndex(0)
     setCorrectCount(0)
     setWrongCount(0)
+    inputValueRef.current = ''
     setInput('')
     setFeedback(null)
   }
@@ -190,11 +203,6 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
             placeholder="התשובה שלך"
             autoFocus
           />
-          {!feedback && (
-            <button type="submit" className="primary-btn">
-              בדוק
-            </button>
-          )}
         </form>
 
         {feedback === 'correct' && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}

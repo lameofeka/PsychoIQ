@@ -18,6 +18,12 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const [pressedKey, press] = useKeypadPress()
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
+  // Mirrors `input` synchronously — reading this instead of the `input`
+  // state closure in appendDigit lets two fast keypresses (physical keyboard
+  // repeat, or a quick double-tap on the on-screen keypad) both land even if
+  // the second one fires before React re-renders and hands appendDigit a
+  // fresh closure. Every setInput call below has a matching write here.
+  const inputValueRef = useRef('')
 
   const current = queue[0]
   const total = initialQuestions.length
@@ -28,8 +34,9 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   }, [current?.id])
 
   function appendDigit(digit) {
-    if (feedback || input.length >= MAX_ANSWER_DIGITS) return
-    const next = input + digit
+    if (feedback || inputValueRef.current.length >= MAX_ANSWER_DIGITS) return
+    const next = inputValueRef.current + digit
+    inputValueRef.current = next
     setInput(next)
     if (next.length >= String(current.answer).length) {
       submitAnswer(next)
@@ -38,11 +45,14 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
-    setInput((prev) => prev.slice(0, -1))
+    const next = inputValueRef.current.slice(0, -1)
+    inputValueRef.current = next
+    setInput(next)
   }
 
   function handleClear() {
     if (feedback) return
+    inputValueRef.current = ''
     setInput('')
   }
 
@@ -67,29 +77,26 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   function submitAnswer(value) {
     if (feedback || value.trim() === '') return
 
+    const question = current
     const userAnswer = Number(value)
-    const isCorrect = userAnswer === current.answer
-    recordFactResult(current.n, isCorrect)
-    setFeedback(isCorrect ? 'correct' : 'wrong')
-    if (isCorrect) vibrateSuccess()
+    const isCorrect = userAnswer === question.answer
+    recordFactResult(question.n, isCorrect)
 
-    const isFirstAttempt = !firstAttempts.has(current.id)
+    const isFirstAttempt = !firstAttempts.has(question.id)
     const nextFirstAttempts = isFirstAttempt
-      ? new Map(firstAttempts).set(current.id, { question: current, userAnswer, isCorrect })
+      ? new Map(firstAttempts).set(question.id, { question, userAnswer, isCorrect })
       : firstAttempts
     if (isFirstAttempt) setFirstAttempts(nextFirstAttempts)
-    if (isCorrect) setResolvedIds((prev) => new Set(prev).add(current.id))
 
-    setTimeout(() => {
+    // Correct answers advance immediately, with no feedback flash or pause —
+    // a confident user can run straight down the list at full typing speed.
+    // Only a wrong answer stops the run to show the right value.
+    if (isCorrect) {
+      vibrateSuccess()
+      setResolvedIds((prev) => new Set(prev).add(question.id))
       const rest = queue.slice(1)
-      if (!isCorrect) {
-        const insertAt = Math.min(rest.length, RETRY_BUFFER)
-        rest.splice(insertAt, 0, current)
-      }
-
+      inputValueRef.current = ''
       setInput('')
-      setFeedback(null)
-
       if (rest.length === 0) {
         onFinish({
           answers: [...nextFirstAttempts.values()],
@@ -97,7 +104,19 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         })
         return
       }
+      setQueue(rest)
+      return
+    }
 
+    setFeedback('wrong')
+    setTimeout(() => {
+      const rest = queue.slice(1)
+      const insertAt = Math.min(rest.length, RETRY_BUFFER)
+      rest.splice(insertAt, 0, question)
+
+      inputValueRef.current = ''
+      setInput('')
+      setFeedback(null)
       setQueue(rest)
     }, FEEDBACK_DELAY_MS)
   }
@@ -136,11 +155,6 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
             placeholder="התשובה שלך"
             autoFocus
           />
-          {!feedback && (
-            <button type="submit" className="primary-btn">
-              בדוק
-            </button>
-          )}
         </form>
 
         <div className="numeric-keypad">
@@ -199,7 +213,6 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           </button>
         </div>
 
-        {feedback === 'correct' && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
         {feedback === 'wrong' && (
           <div className="feedback-msg wrong">
             לא נכון. התשובה הנכונה: {current.answer}

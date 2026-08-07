@@ -24,7 +24,7 @@ export default function Results({ settings, answers, elapsedMs, onPlayAgain, onN
   })
 
   return (
-    <div className="results">
+    <div className="results quant-results">
       <div className="wizard-topbar">
         <button className="icon-back-btn" onClick={onNewSettings} aria-label="הגדרות חדשות">
           →

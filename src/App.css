@@ -947,6 +947,44 @@
   margin-bottom: 20px;
 }
 
+/* Quant games' results screen (multiplication/factorial/powers/primes/
+   circleParts) — bigger text throughout so the summary reads as the main
+   event of the screen instead of a small centered block. */
+.quant-results h2 {
+  font-size: 40px;
+}
+
+.quant-results .summary-line {
+  font-size: 20px;
+}
+
+.quant-results .score-circle {
+  padding: 32px 0;
+  gap: 10px;
+}
+
+.quant-results .score-number {
+  font-size: 88px;
+}
+
+.quant-results .score-sub {
+  font-size: 20px;
+}
+
+.quant-results .time-line {
+  font-size: 20px;
+}
+
+.quant-results .results-actions .primary-btn,
+.quant-results .results-actions .secondary-btn {
+  font-size: 19px;
+  padding: 16px 24px;
+}
+
+.quant-results .results-actions .link-btn {
+  font-size: 17px;
+}
+
 .mistakes-list {
   background: var(--bg);
   border-radius: 12px;
@@ -988,8 +1026,27 @@
   align-items: center;
 }
 
+/* Side by side instead of .results-actions' inherited stacked column — DOM
+   order is continueChain ("המשך מכאן") first, restartChain ("התחל מהתחלה")
+   second, which in this RTL layout already places continue on the right
+   and restart on the left, matching how the two actions read. */
 .chain-actions {
+  flex-direction: row;
+  justify-content: center;
   margin-top: 16px;
+}
+
+.chain-actions .primary-btn,
+.chain-actions .secondary-btn {
+  width: 100px;
+  height: 100px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  border-radius: 16px;
 }
 
 .prime-question-text {
