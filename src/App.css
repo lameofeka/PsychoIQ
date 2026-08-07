@@ -2044,13 +2044,23 @@
 
 .vocab-meanings-list {
   margin: 0;
-  padding-inline-start: 18px;
-  list-style: disc;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
   direction: rtl;
   justify-content: flex-start;
-  gap: 4px 14px;
+  gap: 4px 8px;
+}
+
+.vocab-meanings-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.vocab-meanings-list li::before {
+  content: '•';
 }
 
 .vocab-meanings-list li.vocab-meaning-correct {
