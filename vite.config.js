@@ -1,11 +1,66 @@
 import { readFile, writeFile } from 'node:fs/promises'
+import { execFile } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+const projectRoot = fileURLToPath(new URL('.', import.meta.url))
 const wordsFilePath = fileURLToPath(new URL('./src/games/vocabulary/words.data.json', import.meta.url))
+const wordsRelPath = 'src/games/vocabulary/words.data.json'
 const sentencesFilePath = fileURLToPath(new URL('./src/games/essay/sentences.data.json', import.meta.url))
 const synonymsFilePath = fileURLToPath(new URL('./src/games/essay/synonyms.data.json', import.meta.url))
+
+function runGit(args) {
+  return new Promise((resolve, reject) => {
+    execFile('git', args, { cwd: projectRoot }, (err, stdout, stderr) => {
+      if (err) reject(new Error(stderr || err.message))
+      else resolve(stdout)
+    })
+  })
+}
+
+async function vocabCommitMessage() {
+  try {
+    const [headRaw, currentRaw] = await Promise.all([
+      runGit(['show', `HEAD:${wordsRelPath}`]),
+      readFile(wordsFilePath, 'utf-8'),
+    ])
+    const delta = JSON.parse(currentRaw).length - JSON.parse(headRaw).length
+    if (delta > 0) return `Vocabulary: add ${delta} word${delta === 1 ? '' : 's'} to static dictionary`
+    if (delta < 0) return `Vocabulary: remove ${-delta} word${delta === -1 ? '' : 's'} from static dictionary`
+  } catch {
+    // HEAD has no version of the file yet, or it's unparsable — fall through
+    // to the generic message below.
+  }
+  return 'Vocabulary: update static dictionary'
+}
+
+// Auto-commits+pushes the local dictionary after it's been quiet for
+// `idleMs`: every save resets the timer, so a whole session of adding words
+// collapses into one push right after the user actually stops, instead of
+// one push per word. Runs inside the dev server itself (not the editor), so
+// it works for as long as `npm run dev` is up — VS Code doesn't need to be
+// open.
+function scheduleAutoPush(idleMs = 20000) {
+  let timer = null
+  return () => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(async () => {
+      timer = null
+      try {
+        const status = await runGit(['status', '--porcelain', '--', wordsRelPath])
+        if (!status.trim()) return
+        const message = await vocabCommitMessage()
+        await runGit(['add', wordsRelPath])
+        await runGit(['commit', '-m', message])
+        await runGit(['push'])
+        console.log(`[vocab-auto-push] ${message}`)
+      } catch (err) {
+        console.error('[vocab-auto-push] failed:', err.message)
+      }
+    }, idleMs)
+  }
+}
 
 // Dev-only API so a dataset lives in the project (as a .data.json file)
 // instead of the browser's localStorage — edits made from the UI are written
@@ -16,7 +71,7 @@ const synonymsFilePath = fileURLToPath(new URL('./src/games/essay/synonyms.data.
 // Vercel, so production instead uses the .data.json baked straight into the
 // build. Editing from a deployed site won't persist — edit it locally
 // (npm run dev) and redeploy to update what's shown in production.
-function jsonFileApiPlugin(name, route, filePath) {
+function jsonFileApiPlugin(name, route, filePath, onSaved) {
   return {
     name,
     configureServer(server) {
@@ -81,6 +136,7 @@ function jsonFileApiPlugin(name, route, filePath) {
               await writeFile(filePath, JSON.stringify(data, null, 2) + '\n', 'utf-8')
               res.statusCode = 200
               res.end('ok')
+              onSaved?.()
             } catch (err) {
               res.statusCode = 400
               res.end(String(err))
@@ -100,7 +156,7 @@ function jsonFileApiPlugin(name, route, filePath) {
 export default defineConfig({
   plugins: [
     react(),
-    jsonFileApiPlugin('vocabulary-api', '/api/vocabulary', wordsFilePath),
+    jsonFileApiPlugin('vocabulary-api', '/api/vocabulary', wordsFilePath, scheduleAutoPush()),
     jsonFileApiPlugin('essay-sentences-api', '/api/essay-sentences', sentencesFilePath),
     jsonFileApiPlugin('essay-synonyms-api', '/api/essay-synonyms', synonymsFilePath),
   ],

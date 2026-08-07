@@ -2032,7 +2032,8 @@
   margin-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  direction: rtl;
+  justify-content: flex-start;
   gap: 4px 10px;
 }
 
@@ -2047,7 +2048,8 @@
   list-style: disc;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  direction: rtl;
+  justify-content: flex-start;
   gap: 4px 14px;
 }
 
