@@ -37,7 +37,7 @@ export default function TemplateGame({ onExit, initialStage = 'manage' }) {
           key={roundKey}
           sentences={practiceSentences}
           onFinish={handleFinish}
-          onExitQuiz={() => setStage('manage')}
+          onExitQuiz={onExit}
         />
       )}
       {stage === 'results' && (

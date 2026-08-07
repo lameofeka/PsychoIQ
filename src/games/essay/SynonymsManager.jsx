@@ -9,12 +9,6 @@ import {
   deleteSynonym,
   moveSynonym,
 } from './storage'
-import ModeSwitch from './ModeSwitch'
-
-const MODES = [
-  { value: 'manage', label: 'ניהול מילים נרדפות' },
-  { value: 'practice', label: 'תרגול' },
-]
 
 export default function SynonymsManager({ onExit, onStartPractice }) {
   const [sets, setSets] = useState(() => getSynonymSets())
@@ -87,7 +81,6 @@ export default function SynonymsManager({ onExit, onStartPractice }) {
         <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט חיבור">
           →
         </button>
-        <ModeSwitch mode="manage" options={MODES} onChange={(m) => m === 'practice' && onStartPractice()} />
       </div>
 
       <h2>ניהול מילים נרדפות</h2>

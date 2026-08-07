@@ -1,11 +1,5 @@
 import { useState } from 'react'
 import { getSentences, addSentence, updateSentence, deleteSentence, moveSentence } from './storage'
-import ModeSwitch from './ModeSwitch'
-
-const MODES = [
-  { value: 'manage', label: 'ניהול משפטים' },
-  { value: 'practice', label: 'תרגול' },
-]
 
 export default function TemplateManager({ onExit, onStartPractice }) {
   const [sentences, setSentences] = useState(() => getSentences())
@@ -53,7 +47,6 @@ export default function TemplateManager({ onExit, onStartPractice }) {
         <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט חיבור">
           →
         </button>
-        <ModeSwitch mode="manage" options={MODES} onChange={(m) => m === 'practice' && onStartPractice()} />
       </div>
 
       <h2>ניהול משפטים</h2>

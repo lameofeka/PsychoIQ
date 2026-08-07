@@ -39,7 +39,7 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
     <div className="game-shell">
       {stage === 'manage' && <SynonymsManager onExit={onExit} onStartPractice={startPractice} />}
       {stage === 'practice' && (
-        <SynonymsPlay key={roundKey} sets={practiceSets} onFinish={handleFinish} onExitQuiz={() => setStage('manage')} />
+        <SynonymsPlay key={roundKey} sets={practiceSets} onFinish={handleFinish} onExitQuiz={onExit} />
       )}
       {stage === 'results' && (
         <SynonymsResults
