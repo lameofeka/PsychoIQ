@@ -278,6 +278,18 @@
   width: 100%;
 }
 
+/* No longer clickable (the "התחל תרגול" button below it starts practice
+   now) — plain display card, so it shouldn't look like a button either. */
+.essay-activity-card {
+  border: none;
+  cursor: default;
+}
+
+.essay-start-btn {
+  width: 100%;
+  padding: 8px 20px;
+}
+
 .essay-manage-link {
   width: 100%;
   text-align: center;
@@ -1693,32 +1705,6 @@
 .mistakes-row.tier-5 {
   --tier-color: var(--success);
   --tier-bg: var(--success-bg);
-}
-
-.order-toggle {
-  display: inline-flex;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 14px;
-}
-
-.order-toggle-btn {
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  background: none;
-  border: none;
-}
-
-.order-toggle-btn + .order-toggle-btn {
-  border-inline-start: 1px solid var(--border);
-}
-
-.order-toggle-btn.active {
-  background: var(--accent-bg);
-  color: var(--accent-dark);
 }
 
 /* --- Vocabulary: dictionary manager --- */

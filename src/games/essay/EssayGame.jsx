@@ -56,15 +56,16 @@ export default function EssayGame({ onPhaseChange }) {
 
   return (
     <div className="wizard">
-      <h2>חיבור</h2>
-
       <div className="game-menu essay-activity-menu">
         {ACTIVITIES.map((a) => (
           <div key={a.id} className="essay-activity-block">
-            <button className="game-card" onClick={() => open(a.id, 'practice')}>
+            <div className="game-card essay-activity-card">
               <span className="game-card-icon">{a.icon}</span>
               <span className="game-card-title">{a.title}</span>
               <span className="game-card-desc">{a.description}</span>
+            </div>
+            <button className="primary-btn essay-start-btn" onClick={() => open(a.id, 'practice')}>
+              התחל תרגול
             </button>
             <button className="link-btn essay-manage-link" onClick={() => open(a.id, 'manage')}>
               {a.manageLabel}

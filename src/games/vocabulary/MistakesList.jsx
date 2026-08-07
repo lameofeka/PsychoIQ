@@ -19,7 +19,7 @@ export default function MistakesList({ onBack, onStartPractice }) {
     [groups],
   )
   const [lockVersion, setLockVersion] = useState(0)
-  const [fullyRandom, setFullyRandom] = useState(false)
+  const [inOrder, setInOrder] = useState(true)
   const ranked = useMemo(() => rankWeakWords(allWordsWithGroup), [allWordsWithGroup, lockVersion])
 
   function toggleLock(wordId, locked) {
@@ -30,7 +30,7 @@ export default function MistakesList({ onBack, onStartPractice }) {
 
   function handleStart() {
     const orderedWords = ranked.map((entry) => entry.word)
-    onStartPractice(fullyRandom ? shuffle(orderedWords) : nearbyShuffle(orderedWords))
+    onStartPractice(inOrder ? nearbyShuffle(orderedWords) : shuffle(orderedWords))
   }
 
   return (
@@ -75,20 +75,17 @@ export default function MistakesList({ onBack, onStartPractice }) {
             </ul>
           </div>
 
-          <div className="order-toggle">
+          <div className="in-order-row">
+            <span className="in-order-label">לפי הסדר</span>
             <button
               type="button"
-              className={`order-toggle-btn ${!fullyRandom ? 'active' : ''}`}
-              onClick={() => setFullyRandom(false)}
+              role="switch"
+              aria-checked={inOrder}
+              className={`toggle-switch ${inOrder ? 'checked' : ''}`}
+              onClick={() => setInOrder((v) => !v)}
+              title="מיון לפי חומרת הטעות במקום אקראי לגמרי"
             >
-              לפי חומרה
-            </button>
-            <button
-              type="button"
-              className={`order-toggle-btn ${fullyRandom ? 'active' : ''}`}
-              onClick={() => setFullyRandom(true)}
-            >
-              אקראי לגמרי
+              <span className="toggle-knob" />
             </button>
           </div>
 

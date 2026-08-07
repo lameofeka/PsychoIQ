@@ -42,8 +42,6 @@ export default function GroupSelect({ onManageDictionary, onStart, onOpenMistake
         <ModeSwitch mode="practice" onChange={(m) => m === 'dictionary' && onManageDictionary()} />
       </div>
 
-      <h2>בחר קבוצה</h2>
-
       {groups.length === 0 ? (
         <>
           <p className="summary-line">המילון ריק. הוסיפו מילים כדי להתחיל לתרגל.</p>
