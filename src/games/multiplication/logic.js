@@ -60,22 +60,32 @@ export function getRoundQuestions(settings) {
     }
   }
 
-  const questions = pairs.map(([practiced, other], id) => {
-    let operation = settings.operation
-    if (operation === OPERATIONS.COMBINED) {
-      operation = Math.random() < 0.5 ? OPERATIONS.MULTIPLY : OPERATIONS.DIVIDE
-    }
-
+  function buildQuestion(operation, practiced, other, id) {
     if (operation === OPERATIONS.MULTIPLY) {
       const flip = Math.random() < 0.5
       const a = flip ? practiced : other
       const b = flip ? other : practiced
       return { id, operation, text: `${a} × ${b}`, answer: a * b, a: practiced, b: other }
     }
-
     const dividend = practiced * other
     return { id, operation, text: `${dividend} ÷ ${practiced}`, answer: other, a: practiced, b: other }
-  })
+  }
+
+  const questions = []
+  for (const [practiced, other] of pairs) {
+    // "all" (the default) asks both multiply and divide for every pair;
+    // "random" — the other tap of the "משולב" cube — picks one at random
+    // per question instead, same as before that toggle existed.
+    const operations =
+      settings.operation === OPERATIONS.COMBINED
+        ? settings.combinedMode === 'random'
+          ? [Math.random() < 0.5 ? OPERATIONS.MULTIPLY : OPERATIONS.DIVIDE]
+          : [OPERATIONS.MULTIPLY, OPERATIONS.DIVIDE]
+        : [settings.operation]
+    for (const operation of operations) {
+      questions.push(buildQuestion(operation, practiced, other, questions.length))
+    }
+  }
 
   return shuffle(questions)
 }

@@ -88,21 +88,30 @@ export function getRoundQuestions(settings) {
     }
   }
 
-  const questions = pairs.map(([base, exponent], id) => {
-    let operation = settings.operation
-    if (operation === OPERATIONS.COMBINED) {
-      operation = Math.random() < 0.5 ? OPERATIONS.POWER : OPERATIONS.ROOT
-    }
-
+  function buildQuestion(operation, base, exponent, id) {
     const value = base ** exponent
-
     if (operation === OPERATIONS.POWER) {
       return { id, operation, text: `${base}${toSuperscript(exponent)}`, answer: value, a: base, b: exponent }
     }
-
     const rootIndex = exponent === 2 ? '' : toSuperscript(exponent)
     return { id, operation, text: `${rootIndex}√${value}`, answer: base, a: base, b: exponent }
-  })
+  }
+
+  const questions = []
+  for (const [base, exponent] of pairs) {
+    // "all" (the default) asks both power and root for every base/exponent;
+    // "random" — the other tap of the "משולב" cube — picks one at random
+    // per question instead, same as before that toggle existed.
+    const operations =
+      settings.operation === OPERATIONS.COMBINED
+        ? settings.combinedMode === 'random'
+          ? [Math.random() < 0.5 ? OPERATIONS.POWER : OPERATIONS.ROOT]
+          : [OPERATIONS.POWER, OPERATIONS.ROOT]
+        : [settings.operation]
+    for (const operation of operations) {
+      questions.push(buildQuestion(operation, base, exponent, questions.length))
+    }
+  }
 
   return settings.inOrder ? questions : shuffle(questions)
 }

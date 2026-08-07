@@ -610,6 +610,16 @@
   color: var(--accent-dark);
 }
 
+/* Really-small, subtle indicator of which "משולב" sub-mode is active (all
+   combinations vs. one at random per question) — a second tap on the cube
+   toggles between them. */
+.combined-mode-hint {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--accent-dark);
+  opacity: 0.75;
+}
+
 /* Setup screens split into separate stacked white cards (setup options,
    progress map) rather than one card with an internal divider. */
 .wizard-stack {

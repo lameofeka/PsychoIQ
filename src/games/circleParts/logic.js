@@ -104,21 +104,26 @@ function buildQuestion(fact, operation) {
   }
 }
 
-// One question per fact: single mode asks each fact once, combined asks
-// each fact once per direction (e.g. 11 facts × 2 directions = 22).
+// One question per fact: single mode asks each fact once. Combined mode has
+// two sub-modes, toggled by a second tap on the "משולב" cube: "all" (the
+// default) asks each fact once per direction (e.g. 11 facts × 2 directions =
+// 22); "random" asks each fact once, picking one of the two directions at
+// random.
 export function generateRound(settings) {
   const basePool = settings.weakFacts && settings.weakFacts.length > 0 ? settings.weakFacts : CIRCLE_FACTS
   // Chain mode asks facts by ascending degrees (30°, 36°, 40°, ... - which
   // also happens to walk the fractions from smallest to largest, e.g.
   // 1/12, 1/10, 1/9, ...) instead of the array's unsorted declaration order.
   const pool = settings.inOrder ? [...basePool].sort((a, b) => a.degrees - b.degrees) : basePool
-  const operations =
-    settings.operation === OPERATIONS.COMBINED
-      ? [OPERATIONS.DEGREES_TO_FRACTION, OPERATIONS.FRACTION_TO_DEGREES]
-      : [settings.operation]
 
   const questions = []
   for (const fact of pool) {
+    const operations =
+      settings.operation === OPERATIONS.COMBINED
+        ? settings.combinedMode === 'random'
+          ? [Math.random() < 0.5 ? OPERATIONS.DEGREES_TO_FRACTION : OPERATIONS.FRACTION_TO_DEGREES]
+          : [OPERATIONS.DEGREES_TO_FRACTION, OPERATIONS.FRACTION_TO_DEGREES]
+        : [settings.operation]
     for (const operation of operations) {
       questions.push(buildQuestion(fact, operation))
     }

@@ -16,6 +16,10 @@ const BASES = Array.from({ length: MAX_BASE - MIN_BASE + 1 }, (_, i) => MIN_BASE
 
 export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak }) {
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.POWER)
+  // Second tap on an already-selected "משולב" cube toggles between asking
+  // every combination ("all", the default) and picking one at random per
+  // question ("random", the quiz's older combined behavior).
+  const [combinedMode, setCombinedMode] = useState(initialSettings?.combinedMode ?? 'all')
   const initialRangeType =
     initialSettings?.rangeType === RANGE_TYPES.WEAK ? RANGE_TYPES.ALL : initialSettings?.rangeType
   const [rangeType, setRangeType] = useState(initialRangeType ?? null)
@@ -29,7 +33,15 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
 
   function start() {
     if (!canStart) return
-    onComplete({ operation, rangeType, singleBase, rangeStart, rangeEnd, inOrder })
+    onComplete({ operation, combinedMode, rangeType, singleBase, rangeStart, rangeEnd, inOrder })
+  }
+
+  function pickOperation(value) {
+    if (value === OPERATIONS.COMBINED && operation === OPERATIONS.COMBINED) {
+      setCombinedMode((m) => (m === 'random' ? 'all' : 'random'))
+    } else {
+      setOperation(value)
+    }
   }
 
   // One click picks a single base; a second click on a different base turns
@@ -69,10 +81,13 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
               <button
                 key={opt.value}
                 className={`operation-cube ${operation === opt.value ? 'selected' : ''}`}
-                onClick={() => setOperation(opt.value)}
+                onClick={() => pickOperation(opt.value)}
               >
                 <span className="option-icon">{opt.icon}</span>
                 <span>{opt.label}</span>
+                {opt.value === OPERATIONS.COMBINED && operation === OPERATIONS.COMBINED && (
+                  <span className="combined-mode-hint">{combinedMode === 'random' ? 'אקראי' : 'כל הסוגים'}</span>
+                )}
               </button>
             ))}
           </div>

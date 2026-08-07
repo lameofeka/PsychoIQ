@@ -53,14 +53,22 @@ function buildQuestion(n, operation) {
   }
 }
 
-// One question per fact: single mode asks each number once, combined asks
-// each number once per operation (e.g. 6 numbers × 2 operations = 12).
+// One question per fact: single mode asks each number once. Combined mode
+// has two sub-modes, toggled by a second tap on the "משולב" cube: "all" (the
+// default) asks each number once per operation (e.g. 6 numbers × 2
+// operations = 12); "random" asks each number once, picking one of the two
+// operations at random.
 export function generateRound(settings) {
   const pool = settings.weakNumbers && settings.weakNumbers.length > 0 ? settings.weakNumbers : getAllFacts()
-  const operations = settings.operation === OPERATIONS.COMBINED ? [OPERATIONS.CALCULATE, OPERATIONS.IDENTIFY] : [settings.operation]
 
   const questions = []
   for (const n of pool) {
+    const operations =
+      settings.operation === OPERATIONS.COMBINED
+        ? settings.combinedMode === 'random'
+          ? [Math.random() < 0.5 ? OPERATIONS.CALCULATE : OPERATIONS.IDENTIFY]
+          : [OPERATIONS.CALCULATE, OPERATIONS.IDENTIFY]
+        : [settings.operation]
     for (const operation of operations) {
       questions.push(buildQuestion(n, operation))
     }
