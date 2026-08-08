@@ -45,7 +45,8 @@ export default function DictionaryManager({ onBack }) {
   const [editInMistakes, setEditInMistakes] = useState(false)
   const [editInMistakesInitial, setEditInMistakesInitial] = useState(false)
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
-  const [popup, setPopup] = useState(null) // null | 'add' | 'import' | 'export' | 'swap'
+  const [popup, setPopup] = useState(null) // null | 'add' | 'import' | 'export' | 'swap' | 'duplicate'
+  const [duplicateMatch, setDuplicateMatch] = useState(null) // { existing, pending }
   const [importText, setImportText] = useState('')
   const [importError, setImportError] = useState(null)
   const [copyLabel, setCopyLabel] = useState(COPY_LABEL)
@@ -145,13 +146,41 @@ export default function DictionaryManager({ onBack }) {
   function handleAdd(e) {
     e.preventDefault()
     if (!newWord.trim() || !newDef.trim()) return
-    const updated = addWord({ word: newWord, def: newDef, aas: newAas })
-    if (newInMistakes) lockMistake(updated[updated.length - 1].id)
+    const pending = { word: newWord, def: newDef, aas: newAas, inMistakes: newInMistakes }
+    const existing = words.find((w) => w.word.trim() === pending.word.trim())
+    if (existing) {
+      setDuplicateMatch({ existing, pending })
+      setPopup('duplicate')
+      return
+    }
+    commitAdd(pending)
+  }
+
+  function commitAdd({ word, def, aas, inMistakes }) {
+    const updated = addWord({ word, def, aas })
+    if (inMistakes) lockMistake(updated[updated.length - 1].id)
     setWords(updated)
     setNewWord('')
     setNewDef('')
     setNewAas('')
     setNewInMistakes(false)
+  }
+
+  function cancelDuplicate() {
+    setDuplicateMatch(null)
+    setPopup('add')
+  }
+
+  function confirmReplaceDuplicate() {
+    const { existing, pending } = duplicateMatch
+    if (pending.inMistakes !== isWordInMistakesList(existing.id)) setWordInMistakesList(existing.id, pending.inMistakes)
+    setWords(updateWord(existing.id, { word: pending.word, def: pending.def, aas: pending.aas }))
+    setDuplicateMatch(null)
+    setNewWord('')
+    setNewDef('')
+    setNewAas('')
+    setNewInMistakes(false)
+    setPopup('add')
   }
 
   function startEdit(w) {
@@ -302,6 +331,26 @@ export default function DictionaryManager({ onBack }) {
               הוספת מילה למילון
             </button>
           </form>
+        </Modal>
+      )}
+
+      {popup === 'duplicate' && duplicateMatch && (
+        <Modal title="המילה כבר קיימת" onClose={cancelDuplicate}>
+          <div className="duplicate-warning">
+            <p className="summary-line">
+              המילה &quot;{duplicateMatch.existing.word}&quot; כבר קיימת במילון עם הפירוש:
+            </p>
+            <p className="duplicate-existing-def">{duplicateMatch.existing.def}</p>
+            <p className="summary-line">להחליף אותה בפירוש והרמז החדשים, או לבטל את ההוספה?</p>
+            <div className="json-panel-actions">
+              <button className="primary-btn" onClick={confirmReplaceDuplicate}>
+                החלפה
+              </button>
+              <button className="secondary-btn" onClick={cancelDuplicate}>
+                ביטול
+              </button>
+            </div>
+          </div>
         </Modal>
       )}
 

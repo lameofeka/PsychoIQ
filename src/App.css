@@ -1947,6 +1947,20 @@
   margin-bottom: 12px;
 }
 
+.duplicate-warning .summary-line {
+  margin-bottom: 10px;
+}
+
+.duplicate-existing-def {
+  background: var(--warning-bg);
+  color: var(--text-h);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
 .json-panel {
   margin-bottom: 16px;
 }
@@ -2274,7 +2288,7 @@
   left: 24px;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: 28%;
   border: none;
   background: var(--accent);
   color: white;
@@ -2297,10 +2311,9 @@
 /* --- Vocabulary: floating "next word" button --- */
 
 /* Mirrors .scroll-jump-btn on the opposite (bottom-right) corner — the
-   thumb-reach zone for a right hand holding the phone — as a squircle
-   (a rounded square, not a circle) so it reads as a distinct action from
-   the round scroll button. Lets you advance to the next word without
-   reaching up to the in-card "לשאלה הבאה" button below the definition. */
+   thumb-reach zone for a right hand holding the phone. Lets you advance to
+   the next word without reaching up to the in-card "לשאלה הבאה" button
+   below the definition. */
 .next-word-fab {
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom));
