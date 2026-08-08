@@ -103,7 +103,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     if (isCorrect) {
       vibrateSuccess()
       setCorrectFlash(true)
-      setTimeout(() => setCorrectFlash(false), 500)
+      setTimeout(() => setCorrectFlash(false), FEEDBACK_DELAY_MS)
       setResolvedIds((prev) => new Set(prev).add(question.id))
       const rest = queue.slice(1)
       inputValueRef.current = ''

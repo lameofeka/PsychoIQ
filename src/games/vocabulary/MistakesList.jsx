@@ -51,13 +51,15 @@ export default function MistakesList({ onBack, onStartPractice }) {
 
           <div className="mistakes-list-wrap">
             <ul className="mistakes-list">
-              {ranked.map(({ word, wrongRate, locked }) => (
+              {ranked.map(({ word, wrongRate, locked }, i) => (
                 <li
                   key={word.id}
                   className={`mistakes-row tier-${tierFor(wrongRate)}`}
                   onDoubleClick={() => toggleLock(word.id, locked)}
                   title={locked ? 'נעולה בתרגול טעויות - לחיצה כפולה לביטול הנעילה' : 'לחיצה כפולה תנעל את המילה בתרגול טעויות'}
                 >
+                  <span className="mistakes-row-rank">{i + 1}</span>
+                  <span className="mistakes-row-word">{word.word}</span>
                   {locked && (
                     <button
                       type="button"
@@ -68,7 +70,6 @@ export default function MistakesList({ onBack, onStartPractice }) {
                       🔒
                     </button>
                   )}
-                  <span className="mistakes-row-word">{word.word}</span>
                   <span className="mistakes-row-rate">{Math.round(wrongRate * 100)}%</span>
                 </li>
               ))}

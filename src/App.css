@@ -1011,6 +1011,48 @@
   font-size: 17px;
 }
 
+/* Desktop/web only: unlike a fullscreen mobile view, a browser window's
+   viewport height is eaten into by its own chrome (tabs, address bar), so
+   the quant-results text sizes above are tall enough to force a scroll to
+   see the whole results screen. Trim everything ~20% here so it fits in
+   one screen without scrolling. */
+@media (min-width: 601px) {
+  .quant-results h2 {
+    font-size: 32px;
+  }
+
+  .quant-results .summary-line {
+    font-size: 16px;
+  }
+
+  .quant-results .score-circle {
+    padding: 24px 0;
+    gap: 8px;
+  }
+
+  .quant-results .score-number {
+    font-size: 70px;
+  }
+
+  .quant-results .score-sub {
+    font-size: 16px;
+  }
+
+  .quant-results .time-line {
+    font-size: 16px;
+  }
+
+  .quant-results .results-actions .primary-btn,
+  .quant-results .results-actions .secondary-btn {
+    font-size: 15px;
+    padding: 13px 20px;
+  }
+
+  .quant-results .results-actions .link-btn {
+    font-size: 14px;
+  }
+}
+
 .wrong-answer {
   color: var(--danger);
   direction: rtl;
@@ -1045,7 +1087,19 @@
   justify-content: center;
   text-align: center;
   padding: 8px;
-  border-radius: 16px;
+  border-radius: 12px;
+}
+
+/* Outlined instead of solid-filled — visually reads as "resume", a lighter
+   commitment than the solid restart-from-scratch action next to it. */
+.chain-continue-btn {
+  background: none;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.chain-continue-btn:hover {
+  background: var(--accent-bg);
 }
 
 .prime-question-text {
@@ -1577,10 +1631,9 @@
 .mistakes-list {
   list-style: none;
   margin: 0;
-  padding: 2px 2px 2px 0;
+  padding: 4px 2px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   max-height: 48vh;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -1626,42 +1679,45 @@
 
 .mistakes-row {
   --tier-color: var(--border);
-  --tier-bg: var(--card-bg);
   position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--tier-bg);
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--border);
   user-select: none;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: background 0.12s ease;
+}
+
+.mistakes-row:last-child {
+  border-bottom: none;
 }
 
 .mistakes-row:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  background: var(--accent-bg);
+}
+
+.mistakes-row-rank {
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
 }
 
 .mistakes-row-word {
   flex: 1;
-  text-align: center;
-  /* Symmetric, not just padding-inline-end — asymmetric padding would shift
-     the text-align:center point off the row's true visual center. */
-  padding-inline: 50px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: 600;
   color: var(--text-h);
 }
 
-/* Taken out of the flex flow so the word above centers in the row's full
-   width, as if the percent badge weren't there at all — the badge just
-   overlays the row's end edge instead of pushing the word off-center. */
 .mistakes-row-rate {
-  position: absolute;
-  inset-inline-end: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+  flex-shrink: 0;
   font-size: 13px;
   font-weight: 700;
   padding: 3px 10px;
@@ -1686,27 +1742,22 @@
 
 .mistakes-row.tier-1 {
   --tier-color: #c51a35;
-  --tier-bg: rgba(197, 26, 53, 0.08);
 }
 
 .mistakes-row.tier-2 {
   --tier-color: var(--danger);
-  --tier-bg: var(--danger-bg);
 }
 
 .mistakes-row.tier-3 {
   --tier-color: #e08b2f;
-  --tier-bg: rgba(224, 139, 47, 0.08);
 }
 
 .mistakes-row.tier-4 {
   --tier-color: var(--warning);
-  --tier-bg: var(--warning-bg);
 }
 
 .mistakes-row.tier-5 {
   --tier-color: var(--success);
-  --tier-bg: var(--success-bg);
 }
 
 /* --- Vocabulary: dictionary manager --- */
