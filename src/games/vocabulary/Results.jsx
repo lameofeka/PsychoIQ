@@ -57,7 +57,7 @@ export default function Results({ answers, elapsedMs, onPlayAgain, onNextGroup, 
           </button>
         )}
         {mistakes.length > 0 && (
-          <button className="secondary-btn mistakes-pill-btn" onClick={onMistakesOnly}>
+          <button className="link-btn" onClick={onMistakesOnly}>
             רק טעויות
           </button>
         )}

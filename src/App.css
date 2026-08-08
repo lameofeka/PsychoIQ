@@ -1024,15 +1024,6 @@
   align-items: center;
 }
 
-.mistakes-pill-btn {
-  width: auto;
-  align-self: center;
-  border-radius: 999px;
-  background: var(--muted-bg);
-  color: var(--muted);
-  padding: 10px 22px;
-}
-
 /* Side by side instead of .results-actions' inherited stacked column — DOM
    order is continueChain ("המשך מכאן") first, restartChain ("התחל מהתחלה")
    second, which in this RTL layout already places continue on the right
