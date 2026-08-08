@@ -1,4 +1,5 @@
 import staticWords from './words.data.json'
+import { getArchivedWordIds } from './stats'
 
 const API_URL = '/api/vocabulary'
 export const GROUP_SIZE = 10
@@ -100,6 +101,14 @@ function makeId() {
 
 export function getWords() {
   return wordsCache
+}
+
+// Every practice flow (group select, "תרגל הכל", mistakes) should read
+// through this instead of getWords() — it holds back archived ("known by
+// heart") words without ever removing them from the underlying dictionary.
+export function getActiveWords() {
+  const archived = getArchivedWordIds()
+  return wordsCache.filter((w) => !archived.has(w.id))
 }
 
 export function addWord({ word, def, aas }) {

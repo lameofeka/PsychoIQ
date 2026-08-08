@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { getWords, getGroups } from './dictionary'
+import { getActiveWords, getGroups } from './dictionary'
 import { nearbyShuffle, shuffle } from './logic'
 import { lockMistake, rankWeakWords, unlockMistake } from './stats'
 
@@ -12,7 +12,7 @@ function tierFor(wrongRate) {
 }
 
 export default function MistakesList({ onBack, onStartPractice }) {
-  const words = useMemo(() => getWords(), [])
+  const words = useMemo(() => getActiveWords(), [])
   const groups = useMemo(() => getGroups(words), [words])
   const allWordsWithGroup = useMemo(
     () => groups.flatMap((g) => g.words.map((w) => ({ ...w, groupIndex: g.index }))),

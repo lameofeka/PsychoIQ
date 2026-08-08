@@ -2098,6 +2098,13 @@
   font-size: 31px;
 }
 
+/* Once a word's answered, double-clicking it offers to archive it — cursor
+   is the only affordance, since a persistent hint here would compete with
+   the reveal (definition/hint/buttons) for attention. */
+.vocab-word-archivable {
+  cursor: pointer;
+}
+
 .question-card form input[type='text'] {
   direction: rtl;
   text-align: center;

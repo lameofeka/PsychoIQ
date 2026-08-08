@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { getWords, getGroups } from './dictionary'
+import { getActiveWords, getGroups } from './dictionary'
 import { getGroupLevel, getLastPracticedGroup, rankWeakWords } from './stats'
 import ModeSwitch from './ModeSwitch'
 
@@ -15,8 +15,8 @@ function ShuffleIcon() {
   )
 }
 
-export default function GroupSelect({ onManageDictionary, onStart, onOpenMistakes }) {
-  const words = useMemo(() => getWords(), [])
+export default function GroupSelect({ onManageDictionary, onManageArchive, onStart, onOpenMistakes }) {
+  const words = useMemo(() => getActiveWords(), [])
   const groups = useMemo(() => getGroups(words), [words])
   const lastGroupIndex = useMemo(() => getLastPracticedGroup(), [])
   const [selected, setSelected] = useState(new Set())
@@ -51,7 +51,11 @@ export default function GroupSelect({ onManageDictionary, onStart, onOpenMistake
   return (
     <div className="wizard group-select">
       <div className="wizard-topbar">
-        <ModeSwitch mode="practice" onChange={(m) => m === 'dictionary' && onManageDictionary()} />
+        <ModeSwitch
+          mode="practice"
+          onChange={(m) => m === 'dictionary' && onManageDictionary()}
+          onDictionaryDoubleClick={onManageArchive}
+        />
       </div>
 
       {groups.length === 0 ? (

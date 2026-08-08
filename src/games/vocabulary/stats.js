@@ -11,6 +11,8 @@ const EXCLUDED_MISTAKES_KEY = 'psychoiq_vocab_excluded_mistakes_v1'
 const LOCK_MIGRATION_FLAG_KEY = 'psychoiq_vocab_lock_migration_v1'
 const LOCK_MIGRATION_EXCLUDED_WORD = 'אסקופה'
 
+const ARCHIVED_WORDS_KEY = 'psychoiq_vocab_archived_words_v1'
+
 function load(key) {
   try {
     const raw = localStorage.getItem(key)
@@ -152,6 +154,29 @@ export function isWordInMistakesList(wordId) {
   const stats = load(WORD_STORAGE_KEY)
   const history = stats[wordId]
   return !!history && history.some((v) => !v)
+}
+
+// Words the user has explicitly marked as "known by heart" — held out of
+// every practice flow (group select, "תרגל הכל", mistakes) but never
+// deleted from the dictionary, so they can be brought back at any time.
+export function getArchivedWordIds() {
+  return loadIdSet(ARCHIVED_WORDS_KEY)
+}
+
+export function archiveWord(wordId) {
+  const ids = getArchivedWordIds()
+  ids.add(wordId)
+  saveIdSet(ARCHIVED_WORDS_KEY, ids)
+}
+
+export function unarchiveWord(wordId) {
+  const ids = getArchivedWordIds()
+  ids.delete(wordId)
+  saveIdSet(ARCHIVED_WORDS_KEY, ids)
+}
+
+export function isWordArchived(wordId) {
+  return getArchivedWordIds().has(wordId)
 }
 
 // Manual override from the dictionary editor: force a word in or out of the

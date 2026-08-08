@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import GroupSelect from './GroupSelect'
 import DictionaryManager from './DictionaryManager'
+import ArchiveManager from './ArchiveManager'
 import MistakesList from './MistakesList'
 import GamePlay from './GamePlay'
 import Results from './Results'
-import { getWords, getGroups, loadDictionary } from './dictionary'
+import { getWords, getActiveWords, getGroups, loadDictionary } from './dictionary'
 import { shuffle } from './logic'
 import { recordGroupResult, recordWordResult, runMistakeLockMigrationOnce, setLastPracticedGroup } from './stats'
 
@@ -71,7 +72,7 @@ export default function VocabularyGame({ onPhaseChange }) {
     // Dictionary management is still menu-browsing, not gameplay - keep the
     // header/switch visible and render it in place of the group menu rather
     // than taking over the full screen like playing/results do.
-    onPhaseChange?.(stage === 'groupSelect' || stage === 'manageDictionary' ? 'inline' : 'full')
+    onPhaseChange?.(stage === 'groupSelect' || stage === 'manageDictionary' || stage === 'archive' ? 'inline' : 'full')
   }, [stage])
 
   function startRound(words, label) {
@@ -83,7 +84,7 @@ export default function VocabularyGame({ onPhaseChange }) {
   }
 
   function handleStart(words) {
-    const totalGroups = getGroups(getWords()).length
+    const totalGroups = getGroups(getActiveWords()).length
     const selectedGroupCount = new Set(words.map((w) => w.groupIndex).filter((i) => i != null)).size
     const isFullDictionary = totalGroups > 0 && selectedGroupCount === totalGroups
     setUseBufferedQuiz(isFullDictionary)
@@ -140,7 +141,7 @@ export default function VocabularyGame({ onPhaseChange }) {
 
   const usedGroupIndices = [...new Set(practiceWords.map((w) => w.groupIndex).filter((i) => i != null))]
   const singleGroupIndex = usedGroupIndices.length === 1 ? usedGroupIndices[0] : null
-  const allGroups = !useBufferedQuiz && singleGroupIndex != null ? getGroups(getWords()) : []
+  const allGroups = !useBufferedQuiz && singleGroupIndex != null ? getGroups(getActiveWords()) : []
   const nextGroup = !useBufferedQuiz && singleGroupIndex != null ? allGroups.find((g) => g.index === singleGroupIndex + 1) : null
   const prevGroup = !useBufferedQuiz && singleGroupIndex != null ? allGroups.find((g) => g.index === singleGroupIndex - 1) : null
   const hasNext = !!nextGroup
@@ -176,16 +177,20 @@ export default function VocabularyGame({ onPhaseChange }) {
   }
 
   return (
-    <div className={`game-shell ${stage === 'manageDictionary' ? 'wide' : ''}`}>
+    <div className={`game-shell ${stage === 'manageDictionary' || stage === 'archive' ? 'wide' : ''}`}>
       {stage === 'groupSelect' && (
         <GroupSelect
           onManageDictionary={() => setStage('manageDictionary')}
+          onManageArchive={() => setStage('archive')}
           onStart={handleStart}
           onOpenMistakes={() => setStage('mistakesList')}
         />
       )}
       {stage === 'manageDictionary' && (
         <DictionaryManager onBack={() => setStage('groupSelect')} />
+      )}
+      {stage === 'archive' && (
+        <ArchiveManager onBack={() => setStage('groupSelect')} />
       )}
       {stage === 'mistakesList' && (
         <MistakesList onBack={() => setStage('groupSelect')} onStartPractice={handleStartMistakes} />

@@ -1,3 +1,7 @@
+import { useRef } from 'react'
+
+const DOUBLE_CLICK_WINDOW_MS = 280
+
 function DictionaryIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -16,13 +20,46 @@ function PracticeIcon() {
   )
 }
 
-export default function ModeSwitch({ mode, onChange }) {
+export default function ModeSwitch({ mode, onChange, onDictionaryDoubleClick }) {
+  const clickTimerRef = useRef(null)
+
+  // A double-click still dispatches two click events before its own
+  // dblclick — switching to the dictionary on the first click would already
+  // navigate away before onDictionaryDoubleClick had a chance to fire. When
+  // that handler is wired, hold the single-click action briefly to see if a
+  // second click follows; otherwise (no handler passed in, e.g. from inside
+  // the dictionary manager's own switch) act immediately as before.
+  function handleDictionaryClick() {
+    if (!onDictionaryDoubleClick) {
+      onChange('dictionary')
+      return
+    }
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current)
+      clickTimerRef.current = null
+      return
+    }
+    clickTimerRef.current = setTimeout(() => {
+      clickTimerRef.current = null
+      onChange('dictionary')
+    }, DOUBLE_CLICK_WINDOW_MS)
+  }
+
+  function handleDictionaryDoubleClick() {
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current)
+      clickTimerRef.current = null
+    }
+    onDictionaryDoubleClick?.()
+  }
+
   return (
     <div className="mode-switch">
       <button
         type="button"
         className={`mode-switch-btn ${mode === 'dictionary' ? 'active' : ''}`}
-        onClick={() => onChange('dictionary')}
+        onClick={handleDictionaryClick}
+        onDoubleClick={handleDictionaryDoubleClick}
       >
         <DictionaryIcon />
         מילון

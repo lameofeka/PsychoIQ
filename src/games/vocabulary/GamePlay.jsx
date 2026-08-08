@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound, checkAnswer, splitMeanings } from './logic'
 import { updateWord } from './dictionary'
-import { excludeMistake } from './stats'
+import { excludeMistake, archiveWord } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
+import Modal from './Modal'
 
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
@@ -31,6 +32,7 @@ export default function GamePlay({
   const [isEditing, setIsEditing] = useState(false)
   const [editDef, setEditDef] = useState('')
   const [editAas, setEditAas] = useState('')
+  const [showArchiveConfirm, setShowArchiveConfirm] = useState(false)
   // Meanings already matched for the current word (only relevant when it
   // has more than one "+"-separated sense) — reset whenever the word changes.
   const [satisfiedMeanings, setSatisfiedMeanings] = useState([])
@@ -270,10 +272,31 @@ export default function GamePlay({
     setIsEditing(false)
   }
 
+  // Double-click on the word, after it's been answered, offers to archive it
+  // — "I already know this one by heart" — so it stops showing up in future
+  // practice while staying saved for whenever it's brought back.
+  function handleWordDoubleClick() {
+    if (!verdict || isEditing) return
+    setShowArchiveConfirm(true)
+  }
+
+  function confirmArchive() {
+    archiveWord(current.id)
+    if (bufferedRetry) {
+      retryPassesRef.current.delete(current.id)
+      setPendingRequeue(false)
+    }
+    setShowArchiveConfirm(false)
+  }
+
   // Attached to document (rather than our own container) so it still fires
   // when focus is on a button (e.g. after clicking "לשאלה הבאה").
   useEffect(() => {
     function onKeyDown(e) {
+      // The archive-confirm modal has no keyboard shortcuts of its own —
+      // block the quiz's global ones (ArrowDown removal, Enter-to-advance)
+      // while it's open so they can't fire underneath it.
+      if (showArchiveConfirm) return
       if (e.key === 'ArrowDown' && bufferedRetry) {
         e.preventDefault()
         handleRemoveCurrentWord()
@@ -359,7 +382,12 @@ export default function GamePlay({
       </div>
 
       <div className={`question-card ${verdict ?? ''}`}>
-        <div className="question-text vocab-word">{current.word}</div>
+        <div
+          className={`question-text vocab-word ${verdict ? 'vocab-word-archivable' : ''}`}
+          onDoubleClick={handleWordDoubleClick}
+        >
+          {current.word}
+        </div>
 
         {isMultiMeaning && satisfiedMeanings.length > 0 && !verdict && (
           <div className="vocab-meanings-progress">
@@ -452,6 +480,23 @@ export default function GamePlay({
         <button type="button" className="next-word-fab" onClick={goNext} title="למילה הבאה">
           {isLastOverall ? 'סיום' : 'הבא'}
         </button>
+      )}
+
+      {showArchiveConfirm && (
+        <Modal title="העברה לארכיון" onClose={() => setShowArchiveConfirm(false)}>
+          <p className="summary-line">
+            להעביר את &quot;{current.word}&quot; למילון הארכיון? היא לא תופיע יותר בתרגול, אבל תישאר שמורה ואפשר
+            להחזיר אותה בכל עת.
+          </p>
+          <div className="json-panel-actions">
+            <button className="primary-btn" onClick={confirmArchive}>
+              כן, אני יודע/ת אותה
+            </button>
+            <button className="secondary-btn" onClick={() => setShowArchiveConfirm(false)}>
+              ביטול
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   )
