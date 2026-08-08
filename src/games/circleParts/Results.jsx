@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import { describeSettings } from './logic'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function Results({ settings, answers, elapsedMs, onPlayAgain, onNewSettings, onMistakesOnly, onExit }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const correctCount = answers.filter((a) => a.isCorrect).length
   const total = answers.length
   const percent = Math.round((correctCount / total) * 100)

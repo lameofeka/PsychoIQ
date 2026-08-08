@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function Results({ answers, elapsedMs, onPlayAgain, onNextGroup, onMistakesOnly, onNewGroups }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const correctCount = answers.filter((a) => a.isCorrect).length
   const total = answers.length
   const percent = Math.round((correctCount / total) * 100)
@@ -26,7 +28,7 @@ export default function Results({ answers, elapsedMs, onPlayAgain, onNextGroup, 
   })
 
   return (
-    <div className="results">
+    <div className="results quant-results">
       <div className="wizard-topbar">
         <button className="icon-back-btn" onClick={onNewGroups} aria-label="בחירת קבוצה">
           →
@@ -45,7 +47,7 @@ export default function Results({ answers, elapsedMs, onPlayAgain, onNextGroup, 
 
       <p className="time-line">זמן: {seconds} שניות</p>
 
-      <div className="results-actions">
+      <div className="results-actions vocab-results-actions">
         <button className="primary-btn" onClick={onPlayAgain}>
           נסה שוב
         </button>
@@ -55,7 +57,7 @@ export default function Results({ answers, elapsedMs, onPlayAgain, onNextGroup, 
           </button>
         )}
         {mistakes.length > 0 && (
-          <button className="secondary-btn" onClick={onMistakesOnly}>
+          <button className="secondary-btn mistakes-pill-btn" onClick={onMistakesOnly}>
             רק טעויות
           </button>
         )}

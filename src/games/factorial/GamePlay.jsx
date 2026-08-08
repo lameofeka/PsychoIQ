@@ -34,6 +34,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const current = queue[0]
   const total = initialQuestions.length
   const correctCount = [...firstAttempts.values()].filter((a) => a.isCorrect).length
+  const wrongCount = [...firstAttempts.values()].filter((a) => !a.isCorrect).length
+  const progressPercent = Math.round((resolvedIds.size / total) * 100)
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -138,11 +140,17 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         </button>
       </div>
 
-      <div className="progress-row">
-        <span>
-          שאלה {resolvedIds.size + 1} מתוך {total}
-        </span>
-        <span>ניקוד: {correctCount}</span>
+      <div className="quiz-progress">
+        <div className="quiz-progress-row">
+          <span>{resolvedIds.size} / {total}</span>
+          <span className="quiz-progress-score">
+            <span className="correct">✔︎ {correctCount}</span>
+            <span className="wrong">✘ {wrongCount}</span>
+          </span>
+        </div>
+        <div className="quiz-progress-track">
+          <div className="quiz-progress-fill" style={{ width: `${progressPercent}%` }} />
+        </div>
       </div>
 
       <div className={`question-card ${feedback ?? (correctFlash ? 'correct' : '')}`}>

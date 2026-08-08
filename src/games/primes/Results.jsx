@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import { PRIMES } from './logic'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function Results({ correctCount, elapsedMs, onPlayAgain, onNewSettings, onExit }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const total = PRIMES.length
   const percent = Math.round((correctCount / total) * 100)
   const seconds = Math.round(elapsedMs / 1000)

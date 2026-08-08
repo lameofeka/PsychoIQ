@@ -202,7 +202,15 @@ export default function GamePlay({
     if (bufferedRetry) {
       const rest = queue.slice(1)
       if (pendingRequeue) {
-        const insertAt = Math.min(rest.length, RETRY_BUFFER)
+        // Reinsert ~RETRY_BUFFER words ahead, but never let repeated misses
+        // wall off unseen words: if the next RETRY_BUFFER slots are all
+        // already-attempted retries, push the insert point past the next
+        // fresh (never-attempted) word so the deck keeps moving forward.
+        const firstFreshIdx = rest.findIndex((w) => !firstAttempts.has(w.id))
+        const insertAt =
+          firstFreshIdx === -1
+            ? Math.min(rest.length, RETRY_BUFFER)
+            : Math.min(rest.length, Math.max(RETRY_BUFFER, firstFreshIdx + 1))
         rest.splice(insertAt, 0, current)
       }
       if (rest.length === 0) {
