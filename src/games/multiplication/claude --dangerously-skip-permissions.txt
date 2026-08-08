@@ -1,4 +1,4 @@
-claude --dangerously-skip-permissions
+    claude --dangerously-skip-permissions
 
 
 git commit -am "עדכנתי את הקוד"

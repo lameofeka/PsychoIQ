@@ -15,6 +15,10 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const [queue, setQueue] = useState(initialQuestions)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
+  // Non-blocking "כל הכבוד" flash on a correct answer — unlike `feedback`,
+  // this never disables the keypad or delays the next question, so it
+  // doesn't slow down a confident user running fast down the list.
+  const [correctFlash, setCorrectFlash] = useState(false)
   const [firstAttempts, setFirstAttempts] = useState(() => new Map())
   const [resolvedIds, setResolvedIds] = useState(() => new Set())
   const [pressedKey, press] = useKeypadPress()
@@ -90,11 +94,14 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       : firstAttempts
     if (isFirstAttempt) setFirstAttempts(nextFirstAttempts)
 
-    // Correct answers advance immediately, with no feedback flash or pause —
-    // a confident user can run straight down the list at full typing speed.
-    // Only a wrong answer stops the run to show the right value.
+    // Correct answers advance immediately (correctFlash is a non-blocking
+    // "כל הכבוד" flash, not a pause) — a confident user can run straight
+    // down the list at full typing speed. Only a wrong answer stops the
+    // run to show the right value.
     if (isCorrect) {
       vibrateSuccess()
+      setCorrectFlash(true)
+      setTimeout(() => setCorrectFlash(false), 500)
       setResolvedIds((prev) => new Set(prev).add(question.id))
       const rest = queue.slice(1)
       inputValueRef.current = ''
@@ -138,7 +145,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         <span>ניקוד: {correctCount}</span>
       </div>
 
-      <div className={`question-card ${feedback ?? ''}`}>
+      <div className={`question-card ${feedback ?? (correctFlash ? 'correct' : '')}`}>
         <div className="question-text">
           {current.prefix}
           <span className="answer-blank">{feedback ? current.answer : ' '}</span>
@@ -215,6 +222,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           </button>
         </div>
 
+        {correctFlash && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
         {feedback === 'wrong' && (
           <div className="feedback-msg wrong">
             לא נכון. התשובה הנכונה: {current.answer}

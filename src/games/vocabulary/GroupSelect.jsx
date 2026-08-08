@@ -3,6 +3,18 @@ import { getWords, getGroups } from './dictionary'
 import { getGroupLevel, getLastPracticedGroup, rankWeakWords } from './stats'
 import ModeSwitch from './ModeSwitch'
 
+function ShuffleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 6h3.5c1.5 0 2.5.7 3.5 2l6 8c1 1.3 2 2 3.5 2H21" />
+      <path d="M17.5 4.5 21 6l-3.5 1.5" />
+      <path d="M3 18h3.5c1.5 0 2.5-.7 3.5-2l.7-1" />
+      <path d="M13.5 8l.7-1c1-1.3 2-2 3.5-2H21" />
+      <path d="M17.5 19.5 21 18l-3.5-1.5" />
+    </svg>
+  )
+}
+
 export default function GroupSelect({ onManageDictionary, onStart, onOpenMistakes }) {
   const words = useMemo(() => getWords(), [])
   const groups = useMemo(() => getGroups(words), [words])
@@ -53,6 +65,7 @@ export default function GroupSelect({ onManageDictionary, onStart, onOpenMistake
         <>
           <div className="group-actions">
             <button className="practice-all-btn" onClick={startAll}>
+              <ShuffleIcon />
               תרגל הכל
             </button>
             <button className="link-btn" onClick={clearAll}>
