@@ -953,25 +953,26 @@
 
 /* --- Polygons quiz --- */
 
-.polygon-setup-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
+/* Mirrors circle-parts' progress grid: a single row (one column per shape,
+   here 3 instead of splitting into two rows) whose cells stack the values
+   that need memorizing - sum of angles, one angle, central angle - instead
+   of the plain single-number cells the other quizzes' grids use. */
 .polygon-progress-grid {
   grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .polygon-progress-grid .grid-cell {
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
-.grid-cell-label {
-  font-size: 0.95em;
-  font-weight: 600;
+.grid-cell-value {
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9em;
 }
 
 .polygon-shape-wrap {
@@ -1516,6 +1517,17 @@
 
 .setup-compact .circle-progress-grid .grid-header {
   font-size: 12.5px;
+}
+
+/* Polygons progress map: only 3 columns (one per shape) - even more room
+   per cell than circle-parts' grid, so the three stacked values inside
+   each cell can render clearly bigger than the shared sizing above. */
+.setup-compact .polygon-progress-grid .grid-cell {
+  font-size: 13.5px;
+}
+
+.setup-compact .polygon-progress-grid .grid-header {
+  font-size: 13px;
 }
 
 .setup-compact .legend {

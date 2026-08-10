@@ -76,7 +76,7 @@ const GAMES = [
   {
     id: 'geo',
     category: 'quantitative',
-    title: 'גיאו',
+    title: 'גיאומטריה',
     Component: GeoGame,
   },
   {

@@ -18,13 +18,13 @@ function PolygonIcon() {
   )
 }
 
-// "גיאו" isn't a game of its own - it's a landing card that picks between
+// "גיאומטריה" isn't a game of its own - it's a landing card that picks between
 // the two geometry quizzes (מעגל / מצולעים), reusing each quiz's existing
 // top-level component untouched. Their own onExit ("חזרה לדף הבית") still
 // goes all the way out to the app's real home, same as every other quiz;
 // a small back arrow (shown only while that quiz's own setup screen, phase
 // 'inline', is up) returns to this picker instead, since switching straight
-// back to the already-selected "גיאו" pill wouldn't remount this component.
+// back to the already-selected "גיאומטריה" pill wouldn't remount this component.
 export default function GeoGame({ onPhaseChange, onExit }) {
   const [stage, setStage] = useState('menu') // 'menu' | 'circleParts' | 'polygons'
   const [childPhase, setChildPhase] = useState('inline')
@@ -50,7 +50,7 @@ export default function GeoGame({ onPhaseChange, onExit }) {
         {childPhase === 'inline' && (
           <div className="game-shell geo-back-bar">
             <div className="wizard-topbar">
-              <button className="icon-back-btn" onClick={backToMenu} aria-label="חזרה לבחירת גיאו">
+              <button className="icon-back-btn" onClick={backToMenu} aria-label="חזרה לבחירת גיאומטריה">
                 →
               </button>
             </div>
