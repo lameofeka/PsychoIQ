@@ -51,7 +51,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       if (e.key === 'Enter') {
         e.preventDefault()
         continueChain()
-      } else if (e.key === 'Backspace') {
+      } else if (e.key === 'Backspace' || e.key === 'Tab') {
         e.preventDefault()
         restartChain()
       }
