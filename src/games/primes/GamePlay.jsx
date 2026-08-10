@@ -73,6 +73,10 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
+    if (inputValueRef.current === '') {
+      submitAnswer('')
+      return
+    }
     const next = inputValueRef.current.slice(0, -1)
     inputValueRef.current = next
     setInput(next)
@@ -103,9 +107,12 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
   }
 
   function submitAnswer(value) {
-    if (feedback || value.trim() === '') return
+    if (feedback) return
 
-    const isCorrect = Number(value) === current
+    // An empty submission (Enter/Backspace pressed on a blank field) always
+    // counts as wrong instead of being ignored.
+    const isEmpty = value.trim() === ''
+    const isCorrect = !isEmpty && Number(value) === current
 
     if (!attemptedRef.current.has(currentIndex)) {
       attemptedRef.current.add(currentIndex)

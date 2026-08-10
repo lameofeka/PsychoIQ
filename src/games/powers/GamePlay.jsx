@@ -6,6 +6,9 @@ import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 const FEEDBACK_DELAY_MS = 900
+// Chain mode ("לפי הסדר") advances immediately on a correct answer, so the
+// "כל הכבוד" flash only needs half the normal lingering time.
+const CHAIN_CORRECT_DELAY_MS = FEEDBACK_DELAY_MS / 2
 const MAX_ANSWER_DIGITS = 3
 // Same buffered-retry rules as the vocabulary quiz: a wrong answer resurfaces
 // a few questions later, and has to be answered correctly twice in a row
@@ -74,6 +77,10 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
+    if (inputValueRef.current === '') {
+      submitAnswer('')
+      return
+    }
     const next = inputValueRef.current.slice(0, -1)
     inputValueRef.current = next
     setInput(next)
@@ -104,11 +111,15 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   }
 
   function submitAnswer(value) {
-    if (feedback || value.trim() === '') return
+    if (feedback) return
 
     const question = current
-    const userAnswer = Number(value)
-    const isCorrect = userAnswer === question.answer
+    // An empty submission (Enter/Backspace pressed on a blank field) always
+    // counts as wrong instead of being ignored — Number('') is 0, which
+    // would otherwise false-positive against a 0 answer.
+    const isEmpty = value.trim() === ''
+    const userAnswer = isEmpty ? null : Number(value)
+    const isCorrect = !isEmpty && userAnswer === question.answer
     // Chain mode is a drilled, retry-until-correct practice run, not a
     // diagnostic pass — keep it out of the weak/strong progress-map stats.
     if (!settings.inOrder) recordFactResult(question.a, question.b, isCorrect)
@@ -126,7 +137,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     // the user picks "המשך מכאן" (retry) or "התחל מהתחלה" (restart) instead
     // of the buffered-retry queue silently resurfacing the question later.
     if (settings.inOrder) {
-      if (isCorrect) setTimeout(() => goNext(question, false), FEEDBACK_DELAY_MS)
+      if (isCorrect) setTimeout(() => goNext(question, false), CHAIN_CORRECT_DELAY_MS)
       return
     }
 

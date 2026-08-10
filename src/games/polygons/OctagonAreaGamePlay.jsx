@@ -40,10 +40,23 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
     submitAnswer(input)
   }
 
+  function handleInputKeyDown(e) {
+    // Backspace on an already-empty field has nothing to delete, and Enter
+    // on an empty field can't reach the (disabled) submit button — treat
+    // both as an explicit wrong-answer submission instead of a no-op.
+    if (feedback || input.trim() !== '') return
+    if (e.key === 'Backspace' || e.key === 'Enter') {
+      e.preventDefault()
+      submitAnswer('')
+    }
+  }
+
   function submitAnswer(value) {
-    if (feedback || value.trim() === '') return
+    if (feedback) return
 
     const question = current
+    // checkFormulaAnswer('', ...) already returns false, so an empty
+    // submission naturally counts as wrong rather than being ignored.
     const isCorrect = checkFormulaAnswer(value, question.answers)
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
@@ -132,6 +145,7 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleInputKeyDown}
             disabled={!!feedback}
             placeholder="הקלד/י את התשובה במילים"
             autoFocus

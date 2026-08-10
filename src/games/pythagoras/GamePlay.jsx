@@ -76,6 +76,10 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
   function handleBackspace() {
     if (feedback) return
+    if (inputValueRef.current === '') {
+      submitAnswer('')
+      return
+    }
     const next = inputValueRef.current.slice(0, -1)
     inputValueRef.current = next
     setInput(next)
@@ -106,11 +110,13 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   }
 
   function submitAnswer(value) {
-    if (feedback || value.trim() === '') return
+    if (feedback) return
 
     const question = current
     const pos = activePos
-    const isCorrect = value === String(question.triple[pos])
+    // An empty submission (Enter/Backspace pressed on a blank field) always
+    // counts as wrong instead of being ignored.
+    const isCorrect = value.trim() !== '' && value === String(question.triple[pos])
     // Chain mode is a drilled, retry-until-correct practice run, not a
     // diagnostic pass — keep it out of the weak/strong progress-map stats.
     if (!settings.inOrder) recordFactResult(question.id, isCorrect)
