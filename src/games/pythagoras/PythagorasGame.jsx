@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react'
 import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
-import OctagonAreaGamePlay from './OctagonAreaGamePlay'
 import Results from './Results'
 
-export default function PolygonsGame({ onPhaseChange, onExit, setupHeaderExtra }) {
+export default function PythagorasGame({ onPhaseChange, onExit, setupHeaderExtra }) {
   const [stage, setStage] = useState('setup')
-  // Which GamePlay flavor 'playing'/'results' currently refer to - the
-  // regular sum/angle/central drill, or the octagon area side-quiz opened
-  // via the "תרגול מתומן" link on the setup screen.
-  const [mode, setMode] = useState('facts')
   const [settings, setSettings] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
@@ -19,15 +14,7 @@ export default function PolygonsGame({ onPhaseChange, onExit, setupHeaderExtra }
   }, [stage])
 
   function handleSetupComplete(newSettings) {
-    setMode('facts')
     setSettings(newSettings)
-    setStage('playing')
-  }
-
-  function handleStartOctagonArea() {
-    setMode('octagonArea')
-    setSettings({ octagonArea: true })
-    setRoundKey((k) => k + 1)
     setStage('playing')
   }
 
@@ -45,9 +32,8 @@ export default function PolygonsGame({ onPhaseChange, onExit, setupHeaderExtra }
     setStage('setup')
   }
 
-  function handlePracticeWeak(weakFacts) {
-    setMode('facts')
-    setSettings({ weakFacts })
+  function handlePracticeWeak(weakTriples) {
+    setSettings({ weakTriples })
     setRoundKey((k) => k + 1)
     setStage('playing')
   }
@@ -55,14 +41,8 @@ export default function PolygonsGame({ onPhaseChange, onExit, setupHeaderExtra }
   function handleMistakesOnly() {
     const mistakes = roundResult.answers.filter((a) => !a.isCorrect)
     if (mistakes.length === 0) return
-    if (mode === 'octagonArea') {
-      setSettings({ octagonArea: true, retryQuestions: mistakes.map((a) => a.question) })
-      setRoundKey((k) => k + 1)
-      setStage('playing')
-      return
-    }
-    const weakFacts = mistakes.map((a) => a.question)
-    setSettings({ weakFacts })
+    const weakTriples = mistakes.map((a) => a.question.triple)
+    setSettings({ weakTriples })
     setRoundKey((k) => k + 1)
     setStage('playing')
   }
@@ -70,23 +50,10 @@ export default function PolygonsGame({ onPhaseChange, onExit, setupHeaderExtra }
   return (
     <div className="game-shell">
       {stage === 'setup' && (
-        <SetupWizard
-          onComplete={handleSetupComplete}
-          onPracticeWeak={handlePracticeWeak}
-          onStartOctagonArea={handleStartOctagonArea}
-          headerExtra={setupHeaderExtra}
-        />
+        <SetupWizard onComplete={handleSetupComplete} onPracticeWeak={handlePracticeWeak} headerExtra={setupHeaderExtra} />
       )}
-      {stage === 'playing' && mode === 'facts' && (
+      {stage === 'playing' && (
         <GamePlay key={roundKey} settings={settings} onFinish={handleFinish} onExitQuiz={handleNewSettings} />
-      )}
-      {stage === 'playing' && mode === 'octagonArea' && (
-        <OctagonAreaGamePlay
-          key={roundKey}
-          settings={settings}
-          onFinish={handleFinish}
-          onExitQuiz={handleNewSettings}
-        />
       )}
       {stage === 'results' && (
         <Results

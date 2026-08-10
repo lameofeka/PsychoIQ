@@ -932,47 +932,115 @@
   color: var(--danger);
 }
 
-/* --- Geo: מעגל/מצולעים picker --- */
+/* Hides the on-screen numeric keypad on real desktop/laptop setups (mouse +
+   precise pointer) across every quant quiz that has one - a physical
+   keyboard already drives the same digit/backspace/enter handling (see
+   handleInputKeyDown in each quiz's GamePlay.jsx), so the on-screen keypad
+   is redundant there. Touch devices (any pointer coarseness, any window
+   width) keep it, since `hover`/`pointer` reflect the input method itself
+   rather than viewport size. */
+@media (hover: hover) and (pointer: fine) {
+  .numeric-keypad {
+    display: none;
+  }
 
-.geo-menu-row {
-  grid-template-columns: repeat(2, 1fr);
+  /* circleParts' fraction/percent stage and the whole polygons quiz hide
+     their real <input> entirely (see .sr-only-input) because the on-screen
+     keypad was the only visible way to answer - the digits themselves show
+     up in the decorative fraction-box/answer-blank spans instead. With the
+     keypad gone on desktop there'd be nothing left to click or see focus
+     on, so give the input back its normal visible box here; a physical
+     keyboard already drives it either way via the same keydown handling. */
+  .sr-only-input {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 12px;
+    margin-top: 12px;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    border: 2px solid var(--border);
+  }
 }
 
-.geo-menu-cube svg {
-  width: 32px;
-  height: 32px;
+/* --- Geo: מעגל/מצולעים switch --- */
+
+/* `.mode-switch` is normally absolutely centered over a fixed-height
+   `.wizard-topbar` (e.g. next to a back arrow) - here it's the first thing
+   in the card with nothing else sharing its row, so it's put back in
+   normal flow instead: overflowing its "reserved" height and floating over
+   the title below it is what caused the reported overlap. */
+.geo-switch-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
-/* The back-to-picker arrow sits above the chosen quiz's own card, outside
-   it (no card background of its own) - only shown while that quiz's setup
-   screen (phase 'inline') is up; gameplay/results have their own back
-   arrows already. */
-.geo-back-bar {
-  margin-bottom: -4px;
+.geo-switch-row .mode-switch {
+  position: static;
+  transform: none;
 }
 
 /* --- Polygons quiz --- */
 
-/* Mirrors circle-parts' progress grid: a single row (one column per shape,
-   here 3 instead of splitting into two rows) whose cells stack the values
-   that need memorizing - sum of angles, one angle, central angle - instead
-   of the plain single-number cells the other quizzes' grids use. */
-.polygon-progress-grid {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+/* A real labeled table instead of the other quizzes' unlabeled grid-cell
+   pattern - rows name which value is which (sum/one angle/central angle),
+   columns are the shapes, so it's unambiguous which number means what.
+   Each shape's whole column is tinted by that shape's mastery level. */
+.polygon-fact-table-wrap {
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border);
   margin-bottom: 20px;
 }
 
-.polygon-progress-grid .grid-cell {
-  flex-direction: column;
-  gap: 2px;
+.polygon-fact-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
 }
 
-.grid-cell-value {
+.polygon-fact-table th,
+.polygon-fact-table td {
+  padding: 10px 6px;
+  font-size: 13.5px;
+  border: 1px solid var(--border);
+}
+
+.polygon-fact-table thead th {
   font-weight: 700;
-  color: var(--muted);
+  color: var(--text-h);
+  background: var(--muted-bg);
+}
+
+.polygon-fact-table tbody th {
+  font-weight: 600;
+  color: var(--text);
+  background: var(--muted-bg);
+  white-space: nowrap;
+}
+
+.polygon-fact-table td {
+  font-weight: 700;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
-  font-size: 0.9em;
+}
+
+.polygon-fact-table td.level-green {
+  background: var(--success-bg);
+}
+
+.polygon-fact-table td.level-yellow {
+  background: var(--warning-bg);
+}
+
+.polygon-fact-table td.level-red {
+  background: var(--danger-bg);
+}
+
+.polygon-fact-table td.level-unseen {
+  background: var(--bg);
 }
 
 .polygon-shape-wrap {
@@ -1016,6 +1084,82 @@
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
+}
+
+.octagon-area-link {
+  display: block;
+  margin: 10px auto 0;
+  text-align: center;
+}
+
+.octagon-area-diagram-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.octagon-area-prompt {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* The free-text answer needs a real keyboard (no numeric-keypad auto-submit
+   possible), so - unlike every other quant quiz - this one keeps the input
+   and a manual "בדוק" button, stacked instead of side by side since a full
+   formula sentence is longer than a single input+button row comfortably fits. */
+.octagon-area-form {
+  flex-direction: column;
+}
+
+.octagon-area-form input {
+  width: 100%;
+}
+
+.octagon-area-form .primary-btn {
+  width: 100%;
+}
+
+/* --- Pythagoras quiz --- */
+
+/* Reuses .fraction-box for the blank slots (see renderSlot in GamePlay.jsx)
+   - only the row itself and the given/colon text need their own rules.
+   Forced ltr so "3 : 4 : 5" always reads in natural numeric order despite
+   the app's overall rtl flow, same reasoning as the equation text in every
+   other quant quiz. */
+.triple-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  direction: ltr;
+}
+
+.triple-given {
+  min-width: 1.6em;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+  text-align: center;
+}
+
+.triple-colon {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.pythagoras-progress-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.pythagoras-progress-grid .grid-cell {
+  aspect-ratio: auto;
+  padding: 10px 4px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* --- Results --- */
@@ -1517,17 +1661,6 @@
 
 .setup-compact .circle-progress-grid .grid-header {
   font-size: 12.5px;
-}
-
-/* Polygons progress map: only 3 columns (one per shape) - even more room
-   per cell than circle-parts' grid, so the three stacked values inside
-   each cell can render clearly bigger than the shared sizing above. */
-.setup-compact .polygon-progress-grid .grid-cell {
-  font-size: 13.5px;
-}
-
-.setup-compact .polygon-progress-grid .grid-header {
-  font-size: 13px;
 }
 
 .setup-compact .legend {

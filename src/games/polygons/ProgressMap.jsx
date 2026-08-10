@@ -3,6 +3,12 @@ import { getFactLevel, getWeakNumbers } from './stats'
 
 const SIDES_LIST = POLYGON_FACTS.map((fact) => fact.sides)
 
+const ROWS = [
+  { key: 'sum', label: 'סכום זוויות' },
+  { key: 'angle', label: 'זווית אחת' },
+  { key: 'central', label: 'זווית מרכזית' },
+]
+
 export default function ProgressMap({ onPracticeWeak }) {
   const weakSides = getWeakNumbers(SIDES_LIST)
   const weakFacts = POLYGON_FACTS.filter((fact) => weakSides.includes(fact.sides))
@@ -10,31 +16,36 @@ export default function ProgressMap({ onPracticeWeak }) {
   return (
     <div className="progress-map">
       <h2>מפת התקדמות</h2>
-      <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בצורה הזו</p>
+      <p className="summary-line">כל עמודה צבועה לפי רמת השליטה שלך בצורה הזו</p>
 
-      <div
-        className="progress-grid polygon-progress-grid"
-        style={{ gridTemplateColumns: `repeat(${POLYGON_FACTS.length}, 1fr)` }}
-      >
-        {POLYGON_FACTS.map((fact) => (
-          <div key={`h-${fact.sides}`} className="grid-header">
-            {fact.name}
-          </div>
-        ))}
-        {POLYGON_FACTS.map((fact) => {
-          const level = getFactLevel(fact.sides)
-          return (
-            <div
-              key={fact.sides}
-              className={`grid-cell level-${level}`}
-              title={`${fact.name}: סכום ${fact.sum}°, זווית ${fact.angle}°, זווית מרכזית ${fact.central}°`}
-            >
-              <span className="grid-cell-value">{fact.sum}°</span>
-              <span className="grid-cell-value">{fact.angle}°</span>
-              <span className="grid-cell-value">{fact.central}°</span>
-            </div>
-          )
-        })}
+      <div className="polygon-fact-table-wrap">
+        <table className="polygon-fact-table">
+          <thead>
+            <tr>
+              <th scope="col" />
+              {POLYGON_FACTS.map((fact) => (
+                <th key={fact.sides} scope="col">
+                  {fact.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {ROWS.map((row) => (
+              <tr key={row.key}>
+                <th scope="row">{row.label}</th>
+                {POLYGON_FACTS.map((fact) => {
+                  const level = getFactLevel(fact.sides)
+                  return (
+                    <td key={fact.sides} className={`level-${level}`}>
+                      {fact[row.key]}°
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="legend">

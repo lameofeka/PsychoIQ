@@ -4,15 +4,18 @@ import { recordFactResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
-import PolygonShape from './PolygonShape'
 
 const FEEDBACK_DELAY_MS = 900
-// Longest possible answer is the sum of angles (up to 4 digits, e.g. 1080);
-// a single interior/central angle never exceeds 3.
-const MAX_ANSWER_LEN = 4
-// Same buffered-retry rules as the other quant quizzes: a wrong answer
+// A correct answer only needs a quick flash before moving on; a wrong one
+// keeps the full delay so there's time to actually read the right answer.
+const FEEDBACK_DELAY_CORRECT_MS = FEEDBACK_DELAY_MS / 2
+// Every triple number here is at most two digits (20).
+const MAX_ANSWER_LEN = 2
+// Same buffered-retry rules as the other quant quizzes: a wrong triple
 // resurfaces a few questions later, and has to be answered correctly twice
-// in a row before it's considered learned.
+// in a row before it's considered learned. Every resurfacing re-asks all of
+// that triple's blanks (with a freshly-random given position), not just the
+// one that was wrong.
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
 
@@ -20,29 +23,30 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   useHtmlClassLock('quant-gameplay-lock')
   const questions = useMemo(() => generateRound(settings), [settings])
   const [queue, setQueue] = useState(questions)
+  const [stageIndex, setStageIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [correctCount, setCorrectCount] = useState(0)
   const [wrongCount, setWrongCount] = useState(0)
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
-  // Mirrors `input` synchronously — reading this instead of the `input`
-  // state closure in appendChar lets two fast keypresses (physical keyboard
-  // repeat, or a quick double-tap on the on-screen keypad) both land even if
-  // the second one fires before React re-renders and hands appendChar a
-  // fresh closure. Every setInput call below has a matching write here.
   const inputValueRef = useRef('')
   const [pressedKey, press] = useKeypadPress()
   const firstAttemptsRef = useRef(new Map())
   const retryPassesRef = useRef(new Map())
+  // Results (right or wrong) for each blank position (0/1/2) of the current
+  // question, reset every time the question changes.
+  const resultsRef = useRef({})
 
   const current = queue[0]
   const totalQuestions = questions.length
   const progressPercent = Math.round((correctCount / totalQuestions) * 100)
+  const activePos = current?.blankIndices[stageIndex]
+  const activeAnswer = current ? String(current.triple[activePos]) : ''
 
   useEffect(() => {
     inputRef.current?.focus()
-  }, [current?.id, feedback])
+  }, [current?.id, stageIndex, feedback])
 
   useEffect(() => {
     if (feedback !== 'wrong' || !settings.inOrder) return
@@ -65,7 +69,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     const next = inputValueRef.current + ch
     inputValueRef.current = next
     setInput(next)
-    if (next.length >= String(current.answer).length) {
+    if (next.length >= activeAnswer.length) {
       submitAnswer(next)
     }
   }
@@ -105,30 +109,48 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     if (feedback || value.trim() === '') return
 
     const question = current
-    const isCorrect = value === String(question.answer)
+    const pos = activePos
+    const isCorrect = value === String(question.triple[pos])
     // Chain mode is a drilled, retry-until-correct practice run, not a
     // diagnostic pass — keep it out of the weak/strong progress-map stats.
-    if (!settings.inOrder) recordFactResult(question.sides, isCorrect)
+    if (!settings.inOrder) recordFactResult(question.id, isCorrect)
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
+    resultsRef.current[pos] = { value, isCorrect }
+
     // Chain mode ("לפי הסדר"): a wrong answer pauses the round in place -
-    // the user picks "המשך מכאן" (retry this question) or "התחל מהתחלה"
+    // the user picks "המשך מכאן" (retry this same blank) or "התחל מהתחלה"
     // (reset the whole round) instead of silently moving on.
     if (settings.inOrder && !isCorrect) return
 
+    if (stageIndex < question.blankIndices.length - 1) {
+      setTimeout(() => {
+        setStageIndex((i) => i + 1)
+        inputValueRef.current = ''
+        setInput('')
+        setFeedback(null)
+      }, isCorrect ? FEEDBACK_DELAY_CORRECT_MS : FEEDBACK_DELAY_MS)
+      return
+    }
+
+    const overallCorrect = question.blankIndices.every((i) => resultsRef.current[i]?.isCorrect)
     const isFirstAttempt = !firstAttemptsRef.current.has(question.id)
     let requeue
 
     if (isFirstAttempt) {
-      firstAttemptsRef.current.set(question.id, { question, userAnswer: value, isCorrect })
-      if (isCorrect) setCorrectCount((c) => c + 1)
+      firstAttemptsRef.current.set(question.id, {
+        question,
+        results: { ...resultsRef.current },
+        isCorrect: overallCorrect,
+      })
+      if (overallCorrect) setCorrectCount((c) => c + 1)
       else setWrongCount((c) => c + 1)
-      if (!isCorrect) retryPassesRef.current.set(question.id, RETRY_PASSES_NEEDED)
-      requeue = !isCorrect
+      if (!overallCorrect) retryPassesRef.current.set(question.id, RETRY_PASSES_NEEDED)
+      requeue = !overallCorrect
     } else {
       const remaining = retryPassesRef.current.get(question.id) ?? RETRY_PASSES_NEEDED
-      if (isCorrect) {
+      if (overallCorrect) {
         const nextRemaining = remaining - 1
         if (nextRemaining <= 0) {
           retryPassesRef.current.delete(question.id)
@@ -143,7 +165,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       }
     }
 
-    setTimeout(() => goNext(question, requeue), FEEDBACK_DELAY_MS)
+    setTimeout(() => goNext(question, requeue), isCorrect ? FEEDBACK_DELAY_CORRECT_MS : FEEDBACK_DELAY_MS)
   }
 
   function goNext(question, requeue) {
@@ -155,6 +177,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     inputValueRef.current = ''
     setInput('')
     setFeedback(null)
+    setStageIndex(0)
+    resultsRef.current = {}
 
     if (rest.length === 0) {
       const finalAnswers = questions.map((q) => firstAttemptsRef.current.get(q.id)).filter(Boolean)
@@ -173,16 +197,37 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   function restartChain() {
     firstAttemptsRef.current = new Map()
     retryPassesRef.current = new Map()
+    resultsRef.current = {}
     startTimeRef.current = Date.now()
     setCorrectCount(0)
     setWrongCount(0)
     inputValueRef.current = ''
     setInput('')
     setFeedback(null)
+    setStageIndex(0)
     setQueue(questions)
   }
 
   if (!current) return null
+
+  function renderSlot(pos) {
+    if (pos === current.givenIndex) {
+      return (
+        <span key={pos} className="triple-given">
+          {current.triple[pos]}
+        </span>
+      )
+    }
+    const blankOrder = current.blankIndices.indexOf(pos)
+    const isActive = blankOrder === stageIndex
+    const result = resultsRef.current[pos]
+    const displayValue = result ? current.triple[pos] : isActive ? (feedback ? current.triple[pos] : input) : ''
+    return (
+      <span key={pos} className={`fraction-box ${isActive ? 'active' : ''}`}>
+        {displayValue !== '' ? displayValue : ' '}
+      </span>
+    )
+  }
 
   return (
     <div className="gameplay">
@@ -205,19 +250,13 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         </div>
       </div>
 
-      <div className={`question-card polygon-question-card ${feedback ?? ''}`}>
-        <div className="polygon-shape-wrap">
-          <PolygonShape sides={current.sides} />
-          <div className="polygon-shape-name">{current.name}</div>
-        </div>
-
-        <div className="polygon-fact-rows">
-          <div className="polygon-fact-row active-row">
-            <span className="polygon-fact-label">{current.label}</span>
-            <span>=</span>
-            <span>°</span>
-            <span className="answer-blank">{(feedback ? current.answer : input) || ' '}</span>
-          </div>
+      <div className={`question-card ${feedback ?? ''}`}>
+        <div className="triple-row">
+          {renderSlot(0)}
+          <span className="triple-colon">:</span>
+          {renderSlot(1)}
+          <span className="triple-colon">:</span>
+          {renderSlot(2)}
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -293,7 +332,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
         {feedback === 'correct' && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
         {feedback === 'wrong' && (
-          <div className="feedback-msg wrong">לא נכון. התשובה הנכונה: {current.answer}°</div>
+          <div className="feedback-msg wrong">לא נכון. התשובה הנכונה: {current.triple[activePos]}</div>
         )}
         {feedback === 'wrong' && settings.inOrder && (
           <div className="results-actions chain-actions">

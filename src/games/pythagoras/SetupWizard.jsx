@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import ProgressMap from './ProgressMap'
 
-export default function SetupWizard({ onComplete, onPracticeWeak, onStartOctagonArea, headerExtra }) {
+export default function SetupWizard({ onComplete, onPracticeWeak, headerExtra }) {
   const [inOrder, setInOrder] = useState(false)
 
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
         {headerExtra}
-        <h2>מצולעים משוכללים</h2>
+        <h2>שלשות פיתגורס</h2>
         <p className="summary-line">
-          בכל שאלה תוצג צורה - הזינו את סכום הזוויות, זווית אחת והזווית המרכזית שלה
+          בכל שאלה מוצג מספר אחד מתוך השלשה - השלימו את שני המספרים האחרים לפי הסדר
         </p>
 
         <div className="in-order-row">
@@ -29,10 +29,6 @@ export default function SetupWizard({ onComplete, onPracticeWeak, onStartOctagon
 
         <button className="primary-btn big" onClick={() => onComplete({ inOrder })}>
           התחל תרגול
-        </button>
-
-        <button type="button" className="link-btn octagon-area-link" onClick={onStartOctagonArea}>
-          תרגול מתומן
         </button>
       </div>
 

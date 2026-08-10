@@ -8,7 +8,7 @@ const OPERATION_OPTIONS = [
   { value: OPERATIONS.COMBINED, label: 'משולב', icon: '±' },
 ]
 
-export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak }) {
+export default function SetupWizard({ initialSettings, onComplete, onPracticeWeak, headerExtra }) {
   const [operation, setOperation] = useState(initialSettings?.operation ?? OPERATIONS.DEGREES_TO_FRACTION)
   // Second tap on an already-selected "משולב" cube toggles between asking
   // every combination ("all", the default) and picking one at random per
@@ -34,6 +34,7 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   return (
     <div className="wizard-stack">
       <div className="wizard setup-compact">
+        {headerExtra}
         <div className="setup-section">
           <div className="operation-row">
             {OPERATION_OPTIONS.map((opt) => (

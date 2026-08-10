@@ -2,24 +2,6 @@ import { useRef } from 'react'
 
 const DOUBLE_CLICK_WINDOW_MS = 280
 
-function DictionaryIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 5c2.5-1 5-1 8 0v14c-3-1-5.5-1-8 0V5Z" />
-      <path d="M20 5c-2.5-1-5-1-8 0v14c3-1 5.5-1 8 0V5Z" />
-    </svg>
-  )
-}
-
-function PracticeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4.5 19.5l1-4L14 6l3 3-8.5 8.5-4 1Z" />
-      <path d="M12.5 7.5l3 3" />
-    </svg>
-  )
-}
-
 export default function ModeSwitch({ mode, onChange, onDictionaryDoubleClick }) {
   const clickTimerRef = useRef(null)
 
@@ -61,7 +43,6 @@ export default function ModeSwitch({ mode, onChange, onDictionaryDoubleClick }) 
         onClick={handleDictionaryClick}
         onDoubleClick={handleDictionaryDoubleClick}
       >
-        <DictionaryIcon />
         מילון
       </button>
       <button
@@ -69,7 +50,6 @@ export default function ModeSwitch({ mode, onChange, onDictionaryDoubleClick }) 
         className={`mode-switch-btn ${mode === 'practice' ? 'active' : ''}`}
         onClick={() => onChange('practice')}
       >
-        <PracticeIcon />
         תרגול
       </button>
     </div>
