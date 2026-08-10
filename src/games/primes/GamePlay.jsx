@@ -215,10 +215,10 @@ export default function GamePlay({ onFinish, onExitQuiz }) {
             prime is right there on screen once the user continues anyway. */}
         {feedback === 'wrong' && (
           <div className="results-actions chain-actions">
-            <button className="primary-btn chain-continue-btn" onClick={continueChain}>
+            <button className="primary-btn" onClick={continueChain}>
               המשך מכאן
             </button>
-            <button className="secondary-btn" onClick={restartChain}>
+            <button className="secondary-btn chain-restart-btn" onClick={restartChain}>
               התחל מהתחלה
             </button>
           </div>

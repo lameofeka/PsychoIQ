@@ -1090,15 +1090,16 @@
   border-radius: 12px;
 }
 
-/* Outlined instead of solid-filled — visually reads as "resume", a lighter
-   commitment than the solid restart-from-scratch action next to it. */
-.chain-continue-btn {
+/* Outlined instead of solid-filled — visually reads as a lighter commitment
+   than the solid "continue" action next to it, which now matches the
+   filled, white-text "start practice" button style. */
+.chain-restart-btn {
   background: none;
   border: 2px solid var(--accent);
   color: var(--accent);
 }
 
-.chain-continue-btn:hover {
+.chain-restart-btn:hover {
   background: var(--accent-bg);
 }
 
