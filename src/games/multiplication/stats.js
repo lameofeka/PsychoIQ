@@ -45,6 +45,17 @@ export function recordFactResult(a, b, isCorrect) {
   saveStats(stats)
 }
 
+// Called the moment the buffered-retry queue's own "learned" criterion is
+// met (RETRY_PASSES_NEEDED correct answers in a row after a miss) — forces
+// this fact green immediately, instead of leaving it stuck at yellow/red
+// because the earlier miss is still sitting in the rolling accuracy window.
+export function markFactLearned(a, b) {
+  const stats = loadStats()
+  const key = factKey(a, b)
+  stats[key] = Array(WINDOW_SIZE).fill(true)
+  saveStats(stats)
+}
+
 export function getFactLevel(a, b) {
   const stats = loadStats()
   return levelFromHistory(stats[factKey(a, b)])

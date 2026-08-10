@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound } from './logic'
-import { recordFactResult } from './stats'
+import { recordFactResult, markFactLearned } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
@@ -109,6 +109,10 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     // down the list at full typing speed. Only a wrong answer stops the
     // run to show the right value.
     if (isCorrect) {
+      // Not the first try at this question — it's a retry that resurfaced
+      // after a miss, so this correct answer is exactly the buffered-retry
+      // queue's own "learned" signal for it.
+      if (!isFirstAttempt) markFactLearned(question.n)
       vibrateSuccess()
       setCorrectFlash(true)
       setTimeout(() => setCorrectFlash(false), FEEDBACK_DELAY_MS)

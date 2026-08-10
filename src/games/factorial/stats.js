@@ -36,6 +36,16 @@ export function recordFactResult(n, isCorrect) {
   saveStats(stats)
 }
 
+// Called the moment a previously-wrong question is answered correctly on
+// retry — forces this fact green immediately, instead of leaving it stuck
+// at yellow because the earlier miss is still sitting in the rolling
+// accuracy window.
+export function markFactLearned(n) {
+  const stats = loadStats()
+  stats[n] = Array(WINDOW_SIZE).fill(true)
+  saveStats(stats)
+}
+
 export function getFactLevel(n) {
   const stats = loadStats()
   return levelFromHistory(stats[n])

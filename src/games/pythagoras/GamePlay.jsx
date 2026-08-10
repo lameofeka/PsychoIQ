@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound } from './logic'
-import { recordFactResult } from './stats'
+import { recordFactResult, markFactLearned } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
@@ -161,6 +161,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         if (nextRemaining <= 0) {
           retryPassesRef.current.delete(question.id)
           requeue = false
+          markFactLearned(question.id)
         } else {
           retryPassesRef.current.set(question.id, nextRemaining)
           requeue = true
