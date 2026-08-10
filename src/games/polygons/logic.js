@@ -155,6 +155,14 @@ const FORMULA_STRIP_RE = /[^\wא-ת ]/g
 // JS, so this splits on whitespace and maps whole tokens instead.
 const TOKEN_ALIASES = { איי: 'a', איקס: 'x', שתיים: '2', ארבע: '4' }
 
+// Multiplication between two terms ("2·a²", "a²·√2") is just as often left
+// implicit as said out loud ("שתיים כפול איי בריבוע") - rather than
+// enumerating every position "כפול" could be inserted at across the
+// accepted answers, it's dropped as a no-op connector on both sides before
+// comparing, same as the accepted answers already treat "פלוס"/"ועוד" as
+// interchangeable for "+".
+const IGNORED_WORDS = new Set(['כפול'])
+
 function normalizeFormula(str) {
   return str
     .replace(FORMULA_STRIP_RE, ' ')
@@ -162,6 +170,7 @@ function normalizeFormula(str) {
     .trim()
     .toLowerCase()
     .split(' ')
+    .filter((word) => !IGNORED_WORDS.has(word))
     .map((word) => TOKEN_ALIASES[word] ?? word)
     .join(' ')
 }
