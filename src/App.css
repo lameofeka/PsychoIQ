@@ -932,6 +932,91 @@
   color: var(--danger);
 }
 
+/* --- Geo: מעגל/מצולעים picker --- */
+
+.geo-menu-row {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.geo-menu-cube svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* The back-to-picker arrow sits above the chosen quiz's own card, outside
+   it (no card background of its own) - only shown while that quiz's setup
+   screen (phase 'inline') is up; gameplay/results have their own back
+   arrows already. */
+.geo-back-bar {
+  margin-bottom: -4px;
+}
+
+/* --- Polygons quiz --- */
+
+.polygon-setup-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.polygon-progress-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.polygon-progress-grid .grid-cell {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grid-cell-label {
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+.polygon-shape-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  color: var(--accent-dark);
+}
+
+.polygon-shape-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.polygon-fact-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.polygon-fact-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.polygon-fact-row.active-row {
+  color: var(--text-h);
+}
+
+.polygon-fact-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
 /* --- Results --- */
 
 .results h2 {

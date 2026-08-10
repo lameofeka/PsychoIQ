@@ -3,7 +3,7 @@ import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
 import PrimesGame from './games/primes/PrimesGame'
-import CirclePartsGame from './games/circleParts/CirclePartsGame'
+import GeoGame from './games/geo/GeoGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
 import { recordVisitAndGetStreak } from './streak'
@@ -74,10 +74,10 @@ const GAMES = [
     Component: PrimesGame,
   },
   {
-    id: 'circleParts',
+    id: 'geo',
     category: 'quantitative',
-    title: 'מעגל',
-    Component: CirclePartsGame,
+    title: 'גיאו',
+    Component: GeoGame,
   },
   {
     id: 'vocabulary',

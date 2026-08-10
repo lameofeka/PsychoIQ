@@ -8,6 +8,8 @@ import { PRIMES } from './games/primes/logic'
 import { getPrimeLevel } from './games/primes/stats'
 import { CIRCLE_FACTS } from './games/circleParts/logic'
 import { getWeakNumbers as getCirclePartsWeakNumbers } from './games/circleParts/stats'
+import { POLYGON_FACTS } from './games/polygons/logic'
+import { getWeakNumbers as getPolygonsWeakNumbers } from './games/polygons/stats'
 import { loadDictionary, getWords, getGroups } from './games/vocabulary/dictionary'
 import { getGroupLevel } from './games/vocabulary/stats'
 
@@ -39,6 +41,11 @@ function circlePartsCounts() {
   return { green: degrees.length - getCirclePartsWeakNumbers(degrees).length, total: degrees.length }
 }
 
+function polygonsCounts() {
+  const sides = POLYGON_FACTS.map((f) => f.sides)
+  return { green: sides.length - getPolygonsWeakNumbers(sides).length, total: sides.length }
+}
+
 function vocabularyCounts() {
   const groups = getGroups(getWords())
   const green = groups.filter((g) => getGroupLevel(g.index) === 'green').length
@@ -66,6 +73,7 @@ export async function getMasteryBreakdown() {
     factorialCounts(),
     primesCounts(),
     circlePartsCounts(),
+    polygonsCounts(),
   ]
   const verbalParts = [vocabularyCounts()]
 
