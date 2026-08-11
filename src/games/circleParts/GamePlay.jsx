@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { generateRound, OPERATIONS } from './logic'
-import { recordFactResult, markFactLearned } from './stats'
+import { recordFactResult, markFactLearned, fractionKey, percentKey } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
@@ -162,7 +162,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     const isCorrect = value.trim() !== '' && value === activeAnswer
     // Chain mode is a drilled, retry-until-correct practice run, not a
     // diagnostic pass — keep it out of the weak/strong progress-map stats.
-    if (!settings.inOrder) recordFactResult(question.fact.degrees, isCorrect)
+    // Recorded under a stage-specific key so the progress map can color the
+    // fraction and percent cells independently.
+    if (!settings.inOrder) {
+      recordFactResult(isMainStage ? fractionKey(question.fact.degrees) : percentKey(question.fact.degrees), isCorrect)
+    }
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
@@ -207,7 +211,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         if (nextRemaining <= 0) {
           retryPassesRef.current.delete(question.id)
           requeue = false
-          markFactLearned(question.fact.degrees)
+          markFactLearned(fractionKey(question.fact.degrees))
+          markFactLearned(percentKey(question.fact.degrees))
         } else {
           retryPassesRef.current.set(question.id, nextRemaining)
           requeue = true

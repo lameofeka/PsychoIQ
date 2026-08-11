@@ -18,6 +18,18 @@ function saveStats(stats) {
   }
 }
 
+// A user can know a fact's fraction without knowing its percent (or vice
+// versa) - e.g. 3/8 is an easy fraction to spot but its 37½% is much easier
+// to get wrong. Suffixing the degrees key keeps each stage's rolling
+// accuracy window separate instead of blending both into one score.
+export function fractionKey(degrees) {
+  return `${degrees}-fraction`
+}
+
+export function percentKey(degrees) {
+  return `${degrees}-percent`
+}
+
 function levelFromHistory(history) {
   if (!history || history.length === 0) return 'unseen'
   const correct = history.filter(Boolean).length

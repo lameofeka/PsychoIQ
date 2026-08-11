@@ -1418,44 +1418,51 @@
   background: none;
 }
 
-/* Circle-parts cells hold two stacked lines (fraction + its percent),
-   unlike the plain single-number cells in the other games' grids. */
-.circle-progress-grid .grid-cell {
-  flex-direction: column;
-  gap: 1px;
-  line-height: 1.15;
+/* Circle-parts progress map: one column per fact (header / fraction cell /
+   percent cell), laid out with grid-auto-flow so each fact only needs to
+   contribute 3 items in a flat list - no manual row-chunking. The column
+   count (20 facts) is wider than the compact setup card, so the grid gets a
+   fixed per-column width (instead of the other games' 1fr columns) and
+   scrolls horizontally inside its own wrapper rather than shrinking or
+   wrapping to a second row. */
+.circle-progress-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
 }
 
-.grid-cell-fraction {
+.circle-progress-grid {
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-columns: 56px;
+  width: max-content;
+  margin-bottom: 0;
+}
+
+/* Fraction and percent are separate facts the user can know independently
+   (e.g. spotting "3/8" doesn't mean "37½%" comes just as easily), so each
+   gets its own cell - colored from its own accuracy history - instead of
+   both being crammed into one cell. Square (aspect-ratio inherited from the
+   shared .grid-cell rule) rather than a flattened rectangle, matching every
+   other game's progress-map cells. */
+.circle-fraction-cell,
+.circle-percent-cell {
   font-weight: 700;
-  color: var(--muted);
   font-variant-numeric: tabular-nums;
   font-size: 0.9em;
 }
 
-/* The cell is small enough already - keep the stacked fraction at the
-   cell's own text size instead of additionally shrinking it. */
-.grid-cell-fraction .frac-text,
-.grid-cell-percent .frac-text {
-  font-size: 1em;
-  margin: 0 2px;
+.circle-fraction-cell {
+  color: var(--muted);
 }
 
-.grid-cell-fraction .frac-num {
+.circle-fraction-cell .frac-num {
   border-bottom-width: 1.75px;
 }
 
-.grid-cell-arrow {
-  font-size: 0.6em;
-  line-height: 1;
-  opacity: 0.5;
-}
-
-.grid-cell-percent {
-  font-size: 0.9em;
-  font-weight: 700;
+.circle-percent-cell {
   color: #b29ee8;
-  font-variant-numeric: tabular-nums;
 }
 
 .primes-grid {
@@ -1655,21 +1662,25 @@
   font-size: 11.6px;
 }
 
-/* Circle-parts progress map: fewer columns (facts wrap onto a second row)
-   than the other games' single-row grids, so each cell — and its text —
-   can render noticeably bigger than the shared .setup-compact sizing above
-   while still fitting the compact card width. */
-.setup-compact .circle-progress-grid {
-  gap: 6px;
+/* Circle-parts progress map: a horizontally-scrolling row inside the
+   compact card, so columns run a bit narrower than the full-width sizing
+   above to keep more of them in view at once. */
+.setup-compact .circle-progress-scroll {
   margin-bottom: 14px;
 }
 
-.setup-compact .circle-progress-grid .grid-cell {
+.setup-compact .circle-progress-grid {
+  gap: 5px;
+  grid-auto-columns: 46px;
+}
+
+.setup-compact .circle-fraction-cell,
+.setup-compact .circle-percent-cell {
   font-size: 10.6px;
 }
 
 .setup-compact .circle-progress-grid .grid-header {
-  font-size: 12.5px;
+  font-size: 11.5px;
 }
 
 .setup-compact .legend {
