@@ -112,24 +112,24 @@ export const OCTAGON_AREA_PARTS = [
     kind: 'part',
     key: 'square',
     prompt: 'מהו שטח הריבוע המרכזי?',
-    answers: ['x בריבוע'],
-    display: 'x²',
+    answers: ['a בריבוע'],
+    display: 'a²',
   },
   {
     id: 'part-rectangle',
     kind: 'part',
     key: 'rectangle',
     prompt: 'מהו שטח מלבן אחד?',
-    answers: ['x בריבוע חלקי שורש שתיים', 'שורש שתיים חלקי שתיים כפול x בריבוע'],
-    display: 'x²/√2',
+    answers: ['a בריבוע חלקי שורש שתיים', 'שורש שתיים חלקי שתיים כפול a בריבוע'],
+    display: 'a²/√2',
   },
   {
     id: 'part-triangle',
     kind: 'part',
     key: 'triangle',
     prompt: 'מהו שטח משולש אחד?',
-    answers: ['x בריבוע חלקי ארבע'],
-    display: 'x²/4',
+    answers: ['a בריבוע חלקי ארבע'],
+    display: 'a²/4',
   },
 ]
 
@@ -153,7 +153,10 @@ const FORMULA_STRIP_RE = /[^\wא-ת ]/g
 // of these fold onto the same canonical token before comparing. Word-
 // boundary regex (\b) doesn't recognize Hebrew letters as word characters in
 // JS, so this splits on whitespace and maps whole tokens instead.
-const TOKEN_ALIASES = { איי: 'a', איקס: 'x', שתיים: '2', ארבע: '4' }
+// "a"/"x" name the same side length here (the diagram labels it "a"), so
+// both the letter and its Hebrew name fold onto "a" regardless of which one
+// the accepted answer or the user's own answer happens to use.
+const TOKEN_ALIASES = { איי: 'a', איקס: 'a', x: 'a', שתיים: '2', ארבע: '4' }
 
 // Multiplication between two terms ("2·a²", "a²·√2") is just as often left
 // implicit as said out loud ("שתיים כפול איי בריבוע") - rather than

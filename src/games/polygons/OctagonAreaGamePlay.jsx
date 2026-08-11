@@ -134,6 +134,7 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
 
       <div className={`question-card octagon-area-card ${feedback ?? ''}`}>
         <div className="octagon-area-diagram-wrap">
+          <div className="octagon-area-side-label">a</div>
           {highlight ? <OctagonAreaDiagram highlight={highlight} /> : <PolygonShape sides={8} size={120} />}
         </div>
 
