@@ -77,6 +77,10 @@ const GAMES = [
     id: 'geo',
     category: 'quantitative',
     title: 'גיאומטריה',
+    // "גיאומטריה" is the longest label in the row and crowds the other 4
+    // pills on a narrow phone screen - shown only below the mobile
+    // breakpoint (see .game-pill-title-short in App.css).
+    shortTitle: 'גיאו',
     Component: GeoGame,
   },
   {
@@ -241,7 +245,8 @@ function App() {
                 className={`game-pill ${selectedGameId === game.id ? 'selected' : ''}`}
                 onClick={() => selectPill(game.id)}
               >
-                {game.title}
+                <span className="game-pill-title-full">{game.title}</span>
+                <span className="game-pill-title-short">{game.shortTitle ?? game.title}</span>
               </button>
             ))}
           </div>
