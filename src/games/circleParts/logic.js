@@ -5,6 +5,7 @@ export const OPERATIONS = {
 }
 
 export const CIRCLE_FACTS = [
+  { degrees: 180, numerator: 1, denominator: 2 },
   { degrees: 120, numerator: 1, denominator: 3 },
   { degrees: 90, numerator: 1, denominator: 4 },
   { degrees: 72, numerator: 1, denominator: 5 },
@@ -13,9 +14,17 @@ export const CIRCLE_FACTS = [
   { degrees: 40, numerator: 1, denominator: 9 },
   { degrees: 36, numerator: 1, denominator: 10 },
   { degrees: 30, numerator: 1, denominator: 12 },
+  { degrees: 18, numerator: 1, denominator: 20 },
   { degrees: 240, numerator: 2, denominator: 3 },
   { degrees: 270, numerator: 3, denominator: 4 },
   { degrees: 144, numerator: 2, denominator: 5 },
+  { degrees: 216, numerator: 3, denominator: 5 },
+  { degrees: 288, numerator: 4, denominator: 5 },
+  { degrees: 135, numerator: 3, denominator: 8 },
+  { degrees: 225, numerator: 5, denominator: 8 },
+  { degrees: 315, numerator: 7, denominator: 8 },
+  { degrees: 54, numerator: 3, denominator: 20 },
+  { degrees: 162, numerator: 9, denominator: 20 },
 ]
 
 export function shuffle(list) {
