@@ -1006,7 +1006,12 @@
 }
 
 .polygon-fact-table {
-  width: 100%;
+  /* Not width:100% - the row-label column has no background fill, so
+     stretching it to fill the card left the colored data columns looking
+     shoved to one side with a blank gap after them. Sizing to content and
+     centering keeps the colored cells visually centered instead. */
+  width: auto;
+  margin-inline: auto;
   border-collapse: separate;
   border-spacing: 4px;
   text-align: center;
