@@ -1430,6 +1430,32 @@
   overflow-y: hidden;
   margin-bottom: 20px;
   -webkit-overflow-scrolling: touch;
+  /* Snapping a whole column into place (instead of stopping mid-cell) is
+     what makes a finger-flick on mobile feel deliberate rather than sloppy;
+     "proximity" (not "mandatory") still lets a slow drag stop anywhere. */
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  /* A fixed fade on the trailing edge is a lightweight, static hint that
+     there's more to scroll to - cheaper than tracking scroll position in
+     JS just to toggle it, and the leading edge never needs one since 18°
+     already starts flush against it. */
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 22px), transparent);
+  mask-image: linear-gradient(to right, black calc(100% - 22px), transparent);
+}
+
+.circle-progress-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.circle-progress-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.circle-progress-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }
 
 .circle-progress-grid {
@@ -1438,6 +1464,13 @@
   grid-auto-columns: 56px;
   width: max-content;
   margin-bottom: 0;
+}
+
+/* One snap point per column - fraction/percent cells share their header's
+   horizontal position (same grid column), so snapping just the header is
+   enough to land the whole column in place. */
+.circle-progress-grid .grid-header {
+  scroll-snap-align: start;
 }
 
 /* Fraction and percent are separate facts the user can know independently
