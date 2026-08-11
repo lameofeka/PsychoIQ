@@ -1962,26 +1962,6 @@
   background: var(--accent);
 }
 
-.mistakes-list-wrap::before,
-.mistakes-list-wrap::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0 6px;
-  height: 16px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.mistakes-list-wrap::before {
-  top: 0;
-  background: linear-gradient(to bottom, var(--bg), transparent);
-}
-
-.mistakes-list-wrap::after {
-  bottom: 0;
-  background: linear-gradient(to top, var(--bg), transparent);
-}
-
 .mistakes-row {
   --tier-color: var(--border);
   position: relative;
