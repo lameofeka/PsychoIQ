@@ -27,12 +27,13 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
   const [rangeStart, setRangeStart] = useState(initialSettings?.rangeStart ?? 3)
   const [rangeEnd, setRangeEnd] = useState(initialSettings?.rangeEnd ?? 6)
   const [rangeAnchor, setRangeAnchor] = useState(null)
+  const [inOrder, setInOrder] = useState(initialSettings?.inOrder ?? false)
 
   const canStart = Boolean(operation && rangeType)
 
   function start() {
     if (!canStart) return
-    onComplete({ operation, combinedMode, rangeType, singleNumber, rangeStart, rangeEnd })
+    onComplete({ operation, combinedMode, rangeType, singleNumber, rangeStart, rangeEnd, inOrder })
   }
 
   function pickOperation(value) {
@@ -115,6 +116,20 @@ export default function SetupWizard({ initialSettings, onComplete, onPracticeWea
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="in-order-row">
+          <span className="in-order-label">לפי הסדר</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={inOrder}
+            className={`toggle-switch ${inOrder ? 'checked' : ''}`}
+            onClick={() => setInOrder((v) => !v)}
+            title="מצב שרשרת"
+          >
+            <span className="toggle-knob" />
+          </button>
         </div>
 
         <button className="primary-btn big" disabled={!canStart} onClick={start}>

@@ -87,7 +87,7 @@ export function getRoundQuestions(settings) {
     }
   }
 
-  return shuffle(questions)
+  return settings.inOrder ? questions : shuffle(questions)
 }
 
 export function describeSettings(settings) {

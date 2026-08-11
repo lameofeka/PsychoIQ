@@ -19,7 +19,7 @@ export default function SetupWizard({ onComplete, onPracticeWeak, onStartOctagon
             type="button"
             role="switch"
             aria-checked={inOrder}
-            className={`toggle-switch ${inOrder ? 'checked' : ''}`}
+            className={`toggle-switch geo-toggle-switch ${inOrder ? 'checked' : ''}`}
             onClick={() => setInOrder((v) => !v)}
             title="מצב שרשרת"
           >

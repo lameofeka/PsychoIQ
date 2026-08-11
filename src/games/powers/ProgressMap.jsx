@@ -23,7 +23,7 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       <p className="summary-line">כל תא בטבלה צבוע לפי רמת השליטה שלך באותה חזקה (בסיס × מעריך)</p>
 
       <div
-        className="progress-grid"
+        className="progress-grid powers-progress-grid"
         style={{ gridTemplateColumns: `repeat(${EXPONENTS.length + 1}, 1fr)` }}
       >
         <div className="grid-corner" />

@@ -1695,8 +1695,9 @@
   border-radius: 4px;
 }
 
+/* 15% bigger than the previous 12.1px (12.1 * 1.15 = 13.915px). */
 .setup-compact .primes-grid .grid-cell {
-  font-size: 12.1px;
+  font-size: 13.915px;
 }
 
 .setup-compact .grid-header {
@@ -1710,6 +1711,23 @@
 
 .setup-compact .factorial-progress-grid .grid-header {
   font-size: 11.6px;
+}
+
+/* 35% bigger than the shared 10.5px (10.5 * 1.35 = 14.175px). Padding grows
+   with it so the taller text still has breathing room in the cell. */
+.setup-compact .pythagoras-progress-grid .grid-cell {
+  font-size: 14.175px;
+  padding: 13.5px 5.4px;
+}
+
+/* 20% bigger than the shared 10.5px / 11px (grid-cell 10.5 * 1.2 = 12.6px,
+   grid-header 11 * 1.2 = 13.2px). */
+.setup-compact .powers-progress-grid .grid-cell {
+  font-size: 12.6px;
+}
+
+.setup-compact .powers-progress-grid .grid-header {
+  font-size: 13.2px;
 }
 
 /* Circle-parts progress map: a horizontally-scrolling row inside the
@@ -3052,6 +3070,27 @@
 
   .setup-compact .circle-fraction-cell {
     font-size: 18.2px;
+  }
+
+  /* "in order" toggle in the geo quizzes (circle-parts, polygons, pythagoras)
+     - 15% bigger than the shared .toggle-switch on mobile, where there's
+     room and the switch is easier to tap. Symmetric offsets keep width =
+     2 * (offset + knob), so the checked-state travel distance equals the
+     new knob size, same relationship as the base .toggle-switch rule. */
+  .geo-toggle-switch {
+    width: 46px;
+    height: 26.45px;
+  }
+
+  .geo-toggle-switch .toggle-knob {
+    top: 3.45px;
+    right: 3.45px;
+    width: 19.55px;
+    height: 19.55px;
+  }
+
+  .geo-toggle-switch.checked .toggle-knob {
+    transform: translateX(-19.55px);
   }
 
   /* App-style bottom tab bar for the top-level category switch (כמותי/מילולי),
