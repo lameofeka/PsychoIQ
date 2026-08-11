@@ -64,11 +64,22 @@ export default function OctagonAreaDiagram({ highlight, size = 150 }) {
     )
   }
 
+  // SVG has no z-index - later siblings simply paint over earlier ones at
+  // shared edges. With a fixed rectangles/triangles/square paint order, the
+  // square (always painted last) would clip the highlighted stroke whenever
+  // a rectangle or triangle is the highlighted piece. Painting the
+  // highlighted piece last, whichever one it is, keeps its accent outline
+  // fully on top instead of getting cut off by a neighboring piece's edge.
+  const allPieces = [
+    ...RECTANGLES.map((points, i) => ({ points, isHighlighted: highlight === 'rectangle' && i === 0, key: `rect-${i}` })),
+    ...TRIANGLES.map((points, i) => ({ points, isHighlighted: highlight === 'triangle' && i === 0, key: `tri-${i}` })),
+    { points: SQUARE, isHighlighted: highlight === 'square', key: 'square' },
+  ]
+  const orderedPieces = [...allPieces.filter((p) => !p.isHighlighted), ...allPieces.filter((p) => p.isHighlighted)]
+
   return (
     <svg viewBox={`0 0 ${viewSize} ${viewSize}`} width={size} height={size}>
-      {RECTANGLES.map((points, i) => piece(points, highlight === 'rectangle' && i === 0, `rect-${i}`))}
-      {TRIANGLES.map((points, i) => piece(points, highlight === 'triangle' && i === 0, `tri-${i}`))}
-      {piece(SQUARE, highlight === 'square', 'square')}
+      {orderedPieces.map(({ points, isHighlighted, key }) => piece(points, isHighlighted, key))}
     </svg>
   )
 }
