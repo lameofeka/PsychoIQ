@@ -995,42 +995,46 @@
 /* A real labeled table instead of the other quizzes' unlabeled grid-cell
    pattern - rows name which value is which (sum/one angle/central angle),
    columns are the shapes, so it's unambiguous which number means what.
-   Each shape's whole column is tinted by that shape's mastery level. */
+   Each shape's whole column is tinted by that shape's mastery level.
+   Styled to read like the rest of the site's progress grids (gapped,
+   individually rounded, borderless, unshaded labels) instead of a boxed,
+   grid-lined native table - only the row/column label structure is
+   table-specific, not the look. */
 .polygon-fact-table-wrap {
-  overflow: hidden;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  overflow-x: auto;
   margin-bottom: 20px;
 }
 
 .polygon-fact-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 4px;
   text-align: center;
 }
 
 .polygon-fact-table th,
 .polygon-fact-table td {
   padding: 10px 6px;
-  font-size: 13.5px;
-  border: 1px solid var(--border);
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
 }
 
 .polygon-fact-table thead th {
   font-weight: 700;
-  color: var(--text-h);
-  background: var(--muted-bg);
+  font-size: 12px;
+  color: var(--text);
 }
 
 .polygon-fact-table tbody th {
   font-weight: 600;
+  font-size: 12px;
   color: var(--text);
-  background: var(--muted-bg);
   white-space: nowrap;
 }
 
 .polygon-fact-table td {
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
@@ -3045,6 +3049,29 @@
 
   .game-pill-title-short {
     display: inline;
+  }
+
+  /* Circle-parts progress map: bigger everywhere on mobile than the compact-
+     card sizing above - wider phones have the room, and a phone screen is
+     also where the tiny cells were hardest to read. Column width, both
+     cells, and the degrees header all scale up together, keeping the
+     fraction-vs-percent size relationship (30% bigger) and the fraction/
+     percent colors from the shared rules above. */
+  .setup-compact .circle-progress-grid {
+    gap: 6px;
+    grid-auto-columns: 62px;
+  }
+
+  .setup-compact .circle-progress-grid .grid-header {
+    font-size: 15px;
+  }
+
+  .setup-compact .circle-percent-cell {
+    font-size: 14px;
+  }
+
+  .setup-compact .circle-fraction-cell {
+    font-size: 18.2px;
   }
 
   /* App-style bottom tab bar for the top-level category switch (כמותי/מילולי),
