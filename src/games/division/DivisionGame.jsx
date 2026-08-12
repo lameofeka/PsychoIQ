@@ -6,7 +6,7 @@ import GamePlay from './GamePlay'
 // GamePlay just drops back to the setup screen, same as every other quiz's
 // "הגדרות חדשות" exit. Remounting GamePlay (key={roundKey}) on each fresh
 // start resets its streak back to 0.
-export default function DivisionGame({ onPhaseChange }) {
+export default function DivisionGame({ onPhaseChange, setupHeaderExtra }) {
   const [stage, setStage] = useState('setup')
   const [roundKey, setRoundKey] = useState(0)
 
@@ -21,7 +21,7 @@ export default function DivisionGame({ onPhaseChange }) {
 
   return (
     <div className="game-shell">
-      {stage === 'setup' && <SetupWizard onStart={handleStart} />}
+      {stage === 'setup' && <SetupWizard onStart={handleStart} headerExtra={setupHeaderExtra} />}
       {stage === 'playing' && <GamePlay key={roundKey} onExitQuiz={() => setStage('setup')} />}
     </div>
   )

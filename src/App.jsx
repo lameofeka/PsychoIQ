@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
-import DivisionGame from './games/division/DivisionGame'
-import PrimesGame from './games/primes/PrimesGame'
+import PrimesGroup from './games/primes/PrimesGroup'
 import GeoGame from './games/geo/GeoGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
@@ -69,20 +68,13 @@ const GAMES = [
     Component: FactorialGame,
   },
   {
-    // Not shown as a pill - reached via the ראשוניים/חלוקה switch that
-    // appears under the pill row whenever "ראשוניים" is selected (see
-    // PRIMES_SWITCH_GAMES), same idea as geo's מעגל/מצולעים/פיטגורס switch.
-    id: 'division',
-    category: 'quantitative',
-    title: 'חלוקה',
-    hidden: true,
-    Component: DivisionGame,
-  },
-  {
+    // "ראשוניים" isn't a game of its own - it opens straight into the
+    // primes chain quiz and lets an internal switch (see PrimesGroup.jsx)
+    // swap over to "חלוקה" instead, same pattern as "גיאומטריה" below.
     id: 'primes',
     category: 'quantitative',
     title: 'ראשוניים',
-    Component: PrimesGame,
+    Component: PrimesGroup,
   },
   {
     id: 'geo',
@@ -118,16 +110,6 @@ function firstGameIdForCategory(cat) {
 function masteryTier(percent) {
   return percent < 25 ? 'low' : percent <= 50 ? 'mid' : 'high'
 }
-
-// Rendered as a switch under the pill row whenever either side is
-// selected, so "חלוקה" (hidden from the pill row itself, see GAMES above)
-// is reachable without its own pill - same idea as geo's internal switch,
-// just placed at the home-screen level since primes/division are otherwise
-// unrelated top-level games.
-const PRIMES_SWITCH_GAMES = [
-  { id: 'primes', title: 'ראשוניים' },
-  { id: 'division', title: 'חלוקה' },
-]
 
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
@@ -271,23 +253,6 @@ function App() {
               </button>
             ))}
           </div>
-
-          {PRIMES_SWITCH_GAMES.some((g) => g.id === selectedGameId) && (
-            <div className="subgame-switch-row">
-              <div className="mode-switch">
-                {PRIMES_SWITCH_GAMES.map((g) => (
-                  <button
-                    key={g.id}
-                    type="button"
-                    className={`mode-switch-btn ${selectedGameId === g.id ? 'active' : ''}`}
-                    onClick={() => selectPill(g.id)}
-                  >
-                    {g.title}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </>
       )}
 

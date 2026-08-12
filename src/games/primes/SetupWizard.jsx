@@ -1,9 +1,10 @@
 import { PRIMES } from './logic'
 import { getPrimeLevel } from './stats'
 
-export default function SetupWizard({ onStart }) {
+export default function SetupWizard({ onStart, headerExtra }) {
   return (
     <div className="wizard setup-compact">
+      {headerExtra}
       <h2>מספרים ראשוניים</h2>
       <p className="summary-line">
         כתוב/כתבי את כל המספרים הראשוניים לפי הסדר, אחד אחרי השני, בשרשרת רצופה מ־{PRIMES[0]} עד {PRIMES[PRIMES.length - 1]}
