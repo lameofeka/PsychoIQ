@@ -8,9 +8,8 @@ export default function SetupWizard({ onStart, headerExtra }) {
     <div className="wizard-stack">
       <div className="wizard setup-compact">
         {headerExtra}
-        <h2>חלוקה</h2>
+        <h2>שיא אישי: {bestStreak}</h2>
         <p className="summary-line">יוצג מספר, וצריך/ה לסמן באילו מהספרות הבאות הוא מתחלק - ברצף, בלי סוף</p>
-        <p className="summary-line">השיא האישי שלך: רצף של {bestStreak} מספרים</p>
 
         <button className="primary-btn big" onClick={onStart}>
           התחל תרגול
