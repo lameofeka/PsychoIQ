@@ -1,5 +1,6 @@
 import ProgressMap from './ProgressMap'
 import { getBestStreak } from './stats'
+import FlameIcon from '../../icons/FlameIcon'
 
 export default function SetupWizard({ onStart, headerExtra }) {
   const bestStreak = getBestStreak()
@@ -8,7 +9,13 @@ export default function SetupWizard({ onStart, headerExtra }) {
     <div className="wizard-stack">
       <div className="wizard setup-compact">
         {headerExtra}
-        <h2>שיא אישי: {bestStreak}</h2>
+        <h2 className="record-heading">
+          שיא:{' '}
+          <span className="record-flame">
+            <FlameIcon />
+          </span>{' '}
+          {bestStreak}
+        </h2>
         <p className="summary-line">יוצג מספר, וצריך/ה לסמן באילו מהספרות הבאות הוא מתחלק - ברצף, בלי סוף</p>
 
         <button className="primary-btn big" onClick={onStart}>

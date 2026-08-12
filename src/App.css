@@ -1744,6 +1744,23 @@
   margin-bottom: 10px;
 }
 
+.record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.record-flame {
+  display: flex;
+  color: var(--accent);
+}
+
+.record-flame svg {
+  width: 16px;
+  height: 16px;
+}
+
 .setup-compact .setup-section {
   margin-bottom: 14px;
 }
