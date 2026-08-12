@@ -687,7 +687,7 @@
 }
 
 .question-text {
-  font-size: 40px;
+  font-size: 46px;
   font-weight: 700;
   color: var(--text-h);
   margin-bottom: 20px;
@@ -972,20 +972,21 @@
   }
 }
 
-/* --- Geo: מעגל/מצולעים switch --- */
+/* --- Sub-game switches: geo's מעגל/מצולעים/פיטגורס, home's ראשוניים/חלוקה --- */
 
 /* `.mode-switch` is normally absolutely centered over a fixed-height
-   `.wizard-topbar` (e.g. next to a back arrow) - here it's the first thing
-   in the card with nothing else sharing its row, so it's put back in
-   normal flow instead: overflowing its "reserved" height and floating over
-   the title below it is what caused the reported overlap. */
-.geo-switch-row {
+   `.wizard-topbar` (e.g. next to a back arrow) - here it's used somewhere
+   with nothing else sharing its row (geo's setup card, or directly under
+   the home screen's game-pill-row), so it's put back in normal flow
+   instead: overflowing its "reserved" height and floating over whatever
+   comes next is what caused the reported overlap. */
+.subgame-switch-row {
   display: flex;
   justify-content: center;
   margin-bottom: 16px;
 }
 
-.geo-switch-row .mode-switch {
+.subgame-switch-row .mode-switch {
   position: static;
   transform: none;
 }
@@ -1145,6 +1146,29 @@
   margin: -8px 0 20px;
   font-size: 14px;
   color: var(--text);
+}
+
+/* The endless quiz has no round total to show up top (see GamePlay.jsx) -
+   just the current mistake-free streak, replacing the other quizzes'
+   .quiz-progress bar entirely. */
+.division-streak-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.division-streak-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.division-streak-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-dark);
 }
 
 /* Division's answer grid is a real .numeric-keypad (same markup/classes as
@@ -1919,12 +1943,17 @@
   overflow: hidden;
 }
 
+/* 15% bigger than the original 8px/18px/15px/7px/16px, so the switch
+   between quizzes within a topic (vocabulary's מילון/תרגול, geo's
+   מעגל/מצולעים/פיטגורס, home's ראשוניים/חלוקה) is easier to tap and read.
+   The כמותי/מילולי category switch is frozen back to the pre-bump sizing
+   below - it's the top-level switch, not one of these. */
 .mode-switch-btn {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 18px;
-  font-size: 15px;
+  gap: 8.05px;
+  padding: 9.2px 20.7px;
+  font-size: 17.25px;
   font-weight: 600;
   color: var(--text);
   background: none;
@@ -1936,8 +1965,8 @@
 }
 
 .mode-switch-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 18.4px;
+  height: 18.4px;
 }
 
 .mode-switch-btn.active {
@@ -1949,6 +1978,17 @@
    but not the purple text/icon - overrides the shared style above. */
 .category-switch .mode-switch-btn.active {
   color: var(--text-h);
+}
+
+.category-switch .mode-switch-btn {
+  gap: 7px;
+  padding: 8px 18px;
+  font-size: 15px;
+}
+
+.category-switch .mode-switch-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* --- Vocabulary: group select --- */
@@ -2569,7 +2609,7 @@
 
 .vocab-word {
   direction: rtl;
-  font-size: 31px;
+  font-size: 35.65px;
 }
 
 /* Once a word's answered, double-clicking it offers to archive it — cursor
@@ -3166,8 +3206,8 @@
   }
 
   .mode-switch-btn {
-    padding: 7px 12px;
-    font-size: 13px;
+    padding: 8.05px 13.8px;
+    font-size: 14.95px;
   }
 
   .game-pill-title-full {
@@ -3372,10 +3412,11 @@
     padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
   }
 
-  /* ~39% larger than the base 40px (10%, then another 15%, then another
-     10% on top) so the question itself reads more easily on a phone screen. */
+  /* ~61% larger than the original 40px base (10%, then 15%, then 10%,
+     then another 15% on top) so the question itself reads more easily on
+     a phone screen. */
   .question-text {
-    font-size: 56px;
+    font-size: 64.4px;
     /* Shifts the question + answer field down ~5% of the screen height,
        independent of the keypad, which stays pinned to the bottom via its
        own margin-top:auto (see .question-card:has(.numeric-keypad) below). */
@@ -3383,7 +3424,7 @@
   }
 
   .vocab-word {
-    font-size: 48px;
+    font-size: 55.2px;
   }
 
   /* Vocabulary quiz specifically: lock the whole page to exactly one screen
@@ -3536,7 +3577,7 @@
   }
 
   .question-text {
-    font-size: 51px;
+    font-size: 58.65px;
   }
 
   .quiz-progress-track {
@@ -3544,7 +3585,7 @@
   }
 
   .vocab-word {
-    font-size: 41px;
+    font-size: 47.15px;
   }
 
   .game-card {
@@ -3605,39 +3646,44 @@
     /* Trim each column narrower without touching the column gap itself:
        eating into the content box with inline padding shrinks only the
        1fr columns, since `gap` is a fixed length, not a fraction of the
-       available width. ~14% total inset here compounds to roughly 5%
-       narrower than before, then another ~10% narrower on top of that. */
-    padding-inline: 7%;
+       available width. ~14% total inset here used to compound to roughly
+       5% narrower than before, then another ~10% narrower on top of that;
+       narrowed down further to ~6.2% total inset (solving the same column-
+       width formula in reverse) to grow each button ~10% wider on top of
+       that history, per request. */
+    padding-inline: 3.1%;
   }
 
   .keypad-btn {
-    /* width comes from the grid column (now much wider thanks to the
-       bleed above); aspect-ratio derives height from it directly so
-       buttons are always noticeably wider than tall, instead of a
-       fixed height that could end up taller than the column is wide.
-       1.8 / 1.08 / 1.03 ≈ 1.618: same width, ~8% then another ~3% taller. */
+    /* width comes from the grid column (now wider thanks to the smaller
+       inset above, so this ~10% width growth carries through automatically);
+       aspect-ratio derives height from it directly so buttons are always
+       noticeably wider than tall, instead of a fixed height that could end
+       up taller than the column is wide, and grows ~10% taller right along
+       with the width. 1.8 / 1.08 / 1.03 ≈ 1.618: same width, ~8% then
+       another ~3% taller. */
     aspect-ratio: 1.618 / 1;
     height: auto;
     border-radius: 14px;
     border-width: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    font-size: 26px;
+    font-size: 28.6px;
     font-weight: 600;
   }
 
   .keypad-clear {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .keypad-action svg {
-    width: 24px;
-    height: 24px;
+    width: 26.4px;
+    height: 26.4px;
   }
 }
 
 @media (max-width: 360px) {
   .mode-switch-btn {
-    padding: 6px 9px;
-    font-size: 12px;
+    padding: 6.9px 10.35px;
+    font-size: 13.8px;
   }
 }

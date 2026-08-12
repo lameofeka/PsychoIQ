@@ -30,7 +30,7 @@ export default function GeoGame({ onPhaseChange, onExit }) {
   const ChildComponent = QUIZZES.find((q) => q.value === activeQuiz).Component
 
   const switchBar = (
-    <div className="geo-switch-row">
+    <div className="subgame-switch-row">
       <div className="mode-switch">
         {QUIZZES.map((q) => (
           <button

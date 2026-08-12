@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
@@ -69,9 +69,9 @@ const GAMES = [
     Component: FactorialGame,
   },
   {
-    // Not shown as a pill - reached only by double-clicking the "עצרת"
-    // pill above (see handleFactorialPillDoubleClick), same idea as
-    // vocabulary's dictionary-manager double-click reveal.
+    // Not shown as a pill - reached via the ראשוניים/חלוקה switch that
+    // appears under the pill row whenever "ראשוניים" is selected (see
+    // PRIMES_SWITCH_GAMES), same idea as geo's מעגל/מצולעים/פיטגורס switch.
     id: 'division',
     category: 'quantitative',
     title: 'חלוקה',
@@ -119,10 +119,15 @@ function masteryTier(percent) {
   return percent < 25 ? 'low' : percent <= 50 ? 'mid' : 'high'
 }
 
-// A second tap on the "עצרת" pill within this window reveals the hidden
-// "חלוקה" game instead of just selecting "עצרת" - same double-click
-// window used by vocabulary's dictionary-manager reveal.
-const DOUBLE_CLICK_WINDOW_MS = 280
+// Rendered as a switch under the pill row whenever either side is
+// selected, so "חלוקה" (hidden from the pill row itself, see GAMES above)
+// is reachable without its own pill - same idea as geo's internal switch,
+// just placed at the home-screen level since primes/division are otherwise
+// unrelated top-level games.
+const PRIMES_SWITCH_GAMES = [
+  { id: 'primes', title: 'ראשוניים' },
+  { id: 'division', title: 'חלוקה' },
+]
 
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
@@ -134,7 +139,6 @@ function App() {
   // alongside the header. 'full' = actual gameplay/results, which takes
   // over the whole screen like before (header + pills hidden).
   const [phase, setPhase] = useState('inline')
-  const pillClickTimerRef = useRef(null)
 
   // Recompute whenever the home/inline chrome (where the badge lives) comes
   // back into view - including right after finishing a round - so the
@@ -182,36 +186,6 @@ function App() {
   function selectPill(gameId) {
     setSelectedGameId(gameId)
     setPhase('inline')
-  }
-
-  // A double-click still dispatches two click events before its own
-  // dblclick - selecting "עצרת" on the first click would already switch
-  // screens before a second click had a chance to reveal "חלוקה" instead.
-  // Hold the single-click selection briefly to see if a second click
-  // follows, same pattern as vocabulary/ModeSwitch's dictionary reveal.
-  function handlePillClick(gameId) {
-    if (gameId !== 'factorial') {
-      selectPill(gameId)
-      return
-    }
-    if (pillClickTimerRef.current) {
-      clearTimeout(pillClickTimerRef.current)
-      pillClickTimerRef.current = null
-      return
-    }
-    pillClickTimerRef.current = setTimeout(() => {
-      pillClickTimerRef.current = null
-      selectPill(gameId)
-    }, DOUBLE_CLICK_WINDOW_MS)
-  }
-
-  function handlePillDoubleClick(gameId) {
-    if (gameId !== 'factorial') return
-    if (pillClickTimerRef.current) {
-      clearTimeout(pillClickTimerRef.current)
-      pillClickTimerRef.current = null
-    }
-    selectPill('division')
   }
 
   function collapseToHome() {
@@ -290,14 +264,30 @@ function App() {
                 key={game.id}
                 type="button"
                 className={`game-pill ${selectedGameId === game.id ? 'selected' : ''}`}
-                onClick={() => handlePillClick(game.id)}
-                onDoubleClick={() => handlePillDoubleClick(game.id)}
+                onClick={() => selectPill(game.id)}
               >
                 <span className="game-pill-title-full">{game.title}</span>
                 <span className="game-pill-title-short">{game.shortTitle ?? game.title}</span>
               </button>
             ))}
           </div>
+
+          {PRIMES_SWITCH_GAMES.some((g) => g.id === selectedGameId) && (
+            <div className="subgame-switch-row">
+              <div className="mode-switch">
+                {PRIMES_SWITCH_GAMES.map((g) => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    className={`mode-switch-btn ${selectedGameId === g.id ? 'active' : ''}`}
+                    onClick={() => selectPill(g.id)}
+                  >
+                    {g.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
 
