@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
+import DivisionGame from './games/division/DivisionGame'
 import PrimesGame from './games/primes/PrimesGame'
 import GeoGame from './games/geo/GeoGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
@@ -68,6 +69,16 @@ const GAMES = [
     Component: FactorialGame,
   },
   {
+    // Not shown as a pill - reached only by double-clicking the "עצרת"
+    // pill above (see handleFactorialPillDoubleClick), same idea as
+    // vocabulary's dictionary-manager double-click reveal.
+    id: 'division',
+    category: 'quantitative',
+    title: 'חלוקה',
+    hidden: true,
+    Component: DivisionGame,
+  },
+  {
     id: 'primes',
     category: 'quantitative',
     title: 'ראשוניים',
@@ -101,12 +112,17 @@ const GAMES = [
 // GAMES lands as the rightmost pill — matching that as the always-on
 // default keeps a selection pressed at all times, never an empty switch.
 function firstGameIdForCategory(cat) {
-  return GAMES.find((g) => g.category === cat)?.id
+  return GAMES.find((g) => g.category === cat && !g.hidden)?.id
 }
 
 function masteryTier(percent) {
   return percent < 25 ? 'low' : percent <= 50 ? 'mid' : 'high'
 }
+
+// A second tap on the "עצרת" pill within this window reveals the hidden
+// "חלוקה" game instead of just selecting "עצרת" - same double-click
+// window used by vocabulary's dictionary-manager reveal.
+const DOUBLE_CLICK_WINDOW_MS = 280
 
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
@@ -118,6 +134,7 @@ function App() {
   // alongside the header. 'full' = actual gameplay/results, which takes
   // over the whole screen like before (header + pills hidden).
   const [phase, setPhase] = useState('inline')
+  const pillClickTimerRef = useRef(null)
 
   // Recompute whenever the home/inline chrome (where the badge lives) comes
   // back into view - including right after finishing a round - so the
@@ -165,6 +182,36 @@ function App() {
   function selectPill(gameId) {
     setSelectedGameId(gameId)
     setPhase('inline')
+  }
+
+  // A double-click still dispatches two click events before its own
+  // dblclick - selecting "עצרת" on the first click would already switch
+  // screens before a second click had a chance to reveal "חלוקה" instead.
+  // Hold the single-click selection briefly to see if a second click
+  // follows, same pattern as vocabulary/ModeSwitch's dictionary reveal.
+  function handlePillClick(gameId) {
+    if (gameId !== 'factorial') {
+      selectPill(gameId)
+      return
+    }
+    if (pillClickTimerRef.current) {
+      clearTimeout(pillClickTimerRef.current)
+      pillClickTimerRef.current = null
+      return
+    }
+    pillClickTimerRef.current = setTimeout(() => {
+      pillClickTimerRef.current = null
+      selectPill(gameId)
+    }, DOUBLE_CLICK_WINDOW_MS)
+  }
+
+  function handlePillDoubleClick(gameId) {
+    if (gameId !== 'factorial') return
+    if (pillClickTimerRef.current) {
+      clearTimeout(pillClickTimerRef.current)
+      pillClickTimerRef.current = null
+    }
+    selectPill('division')
   }
 
   function collapseToHome() {
@@ -238,12 +285,13 @@ function App() {
           </div>
 
           <div className="game-pill-row">
-            {GAMES.filter((game) => game.category === category).map((game) => (
+            {GAMES.filter((game) => game.category === category && !game.hidden).map((game) => (
               <button
                 key={game.id}
                 type="button"
                 className={`game-pill ${selectedGameId === game.id ? 'selected' : ''}`}
-                onClick={() => selectPill(game.id)}
+                onClick={() => handlePillClick(game.id)}
+                onDoubleClick={() => handlePillDoubleClick(game.id)}
               >
                 <span className="game-pill-title-full">{game.title}</span>
                 <span className="game-pill-title-short">{game.shortTitle ?? game.title}</span>

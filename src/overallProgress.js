@@ -4,6 +4,8 @@ import { getAllFactPairs as getPowersAllPairs } from './games/powers/logic'
 import { getWeakFactPairs as getPowersWeakPairs } from './games/powers/stats'
 import { getAllFacts as getFactorialAllFacts } from './games/factorial/logic'
 import { getWeakNumbers as getFactorialWeakNumbers } from './games/factorial/stats'
+import { DIVISORS } from './games/division/logic'
+import { getWeakNumbers as getDivisionWeakNumbers } from './games/division/stats'
 import { PRIMES } from './games/primes/logic'
 import { getPrimeLevel } from './games/primes/stats'
 import { CIRCLE_FACTS } from './games/circleParts/logic'
@@ -31,6 +33,10 @@ function powersCounts() {
 function factorialCounts() {
   const all = getFactorialAllFacts()
   return { green: all.length - getFactorialWeakNumbers(all).length, total: all.length }
+}
+
+function divisionCounts() {
+  return { green: DIVISORS.length - getDivisionWeakNumbers(DIVISORS).length, total: DIVISORS.length }
 }
 
 function primesCounts() {
@@ -78,6 +84,7 @@ export async function getMasteryBreakdown() {
     multiplicationCounts(),
     powersCounts(),
     factorialCounts(),
+    divisionCounts(),
     primesCounts(),
     circlePartsCounts(),
     polygonsCounts(),

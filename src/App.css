@@ -1060,6 +1060,140 @@
   background: var(--bg);
 }
 
+/* Division's rule table is the reverse shape of the polygon one - rows are
+   the facts (one per divisor), so the whole row gets the level color
+   (applied to every td in it) instead of a single column. */
+.division-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.division-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  text-align: right;
+}
+
+.division-table th,
+.division-table td {
+  padding: 10px 8px;
+  font-size: 13px;
+  border: none;
+}
+
+.division-table thead th {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.division-table td {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.division-table-n {
+  font-weight: 700;
+  color: var(--text-h);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  border-radius: 8px 0 0 8px;
+}
+
+.division-table-example {
+  direction: ltr;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  border-radius: 0 8px 8px 0;
+}
+
+.division-table tr.level-green td {
+  background: var(--success-bg);
+}
+
+.division-table tr.level-yellow td {
+  background: var(--warning-bg);
+}
+
+.division-table tr.level-red td {
+  background: var(--danger-bg);
+}
+
+.division-table tr.level-unseen td {
+  background: var(--bg);
+}
+
+.division-question-text {
+  direction: ltr;
+}
+
+.division-prompt {
+  margin: -8px 0 20px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.divisor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  direction: ltr;
+}
+
+.divisor-chip {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+@media (hover: hover) {
+  .divisor-chip:hover {
+    border-color: var(--accent);
+  }
+}
+
+.divisor-chip.selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* On a wrong answer, every real divisor gets this ring so the learner sees
+   the full correct set at a glance, whether or not they had picked it. */
+.divisor-chip.actual {
+  border-color: var(--success);
+}
+
+.divisor-chip.selected.actual {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+/* A mistake (picked but shouldn't have been, or vice versa) always wins
+   over the "actual" ring - it's the more important signal to see. */
+.divisor-chip.mistake {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.divisor-chip:disabled {
+  opacity: 0.85;
+}
+
+.division-submit-btn {
+  width: 100%;
+  margin-top: 16px;
+}
+
 .polygon-shape-wrap {
   display: flex;
   flex-direction: column;
