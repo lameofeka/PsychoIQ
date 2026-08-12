@@ -1062,7 +1062,9 @@
 
 /* Division's rule table is the reverse shape of the polygon one - rows are
    the facts (one per divisor), so the whole row gets the level color
-   (applied to every td in it) instead of a single column. */
+   instead of a single column. Cells are individually rounded islands with
+   real gaps between them (both axes), same "borderless colored chips, not
+   a boxed grid" language as .polygon-fact-table. */
 .division-table-wrap {
   overflow-x: auto;
   margin-bottom: 20px;
@@ -1071,21 +1073,34 @@
 .division-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 4px;
+  border-spacing: 6px;
   text-align: right;
 }
 
 .division-table th,
 .division-table td {
-  padding: 10px 8px;
+  padding: 10px 12px;
   font-size: 13px;
   border: none;
+  border-radius: 10px;
 }
 
 .division-table thead th {
+  padding-top: 0;
+  padding-bottom: 4px;
   font-weight: 700;
   font-size: 12px;
   color: var(--text);
+}
+
+.division-table thead th:first-child,
+.division-table td.division-table-n {
+  text-align: center;
+}
+
+.division-table thead th:last-child,
+.division-table td.division-table-example {
+  text-align: center;
 }
 
 .division-table td {
@@ -1095,18 +1110,15 @@
 
 .division-table-n {
   font-weight: 700;
+  font-size: 15px;
   color: var(--text-h);
-  text-align: center;
   font-variant-numeric: tabular-nums;
-  border-radius: 8px 0 0 8px;
 }
 
 .division-table-example {
   direction: ltr;
-  text-align: left;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  border-radius: 0 8px 8px 0;
 }
 
 .division-table tr.level-green td {
@@ -1135,31 +1147,31 @@
   color: var(--text);
 }
 
-.divisor-grid {
+/* Division's answer grid uses the exact same .keypad-btn buttons as every
+   other quant quiz's keypad (same size/border/hover/disabled look - see
+   KEYPAD_SLOTS in GamePlay.jsx, which fills the 1-9 grid positions and adds
+   a 4th row for 10/11) so the keys feel familiar. The container itself is
+   its own .division-keypad, not .numeric-keypad, on purpose: the other
+   quizzes' .numeric-keypad mobile rules pin the keypad to the very bottom
+   of the screen and float feedback text up above it, which assumes nothing
+   real follows the keypad - division has a "בדוק" button and a feedback
+   message that both need to sit below it in normal reading order, so it
+   gets its own (simpler, non-pinned) grid instead. */
+.division-keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  margin-top: 14px;
   direction: ltr;
 }
 
-.divisor-chip {
-  aspect-ratio: 1;
-  border-radius: 12px;
-  border: 2px solid var(--border);
-  background: var(--card-bg);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-h);
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+/* Slightly smaller than the default 22px so "10"/"11" fit comfortably
+   without shrinking the rest of the row to match. */
+.division-keypad .keypad-btn {
+  font-size: 18px;
 }
 
-@media (hover: hover) {
-  .divisor-chip:hover {
-    border-color: var(--accent);
-  }
-}
-
-.divisor-chip.selected {
+.keypad-btn.divisor-selected {
   border-color: var(--accent);
   background: var(--accent);
   color: #fff;
@@ -1167,11 +1179,11 @@
 
 /* On a wrong answer, every real divisor gets this ring so the learner sees
    the full correct set at a glance, whether or not they had picked it. */
-.divisor-chip.actual {
+.keypad-btn.divisor-actual {
   border-color: var(--success);
 }
 
-.divisor-chip.selected.actual {
+.keypad-btn.divisor-selected.divisor-actual {
   background: var(--success);
   border-color: var(--success);
   color: #fff;
@@ -1179,14 +1191,10 @@
 
 /* A mistake (picked but shouldn't have been, or vice versa) always wins
    over the "actual" ring - it's the more important signal to see. */
-.divisor-chip.mistake {
+.keypad-btn.divisor-mistake {
   border-color: var(--danger);
   background: var(--danger-bg);
   color: var(--danger);
-}
-
-.divisor-chip:disabled {
-  opacity: 0.85;
 }
 
 .division-submit-btn {
