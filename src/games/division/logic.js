@@ -46,7 +46,10 @@ function buildQuestion(value) {
 
 // "תרגול רק טעויות" on Results passes the exact numbers that were wrong
 // (settings.retryValues) instead of a fresh random batch; otherwise a full
-// ROUND_SIZE batch of unique random numbers is generated.
+// ROUND_SIZE batch of unique random numbers is generated. Every generated
+// number is guaranteed at least one real divisor from DIVISORS - a number
+// with none would be a dead end under the tap-to-find-them-all gameplay
+// (nothing to ever tap correctly, so the question could never complete).
 export function generateRound(settings) {
   if (settings?.retryValues && settings.retryValues.length > 0) {
     return shuffle(settings.retryValues.map(buildQuestion))
@@ -57,6 +60,7 @@ export function generateRound(settings) {
   while (questions.length < ROUND_SIZE) {
     const value = randomNumber()
     if (seen.has(value)) continue
+    if (actualDivisors(value).length === 0) continue
     seen.add(value)
     questions.push(buildQuestion(value))
   }

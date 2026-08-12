@@ -1,109 +1,75 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { generateRound, DIVISORS } from './logic'
 import { recordDivisorResult } from './stats'
 import { vibrateSuccess } from '../../utils/haptics'
+import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
-const FEEDBACK_DELAY_MS = 1600
-const CORRECT_FLASH_MS = 800
-const RETRY_BUFFER = 3
+// No "בדוק" button - every tap resolves immediately (the tapped digit turns
+// green or red on the spot), so the only pause is this short beat once the
+// last correct digit for the current number lands, before the next number
+// takes over.
+const ADVANCE_DELAY_MS = 700
 
 // Shaped like the other quant quizzes' 1-9 numeric keypad (same
-// .keypad-btn buttons, so the size/border/hover/disabled look matches) so
-// keys land in the same familiar spot; 1 and 7 have no divisibility rule in
-// this quiz, so they render as permanently disabled placeholders instead of
-// being skipped and shifting every other digit out of its usual position.
-// 10 and 11 (not single digits) get a 4th row of their own.
+// .numeric-keypad/.keypad-btn) so the keys land in the same familiar spot;
+// 1 and 7 have no divisibility rule in this quiz, so they render as
+// permanently disabled placeholders instead of being skipped and shifting
+// every other digit out of its usual position. 10 and 11 (not single
+// digits) get a 4th row of their own.
 const KEYPAD_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   useHtmlClassLock('quant-gameplay-lock')
   const initialQuestions = useMemo(() => generateRound(settings), [settings])
   const [queue, setQueue] = useState(initialQuestions)
-  const [selected, setSelected] = useState(() => new Set())
-  const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
-  const [correctFlash, setCorrectFlash] = useState(false)
-  const [firstAttempts, setFirstAttempts] = useState(() => new Map())
-  const [resolvedIds, setResolvedIds] = useState(() => new Set())
+  const [found, setFound] = useState(() => new Set())
+  const [wrong, setWrong] = useState(() => new Set())
+  const [advancing, setAdvancing] = useState(false)
+  const [answers, setAnswers] = useState([])
+  const [pressedKey, press] = useKeypadPress()
   const startTimeRef = useRef(Date.now())
 
   const current = queue[0]
   const total = initialQuestions.length
-  const correctCount = [...firstAttempts.values()].filter((a) => a.isCorrect).length
-  const wrongCount = [...firstAttempts.values()].filter((a) => !a.isCorrect).length
-  const progressPercent = Math.round((resolvedIds.size / total) * 100)
-  const actual = useMemo(() => new Set(current?.divisors ?? []), [current])
+  const correctCount = answers.filter((a) => a.isCorrect).length
+  const wrongCount = answers.filter((a) => !a.isCorrect).length
+  const progressPercent = Math.round((answers.length / total) * 100)
 
-  useEffect(() => {
-    if (feedback) return
-    function onKeyDown(e) {
-      if (e.target.closest('button')) return
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        submitAnswer()
-      }
-    }
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  })
+  function pressDivisor(n) {
+    if (advancing || found.has(n) || wrong.has(n)) return
 
-  function toggleDivisor(n) {
-    if (feedback) return
-    setSelected((prev) => {
-      const next = new Set(prev)
-      if (next.has(n)) next.delete(n)
-      else next.add(n)
-      return next
-    })
-  }
+    const isRight = current.divisors.includes(n)
+    recordDivisorResult(n, isRight)
 
-  function submitAnswer() {
-    if (feedback) return
-
-    const question = current
-    let allMatch = true
-    for (const n of DIVISORS) {
-      const isRight = selected.has(n) === actual.has(n)
-      if (!isRight) allMatch = false
-      recordDivisorResult(n, isRight)
-    }
-
-    const isFirstAttempt = !firstAttempts.has(question.id)
-    const nextFirstAttempts = isFirstAttempt
-      ? new Map(firstAttempts).set(question.id, { question, selected: new Set(selected), isCorrect: allMatch })
-      : firstAttempts
-    if (isFirstAttempt) setFirstAttempts(nextFirstAttempts)
-
-    // Correct answers advance immediately (correctFlash is a non-blocking
-    // "כל הכבוד" flash, not a pause) — only a wrong answer stops to reveal
-    // which divisors were marked incorrectly.
-    if (allMatch) {
-      vibrateSuccess()
-      setCorrectFlash(true)
-      setTimeout(() => setCorrectFlash(false), CORRECT_FLASH_MS)
-      setResolvedIds((prev) => new Set(prev).add(question.id))
-      const rest = queue.slice(1)
-      setSelected(new Set())
-      if (rest.length === 0) {
-        onFinish({
-          answers: [...nextFirstAttempts.values()],
-          elapsedMs: Date.now() - startTimeRef.current,
-        })
-        return
-      }
-      setQueue(rest)
+    if (!isRight) {
+      setWrong((prev) => new Set(prev).add(n))
       return
     }
 
-    setFeedback('wrong')
+    vibrateSuccess()
+    const nextFound = new Set(found).add(n)
+    setFound(nextFound)
+
+    if (nextFound.size < current.divisors.length) return
+
+    // Every real divisor of the current number has now been tapped
+    // correctly - this question is done, with a mistake-free pass only if
+    // nothing was ever tapped wrong along the way.
+    const nextAnswers = [...answers, { question: current, isCorrect: wrong.size === 0 }]
+    setAnswers(nextAnswers)
+    setAdvancing(true)
     setTimeout(() => {
       const rest = queue.slice(1)
-      const insertAt = Math.min(rest.length, RETRY_BUFFER)
-      rest.splice(insertAt, 0, question)
-      setSelected(new Set())
-      setFeedback(null)
+      setFound(new Set())
+      setWrong(new Set())
+      setAdvancing(false)
+      if (rest.length === 0) {
+        onFinish({ answers: nextAnswers, elapsedMs: Date.now() - startTimeRef.current })
+        return
+      }
       setQueue(rest)
-    }, FEEDBACK_DELAY_MS)
+    }, ADVANCE_DELAY_MS)
   }
 
   return (
@@ -116,7 +82,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
 
       <div className="quiz-progress">
         <div className="quiz-progress-row">
-          <span>{resolvedIds.size} / {total}</span>
+          <span>{answers.length} / {total}</span>
           <span className="quiz-progress-score">
             <span className="correct">✔︎ {correctCount}</span>
             <span className="wrong">✘ {wrongCount}</span>
@@ -127,11 +93,11 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         </div>
       </div>
 
-      <div className={`question-card ${feedback ?? (correctFlash ? 'correct' : '')}`}>
+      <div className={`question-card ${advancing ? 'correct' : ''}`}>
         <div className="question-text division-question-text">{current.value}</div>
         <p className="division-prompt">באילו מהספרות הבאות המספר מתחלק?</p>
 
-        <div className="division-keypad">
+        <div className="numeric-keypad division-keypad">
           {KEYPAD_SLOTS.map((n) => {
             if (!DIVISORS.includes(n)) {
               return (
@@ -140,16 +106,19 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
                 </button>
               )
             }
-            const isSelected = selected.has(n)
-            const isActual = feedback === 'wrong' && actual.has(n)
-            const isMistake = feedback === 'wrong' && isSelected !== actual.has(n)
+            const key = String(n)
             return (
               <button
                 key={n}
                 type="button"
-                className={`keypad-btn ${isSelected ? 'divisor-selected' : ''} ${isActual ? 'divisor-actual' : ''} ${isMistake ? 'divisor-mistake' : ''}`}
-                onClick={() => toggleDivisor(n)}
-                disabled={!!feedback}
+                className={`keypad-btn ${found.has(n) ? 'divisor-found' : ''} ${wrong.has(n) ? 'divisor-wrong' : ''} ${
+                  pressedKey === key ? 'pressed' : ''
+                }`}
+                onClick={() => {
+                  press(key)
+                  pressDivisor(n)
+                }}
+                disabled={advancing || found.has(n) || wrong.has(n)}
               >
                 {n}
               </button>
@@ -157,16 +126,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           })}
         </div>
 
-        <button className="primary-btn division-submit-btn" onClick={submitAnswer} disabled={!!feedback}>
-          בדוק
-        </button>
-
-        {correctFlash && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
-        {feedback === 'wrong' && (
-          <div className="feedback-msg wrong">
-            לא נכון. {current.value} מתחלק ב: {current.divisors.length > 0 ? current.divisors.join(', ') : 'אף אחת מהספרות'}
-          </div>
-        )}
+        {advancing && <div className="feedback-msg correct">כל הכבוד! נכון ✔</div>}
       </div>
     </div>
   )

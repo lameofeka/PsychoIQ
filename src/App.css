@@ -1147,59 +1147,41 @@
   color: var(--text);
 }
 
-/* Division's answer grid uses the exact same .keypad-btn buttons as every
-   other quant quiz's keypad (same size/border/hover/disabled look - see
-   KEYPAD_SLOTS in GamePlay.jsx, which fills the 1-9 grid positions and adds
-   a 4th row for 10/11) so the keys feel familiar. The container itself is
-   its own .division-keypad, not .numeric-keypad, on purpose: the other
-   quizzes' .numeric-keypad mobile rules pin the keypad to the very bottom
-   of the screen and float feedback text up above it, which assumes nothing
-   real follows the keypad - division has a "בדוק" button and a feedback
-   message that both need to sit below it in normal reading order, so it
-   gets its own (simpler, non-pinned) grid instead. */
-.division-keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-  direction: ltr;
-}
-
-/* Slightly smaller than the default 22px so "10"/"11" fit comfortably
-   without shrinking the rest of the row to match. */
+/* Division's answer grid is a real .numeric-keypad (same markup/classes as
+   every other quant quiz's digit keypad, see KEYPAD_SLOTS in GamePlay.jsx)
+   so it inherits that exact size/border/hover/disabled look and all the
+   mobile spacing tuning that comes with it - .division-keypad only adds
+   the one tweak specific to this quiz. There's no submit button: each tap
+   resolves immediately (see .divisor-found/.divisor-wrong below), so
+   nothing else needs to share the keypad's pinned-to-bottom mobile spot. */
 .division-keypad .keypad-btn {
+  /* Slightly smaller than the default 22px so "10"/"11" fit comfortably
+     without shrinking the rest of the row to match. */
   font-size: 18px;
 }
 
-.keypad-btn.divisor-selected {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
-/* On a wrong answer, every real divisor gets this ring so the learner sees
-   the full correct set at a glance, whether or not they had picked it. */
-.keypad-btn.divisor-actual {
+/* A correctly-tapped divisor locks in green and stays that way for the
+   rest of this number. */
+.keypad-btn.divisor-found {
   border-color: var(--success);
-}
-
-.keypad-btn.divisor-selected.divisor-actual {
   background: var(--success);
-  border-color: var(--success);
   color: #fff;
 }
 
-/* A mistake (picked but shouldn't have been, or vice versa) always wins
-   over the "actual" ring - it's the more important signal to see. */
-.keypad-btn.divisor-mistake {
+/* A wrongly-tapped one locks in red the same way, so the learner can see
+   at a glance which keys they've already ruled out. */
+.keypad-btn.divisor-wrong {
   border-color: var(--danger);
   background: var(--danger-bg);
   color: var(--danger);
 }
 
-.division-submit-btn {
-  width: 100%;
-  margin-top: 16px;
+/* Both states are reached via the disabled attribute (locking the key out
+   for the rest of this number) - override the generic :disabled fade so
+   the green/red stays crisp instead of washing out to 50% opacity. */
+.keypad-btn.divisor-found:disabled,
+.keypad-btn.divisor-wrong:disabled {
+  opacity: 1;
 }
 
 .polygon-shape-wrap {
