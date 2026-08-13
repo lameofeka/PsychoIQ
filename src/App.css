@@ -1175,37 +1175,66 @@
    every other quant quiz's digit keypad, see KEYPAD_SLOTS in GamePlay.jsx)
    so it inherits that exact size/border/hover/disabled look and all the
    mobile spacing tuning that comes with it - .division-keypad only adds
-   the one tweak specific to this quiz. There's no submit button: each tap
-   resolves immediately (see .divisor-found/.divisor-wrong below), so
-   nothing else needs to share the keypad's pinned-to-bottom mobile spot. */
+   the one tweak specific to this quiz. The 12th slot is the purple "הגשה"
+   checkmark (see .division-submit-btn below) that grades every marked
+   digit at once (see .divisor-found/.divisor-wrong/.divisor-missed). */
 .division-keypad .keypad-btn {
   /* Slightly smaller than the default 22px so "10"/"11" fit comfortably
      without shrinking the rest of the row to match. */
   font-size: 18px;
 }
 
-/* A correctly-tapped divisor locks in green and stays that way for the
-   rest of this number. */
+/* Marked but not yet graded - the learner's picks before "הגשה" is
+   pressed, so they can see what they've toggled on so far. */
+.keypad-btn.divisor-selected {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent-dark);
+}
+
+/* After grading: a digit the learner marked that really does divide the
+   number locks in green. */
 .keypad-btn.divisor-found {
   border-color: var(--success);
   background: var(--success);
   color: #fff;
 }
 
-/* A wrongly-tapped one locks in red the same way, so the learner can see
-   at a glance which keys they've already ruled out. */
+/* A digit the learner marked that does NOT divide the number locks in red
+   the same way, so the learner can see at a glance which picks were wrong. */
 .keypad-btn.divisor-wrong {
   border-color: var(--danger);
   background: var(--danger-bg);
   color: var(--danger);
 }
 
-/* Both states are reached via the disabled attribute (locking the key out
-   for the rest of this number) - override the generic :disabled fade so
-   the green/red stays crisp instead of washing out to 50% opacity. */
+/* A real divisor the learner left unmarked - a miss, not a wrong pick, so
+   it gets its own amber indicator distinct from both the green (marked and
+   right) and red (marked and wrong) states. */
+.keypad-btn.divisor-missed {
+  border-color: var(--warning);
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+/* All three graded states are reached via the disabled attribute (locking
+   the whole keypad during the reveal pause) - override the generic
+   :disabled fade so the colors stay crisp instead of washing out to 50%
+   opacity. */
 .keypad-btn.divisor-found:disabled,
-.keypad-btn.divisor-wrong:disabled {
+.keypad-btn.divisor-wrong:disabled,
+.keypad-btn.divisor-missed:disabled {
   opacity: 1;
+}
+
+/* The purple "הגשה" checkmark that grades the whole marked set at once. */
+.division-submit-btn {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.division-submit-btn:disabled {
+  opacity: 0.5;
 }
 
 .polygon-shape-wrap {
