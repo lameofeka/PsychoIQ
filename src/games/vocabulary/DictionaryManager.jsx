@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWords, addWord, updateWord, deleteWord, importWords, getGroups, swapWords } from './dictionary'
 import { isWordInMistakesList, lockMistake, setWordInMistakesList } from './stats'
-import ModeSwitch from './ModeSwitch'
 import Modal from './Modal'
 
 const COPY_LABEL = 'העתק'
@@ -32,7 +31,11 @@ function ExportIcon() {
   )
 }
 
-export default function DictionaryManager({ onBack }) {
+// Rendered inline by GroupSelect (as its "מילון" edit mode) rather than as a
+// separate page/stage - no navigation, no wrapper/topbar of its own, just
+// the toolbar/search/word-list content for the caller to place inside its
+// own <div className="wizard ...">.
+export default function DictionaryManager() {
   const [words, setWords] = useState(() => getWords())
   const [newWord, setNewWord] = useState('')
   const [newDef, setNewDef] = useState('')
@@ -280,7 +283,7 @@ export default function DictionaryManager({ onBack }) {
   }
 
   return (
-    <div className="wizard dict-manager">
+    <>
       {canJumpScroll && (
         <button
           type="button"
@@ -291,9 +294,6 @@ export default function DictionaryManager({ onBack }) {
           {isNearTop ? '↓' : '↑'}
         </button>
       )}
-      <div className="wizard-topbar">
-        <ModeSwitch mode="dictionary" onChange={(m) => m === 'practice' && onBack()} />
-      </div>
 
       <h2>מילון</h2>
 
@@ -611,6 +611,6 @@ export default function DictionaryManager({ onBack }) {
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }

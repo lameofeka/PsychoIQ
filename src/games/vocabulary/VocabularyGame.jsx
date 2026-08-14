@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import GroupSelect from './GroupSelect'
-import DictionaryManager from './DictionaryManager'
 import ArchiveManager from './ArchiveManager'
 import MistakesList from './MistakesList'
 import GamePlay from './GamePlay'
@@ -50,6 +49,10 @@ function refreshWords(list) {
 export default function VocabularyGame({ onPhaseChange }) {
   const [ready, setReady] = useState(false)
   const [stage, setStage] = useState('groupSelect')
+  // Lifted here (not local to GroupSelect) only so the "wide" game-shell
+  // class below can react to it - the toggle itself, and everything it
+  // shows, still lives entirely inside GroupSelect, not a separate stage.
+  const [dictEditMode, setDictEditMode] = useState(false)
   const [practiceWords, setPracticeWords] = useState([])
   const [practiceLabel, setPracticeLabel] = useState(null)
   const [roundResult, setRoundResult] = useState(null)
@@ -70,9 +73,10 @@ export default function VocabularyGame({ onPhaseChange }) {
 
   useEffect(() => {
     // Dictionary management is still menu-browsing, not gameplay - keep the
-    // header/switch visible and render it in place of the group menu rather
-    // than taking over the full screen like playing/results do.
-    onPhaseChange?.(stage === 'groupSelect' || stage === 'manageDictionary' || stage === 'archive' ? 'inline' : 'full')
+    // header/switch visible rather than taking over the full screen like
+    // playing/results do. It's an inline mode of 'groupSelect' now (not its
+    // own stage), so this only needs to check for 'archive' separately.
+    onPhaseChange?.(stage === 'groupSelect' || stage === 'archive' ? 'inline' : 'full')
   }, [stage])
 
   function startRound(words, label) {
@@ -177,17 +181,15 @@ export default function VocabularyGame({ onPhaseChange }) {
   }
 
   return (
-    <div className={`game-shell ${stage === 'manageDictionary' || stage === 'archive' ? 'wide' : ''}`}>
+    <div className={`game-shell ${(stage === 'groupSelect' && dictEditMode) || stage === 'archive' ? 'wide' : ''}`}>
       {stage === 'groupSelect' && (
         <GroupSelect
-          onManageDictionary={() => setStage('manageDictionary')}
+          editMode={dictEditMode}
+          onEditModeChange={setDictEditMode}
           onManageArchive={() => setStage('archive')}
           onStart={handleStart}
           onOpenMistakes={() => setStage('mistakesList')}
         />
-      )}
-      {stage === 'manageDictionary' && (
-        <DictionaryManager onBack={() => setStage('groupSelect')} />
       )}
       {stage === 'archive' && (
         <ArchiveManager onBack={() => setStage('groupSelect')} />

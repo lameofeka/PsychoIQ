@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { getActiveWords, getGroups } from './dictionary'
 import { getGroupLevel, getLastPracticedGroup, rankWeakWords } from './stats'
 import ModeSwitch from './ModeSwitch'
+import DictionaryManager from './DictionaryManager'
 
 function ShuffleIcon() {
   return (
@@ -15,8 +16,11 @@ function ShuffleIcon() {
   )
 }
 
-export default function GroupSelect({ onManageDictionary, onManageArchive, onStart, onOpenMistakes }) {
-  const words = useMemo(() => getActiveWords(), [])
+export default function GroupSelect({ onManageArchive, onStart, onOpenMistakes, editMode, onEditModeChange }) {
+  // Re-read whenever editMode toggles (not just once at mount) - editing the
+  // dictionary inline can add/delete/rename words, and this must reflect
+  // that the moment the user switches back from "מילון" to "תרגול".
+  const words = useMemo(() => getActiveWords(), [editMode])
   const groups = useMemo(() => getGroups(words), [words])
   const lastGroupIndex = useMemo(() => getLastPracticedGroup(), [])
   const [selected, setSelected] = useState(new Set())
@@ -52,16 +56,18 @@ export default function GroupSelect({ onManageDictionary, onManageArchive, onSta
     <div className="wizard group-select">
       <div className="wizard-topbar">
         <ModeSwitch
-          mode="practice"
-          onChange={(m) => m === 'dictionary' && onManageDictionary()}
+          mode={editMode ? 'dictionary' : 'practice'}
+          onChange={(m) => onEditModeChange(m === 'dictionary')}
           onDictionaryDoubleClick={onManageArchive}
         />
       </div>
 
-      {groups.length === 0 ? (
+      {editMode ? (
+        <DictionaryManager />
+      ) : groups.length === 0 ? (
         <>
           <p className="summary-line">המילון ריק. הוסיפו מילים כדי להתחיל לתרגל.</p>
-          <button className="primary-btn" onClick={onManageDictionary}>
+          <button className="primary-btn" onClick={() => onEditModeChange(true)}>
             הוספת מילים למילון
           </button>
         </>
