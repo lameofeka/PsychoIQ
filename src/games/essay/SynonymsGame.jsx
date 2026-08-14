@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import SynonymsManager from './SynonymsManager'
 import SynonymsPlay from './SynonymsPlay'
 import SynonymsProgressMap from './SynonymsProgressMap'
 import SynonymsResults from './SynonymsResults'
@@ -11,8 +10,8 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
     if (initialStage === 'practice' && getSynonymSets().filter((s) => s.synonyms.length > 0).length > 0) {
       return 'practice'
     }
-    // "manage" now lands on the progress map first — the raw add/edit/delete
-    // table (SynonymsManager) is reached from there via its "עריכה" button.
+    // "manage" now lands on the progress map, which also has its own inline
+    // add/edit/delete mode — there's no separate editing screen anymore.
     return 'progress'
   })
   const [practiceSets, setPracticeSets] = useState(() => {
@@ -48,14 +47,8 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
   return (
     <div className="game-shell">
       {stage === 'progress' && (
-        <SynonymsProgressMap
-          onBack={onExit}
-          onEdit={() => setStage('edit')}
-          onStartPractice={startPractice}
-          onPracticeWeak={startPracticeWithSets}
-        />
+        <SynonymsProgressMap onBack={onExit} onStartPractice={startPractice} onPracticeWeak={startPracticeWithSets} />
       )}
-      {stage === 'edit' && <SynonymsManager onExit={() => setStage('progress')} onStartPractice={startPractice} />}
       {stage === 'practice' && (
         <SynonymsPlay key={roundKey} sets={practiceSets} onFinish={handleFinish} onExitQuiz={onExit} />
       )}
