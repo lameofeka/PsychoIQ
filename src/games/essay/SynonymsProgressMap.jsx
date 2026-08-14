@@ -275,7 +275,7 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
         <button className="primary-btn big" disabled={practicable.length === 0} onClick={onStartPractice}>
           התחל תרגול
         </button>
-        <button type="button" className="secondary-btn" onClick={() => setEditMode((v) => !v)}>
+        <button type="button" className="link-btn" onClick={() => setEditMode((v) => !v)}>
           {editMode ? 'סיום עריכה' : 'עריכת מילים'}
         </button>
       </div>
