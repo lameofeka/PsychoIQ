@@ -44,12 +44,12 @@ export default function TemplateManager({ onExit, onStartPractice }) {
   return (
     <div className="wizard">
       <div className="wizard-topbar">
-        <button className="icon-back-btn" onClick={onExit} aria-label="לתפריט חיבור">
+        <button className="icon-back-btn" onClick={onExit} aria-label="חזרה למפת ההתקדמות">
           →
         </button>
       </div>
 
-      <h2>ניהול משפטים</h2>
+      <h2>עריכת משפטים</h2>
 
       <form className="dict-form" onSubmit={handleAdd}>
         <textarea

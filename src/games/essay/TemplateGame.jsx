@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import TemplateManager from './TemplateManager'
 import TemplatePlay from './TemplatePlay'
+import TemplateProgressMap from './TemplateProgressMap'
 import TemplateResults from './TemplateResults'
 import { getSentences } from './storage'
 
 export default function TemplateGame({ onExit, initialStage = 'manage' }) {
   const [stage, setStage] = useState(() => {
     if (initialStage === 'practice' && getSentences().length > 0) return 'practice'
-    return 'manage'
+    // "manage" now lands on the progress map first — the raw add/edit/delete
+    // table (TemplateManager) is reached from there via its "עריכה" button.
+    return 'progress'
   })
   const [practiceSentences, setPracticeSentences] = useState(() => {
     if (initialStage === 'practice') return getSentences()
@@ -24,6 +27,13 @@ export default function TemplateGame({ onExit, initialStage = 'manage' }) {
     setStage('practice')
   }
 
+  function startPracticeWithSentences(sentences) {
+    if (!sentences || sentences.length === 0) return
+    setPracticeSentences(sentences)
+    setRoundKey((k) => k + 1)
+    setStage('practice')
+  }
+
   function handleFinish(result) {
     setRoundResult(result)
     setStage('results')
@@ -31,7 +41,15 @@ export default function TemplateGame({ onExit, initialStage = 'manage' }) {
 
   return (
     <div className="game-shell">
-      {stage === 'manage' && <TemplateManager onExit={onExit} onStartPractice={startPractice} />}
+      {stage === 'progress' && (
+        <TemplateProgressMap
+          onBack={onExit}
+          onEdit={() => setStage('edit')}
+          onStartPractice={startPractice}
+          onPracticeWeak={startPracticeWithSentences}
+        />
+      )}
+      {stage === 'edit' && <TemplateManager onExit={() => setStage('progress')} onStartPractice={startPractice} />}
       {stage === 'practice' && (
         <TemplatePlay
           key={roundKey}
@@ -46,7 +64,7 @@ export default function TemplateGame({ onExit, initialStage = 'manage' }) {
           mistakeCount={roundResult.mistakeCount}
           elapsedMs={roundResult.elapsedMs}
           onPracticeAgain={startPractice}
-          onManage={() => setStage('manage')}
+          onManage={() => setStage('progress')}
           onExit={onExit}
         />
       )}

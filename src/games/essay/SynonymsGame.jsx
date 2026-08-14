@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SynonymsManager from './SynonymsManager'
 import SynonymsPlay from './SynonymsPlay'
+import SynonymsProgressMap from './SynonymsProgressMap'
 import SynonymsResults from './SynonymsResults'
 import { getSynonymSets } from './storage'
 import { shuffle } from './logic'
@@ -10,7 +11,9 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
     if (initialStage === 'practice' && getSynonymSets().filter((s) => s.synonyms.length > 0).length > 0) {
       return 'practice'
     }
-    return 'manage'
+    // "manage" now lands on the progress map first — the raw add/edit/delete
+    // table (SynonymsManager) is reached from there via its "עריכה" button.
+    return 'progress'
   })
   const [practiceSets, setPracticeSets] = useState(() => {
     if (initialStage === 'practice') {
@@ -30,6 +33,13 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
     setStage('practice')
   }
 
+  function startPracticeWithSets(sets) {
+    if (!sets || sets.length === 0) return
+    setPracticeSets(shuffle(sets))
+    setRoundKey((k) => k + 1)
+    setStage('practice')
+  }
+
   function handleFinish(result) {
     setRoundResult(result)
     setStage('results')
@@ -37,7 +47,15 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
 
   return (
     <div className="game-shell">
-      {stage === 'manage' && <SynonymsManager onExit={onExit} onStartPractice={startPractice} />}
+      {stage === 'progress' && (
+        <SynonymsProgressMap
+          onBack={onExit}
+          onEdit={() => setStage('edit')}
+          onStartPractice={startPractice}
+          onPracticeWeak={startPracticeWithSets}
+        />
+      )}
+      {stage === 'edit' && <SynonymsManager onExit={() => setStage('progress')} onStartPractice={startPractice} />}
       {stage === 'practice' && (
         <SynonymsPlay key={roundKey} sets={practiceSets} onFinish={handleFinish} onExitQuiz={onExit} />
       )}
@@ -48,7 +66,7 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
           wrongTotal={roundResult.wrongTotal}
           elapsedMs={roundResult.elapsedMs}
           onPracticeAgain={startPractice}
-          onManage={() => setStage('manage')}
+          onManage={() => setStage('progress')}
           onExit={onExit}
         />
       )}

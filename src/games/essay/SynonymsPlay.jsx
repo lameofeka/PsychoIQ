@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { wordsMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
+import { recordSynonymSetResult } from './stats'
 
 export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const questions = sets
@@ -12,6 +13,10 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const [wrongTotal, setWrongTotal] = useState(0)
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
+  // Tracks whether the current word had any wrong/given-up guess this round,
+  // so goNext can record one pass/fail result per word for the progress map
+  // — reset whenever qIndex moves to a new word.
+  const wordMistakeRef = useRef(false)
 
   const current = questions[qIndex]
   const wordDone = filledIds.size === current.synonyms.length
@@ -75,7 +80,11 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (wordDone || input.trim() === '') return
+    if (wordDone) return
+    if (input.trim() === '') {
+      giveUpOnSlot()
+      return
+    }
 
     const match = current.synonyms.find((syn) => !filledIds.has(syn.id) && wordsMatch(input, syn.text))
     if (match) {
@@ -87,10 +96,27 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
       setWrongTotal((c) => c + 1)
       setWrongFlash(true)
       setInput('')
+      wordMistakeRef.current = true
     }
   }
 
+  // Submitting an empty field (Enter) or pressing Backspace while it's
+  // already empty means "I don't know" — same convention as the quant
+  // quizzes' empty-field auto-submit: counts as a wrong guess and reveals
+  // one of the still-missing synonyms instead of silently doing nothing.
+  function giveUpOnSlot() {
+    const remaining = current.synonyms.find((syn) => !filledIds.has(syn.id))
+    if (!remaining) return
+    setFilledIds((prev) => new Set(prev).add(remaining.id))
+    setWrongTotal((c) => c + 1)
+    setWrongFlash(true)
+    setInput('')
+    wordMistakeRef.current = true
+  }
+
   function goNext() {
+    recordSynonymSetResult(current.id, !wordMistakeRef.current)
+    wordMistakeRef.current = false
     if (qIndex + 1 < questions.length) {
       setQIndex((i) => i + 1)
       setFilledIds(new Set())
@@ -142,6 +168,12 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Backspace' && input === '') {
+                  e.preventDefault()
+                  giveUpOnSlot()
+                }
+              }}
               placeholder="מילה נרדפת בשפה גבוהה"
               autoFocus
             />

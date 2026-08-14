@@ -8,7 +8,9 @@ const projectRoot = fileURLToPath(new URL('.', import.meta.url))
 const wordsFilePath = fileURLToPath(new URL('./src/games/vocabulary/words.data.json', import.meta.url))
 const wordsRelPath = 'src/games/vocabulary/words.data.json'
 const sentencesFilePath = fileURLToPath(new URL('./src/games/essay/sentences.data.json', import.meta.url))
+const sentencesRelPath = 'src/games/essay/sentences.data.json'
 const synonymsFilePath = fileURLToPath(new URL('./src/games/essay/synonyms.data.json', import.meta.url))
+const synonymsRelPath = 'src/games/essay/synonyms.data.json'
 
 function runGit(args) {
   return new Promise((resolve, reject) => {
@@ -19,44 +21,62 @@ function runGit(args) {
   })
 }
 
-async function vocabCommitMessage() {
+// Top-level-array-length delta between HEAD's copy of the file and the
+// current one on disk — shared by every dataset's commit-message builder
+// below. Returns null (instead of throwing) when HEAD has no version of the
+// file yet or it's unparsable, so callers can fall back to a generic message.
+async function arrayLengthDelta(filePath, relPath) {
   try {
-    const [headRaw, currentRaw] = await Promise.all([
-      runGit(['show', `HEAD:${wordsRelPath}`]),
-      readFile(wordsFilePath, 'utf-8'),
-    ])
-    const delta = JSON.parse(currentRaw).length - JSON.parse(headRaw).length
-    if (delta > 0) return `Vocabulary: add ${delta} word${delta === 1 ? '' : 's'} to static dictionary`
-    if (delta < 0) return `Vocabulary: remove ${-delta} word${delta === -1 ? '' : 's'} from static dictionary`
+    const [headRaw, currentRaw] = await Promise.all([runGit(['show', `HEAD:${relPath}`]), readFile(filePath, 'utf-8')])
+    return JSON.parse(currentRaw).length - JSON.parse(headRaw).length
   } catch {
-    // HEAD has no version of the file yet, or it's unparsable — fall through
-    // to the generic message below.
+    return null
   }
+}
+
+async function vocabCommitMessage() {
+  const delta = await arrayLengthDelta(wordsFilePath, wordsRelPath)
+  if (delta > 0) return `Vocabulary: add ${delta} word${delta === 1 ? '' : 's'} to static dictionary`
+  if (delta < 0) return `Vocabulary: remove ${-delta} word${delta === -1 ? '' : 's'} from static dictionary`
   return 'Vocabulary: update static dictionary'
 }
 
-// Auto-commits+pushes the local dictionary after it's been quiet for
-// `idleMs`: every save resets the timer, so a whole session of adding words
-// collapses into one push right after the user actually stops, instead of
-// one push per word. Runs inside the dev server itself (not the editor), so
-// it works for as long as `npm run dev` is up — VS Code doesn't need to be
-// open.
-function scheduleAutoPush(idleMs = 20000) {
+async function sentencesCommitMessage() {
+  const delta = await arrayLengthDelta(sentencesFilePath, sentencesRelPath)
+  if (delta > 0) return `Essay: add ${delta} template sentence${delta === 1 ? '' : 's'} to static data`
+  if (delta < 0) return `Essay: remove ${-delta} template sentence${delta === -1 ? '' : 's'} from static data`
+  return 'Essay: update static template data'
+}
+
+async function synonymsCommitMessage() {
+  const delta = await arrayLengthDelta(synonymsFilePath, synonymsRelPath)
+  if (delta > 0) return `Essay: add ${delta} synonym word${delta === 1 ? '' : 's'} to static data`
+  if (delta < 0) return `Essay: remove ${-delta} synonym word${delta === -1 ? '' : 's'} from static data`
+  return 'Essay: update static synonym data'
+}
+
+// Auto-commits+pushes a static dataset after it's been quiet for `idleMs`:
+// every save resets the timer, so a whole session of edits collapses into
+// one push right after the user actually stops, instead of one push per
+// edit. Runs inside the dev server itself (not the editor), so it works for
+// as long as `npm run dev` is up — VS Code doesn't need to be open. Each
+// caller gets its own independent timer via its own closure.
+function scheduleAutoPush(relPath, buildMessage, idleMs = 20000) {
   let timer = null
   return () => {
     if (timer) clearTimeout(timer)
     timer = setTimeout(async () => {
       timer = null
       try {
-        const status = await runGit(['status', '--porcelain', '--', wordsRelPath])
+        const status = await runGit(['status', '--porcelain', '--', relPath])
         if (!status.trim()) return
-        const message = await vocabCommitMessage()
-        await runGit(['add', wordsRelPath])
+        const message = await buildMessage()
+        await runGit(['add', relPath])
         await runGit(['commit', '-m', message])
         await runGit(['push'])
-        console.log(`[vocab-auto-push] ${message}`)
+        console.log(`[auto-push] ${message}`)
       } catch (err) {
-        console.error('[vocab-auto-push] failed:', err.message)
+        console.error('[auto-push] failed:', err.message)
       }
     }, idleMs)
   }
@@ -156,8 +176,18 @@ function jsonFileApiPlugin(name, route, filePath, onSaved) {
 export default defineConfig({
   plugins: [
     react(),
-    jsonFileApiPlugin('vocabulary-api', '/api/vocabulary', wordsFilePath, scheduleAutoPush()),
-    jsonFileApiPlugin('essay-sentences-api', '/api/essay-sentences', sentencesFilePath),
-    jsonFileApiPlugin('essay-synonyms-api', '/api/essay-synonyms', synonymsFilePath),
+    jsonFileApiPlugin('vocabulary-api', '/api/vocabulary', wordsFilePath, scheduleAutoPush(wordsRelPath, vocabCommitMessage)),
+    jsonFileApiPlugin(
+      'essay-sentences-api',
+      '/api/essay-sentences',
+      sentencesFilePath,
+      scheduleAutoPush(sentencesRelPath, sentencesCommitMessage),
+    ),
+    jsonFileApiPlugin(
+      'essay-synonyms-api',
+      '/api/essay-synonyms',
+      synonymsFilePath,
+      scheduleAutoPush(synonymsRelPath, synonymsCommitMessage),
+    ),
   ],
 })

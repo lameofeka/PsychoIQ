@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { sentencesMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
+import { recordSentenceResult } from './stats'
 
 export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
   const [index, setIndex] = useState(0)
@@ -10,6 +11,10 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
   const [mistakeCount, setMistakeCount] = useState(0)
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
+  // Whether the sentence currently at `index` has broken at least once this
+  // pass — recorded against it (as a miss) once it's finally typed
+  // correctly, for the progress map. Reset on advance and on a full restart.
+  const sentenceMistakeRef = useRef(false)
 
   const total = sentences.length
   const current = sentences[index]
@@ -40,6 +45,8 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
 
     if (sentencesMatch(input, current.text)) {
       vibrateSuccess()
+      recordSentenceResult(current.id, !sentenceMistakeRef.current)
+      sentenceMistakeRef.current = false
       if (index + 1 < total) {
         setIndex((i) => i + 1)
         setInput('')
@@ -50,6 +57,7 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
       setBrokenInput(input)
       setMistakeCount((c) => c + 1)
       setStatus('broken')
+      sentenceMistakeRef.current = true
     }
   }
 
@@ -65,6 +73,7 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
     setBrokenInput('')
     setMistakeCount(0)
     setStatus('typing')
+    sentenceMistakeRef.current = false
   }
 
   return (

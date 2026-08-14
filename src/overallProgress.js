@@ -16,6 +16,8 @@ import { TRIPLES, tripleId } from './games/pythagoras/logic'
 import { getWeakIds as getPythagorasWeakIds } from './games/pythagoras/stats'
 import { loadDictionary, getWords, getGroups } from './games/vocabulary/dictionary'
 import { getGroupLevel } from './games/vocabulary/stats'
+import { loadTemplateData, loadSynonymData, getSentences, getSynonymSets } from './games/essay/storage'
+import { getSentenceLevel, getSynonymSetLevel } from './games/essay/stats'
 
 function multiplicationCounts() {
   let total = 0
@@ -65,6 +67,17 @@ function vocabularyCounts() {
   return { green, total: groups.length }
 }
 
+function essayCounts() {
+  const sentences = getSentences()
+  const synonymSets = getSynonymSets().filter((s) => s.synonyms.length > 0)
+  const sentenceGreen = sentences.filter((s) => getSentenceLevel(s.id) === 'green').length
+  const synonymGreen = synonymSets.filter((s) => getSynonymSetLevel(s.id) === 'green').length
+  return {
+    green: sentenceGreen + synonymGreen,
+    total: sentences.length + synonymSets.length,
+  }
+}
+
 function percentOf(parts) {
   const total = parts.reduce((sum, p) => sum + p.total, 0)
   if (total === 0) return 0
@@ -78,7 +91,7 @@ function percentOf(parts) {
 // category. Vocabulary's word list loads asynchronously, so this resolves
 // only once it's available rather than undercounting it as empty.
 export async function getMasteryBreakdown() {
-  await loadDictionary()
+  await Promise.all([loadDictionary(), loadTemplateData(), loadSynonymData()])
 
   const quantitativeParts = [
     multiplicationCounts(),
@@ -90,7 +103,7 @@ export async function getMasteryBreakdown() {
     polygonsCounts(),
     pythagorasCounts(),
   ]
-  const verbalParts = [vocabularyCounts()]
+  const verbalParts = [vocabularyCounts(), essayCounts()]
 
   return {
     overall: percentOf([...quantitativeParts, ...verbalParts]),
