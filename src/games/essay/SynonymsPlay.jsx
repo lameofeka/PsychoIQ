@@ -13,18 +13,21 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const [wrongTotal, setWrongTotal] = useState(0)
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
-  // Tracks whether the current word had any wrong/given-up guess this round,
-  // so goNext can record one pass/fail result per word for the progress map
-  // — reset whenever qIndex moves to a new word.
-  const wordMistakeRef = useRef(false)
+  // Whether the current word had any wrong/given-up guess since it was last
+  // reset (either by moving to a new word or by "נסה שוב") — a word only
+  // counts as mastered, and only advances to the next one, once it's been
+  // filled with this at false the whole way through.
+  const [wordHasMistake, setWordHasMistake] = useState(false)
 
   const current = questions[qIndex]
-  const wordDone = filledIds.size === current.synonyms.length
+  const allFilled = filledIds.size === current.synonyms.length
+  const wordSucceeded = allFilled && !wordHasMistake
+  const wordFailed = allFilled && wordHasMistake
   const progressPercent = Math.round((qIndex / questions.length) * 100)
 
   useEffect(() => {
-    if (!wordDone) inputRef.current?.focus()
-  }, [qIndex, wordDone])
+    if (!allFilled) inputRef.current?.focus()
+  }, [qIndex, allFilled])
 
   useEffect(() => {
     if (wrongFlash) {
@@ -69,9 +72,13 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   useEffect(() => {
     function onKeyDown(e) {
       if (e.target.closest('button')) return
-      if (wordDone && e.key === 'Enter') {
+      if (e.key !== 'Enter') return
+      if (wordSucceeded) {
         e.preventDefault()
         goNext()
+      } else if (wordFailed) {
+        e.preventDefault()
+        retryWord()
       }
     }
     document.addEventListener('keydown', onKeyDown)
@@ -80,7 +87,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (wordDone) return
+    if (allFilled) return
     if (input.trim() === '') {
       giveUpOnSlot()
       return
@@ -96,7 +103,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
       setWrongTotal((c) => c + 1)
       setWrongFlash(true)
       setInput('')
-      wordMistakeRef.current = true
+      setWordHasMistake(true)
     }
   }
 
@@ -111,15 +118,24 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     setWrongTotal((c) => c + 1)
     setWrongFlash(true)
     setInput('')
-    wordMistakeRef.current = true
+    setWordHasMistake(true)
+  }
+
+  // A word with any mistake this pass doesn't advance - it's cleared back to
+  // empty so the user has to type every synonym again, from scratch, until
+  // a clean pass with no mistakes at all.
+  function retryWord() {
+    setFilledIds(new Set())
+    setWordHasMistake(false)
+    setInput('')
   }
 
   function goNext() {
-    recordSynonymSetResult(current.id, !wordMistakeRef.current)
-    wordMistakeRef.current = false
+    recordSynonymSetResult(current.id, true)
     if (qIndex + 1 < questions.length) {
       setQIndex((i) => i + 1)
       setFilledIds(new Set())
+      setWordHasMistake(false)
       setInput('')
     } else {
       onFinish({ correctTotal, wrongTotal, elapsedMs: Date.now() - startTimeRef.current, totalWords: questions.length })
@@ -149,7 +165,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         </div>
       </div>
 
-      <div className={`question-card ${wrongFlash ? 'wrong' : ''} ${wordDone ? 'correct' : ''}`}>
+      <div className={`question-card ${wrongFlash || wordFailed ? 'wrong' : ''} ${wordSucceeded ? 'correct' : ''}`}>
         <div className="question-text vocab-word">{current.word}</div>
 
         <ol className="synonym-slots">
@@ -161,7 +177,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
           ))}
         </ol>
 
-        {!wordDone && (
+        {!allFilled && (
           <form onSubmit={handleSubmit}>
             <input
               ref={inputRef}
@@ -183,7 +199,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
           </form>
         )}
 
-        {wordDone && (
+        {wordSucceeded && (
           <div className="vocab-reveal">
             <div className="feedback-msg correct">כל המילים הנרדפות נמצאו! ✔</div>
             <button className="primary-btn vocab-next-btn" onClick={goNext}>
@@ -191,11 +207,25 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
             </button>
           </div>
         )}
+
+        {wordFailed && (
+          <div className="vocab-reveal">
+            <div className="feedback-msg wrong">היו טעויות במילה הזו - צריך לכתוב את כל המילים הנרדפות שוב</div>
+            <button className="primary-btn vocab-next-btn" onClick={retryWord}>
+              נסה שוב
+            </button>
+          </div>
+        )}
       </div>
 
-      {wordDone && (
-        <button type="button" className="next-word-fab" onClick={goNext} title="למילה הבאה">
-          {qIndex + 1 < questions.length ? 'הבא' : 'סיום'}
+      {allFilled && (
+        <button
+          type="button"
+          className="next-word-fab"
+          onClick={wordSucceeded ? goNext : retryWord}
+          title={wordSucceeded ? 'למילה הבאה' : 'נסה שוב'}
+        >
+          {wordSucceeded ? (qIndex + 1 < questions.length ? 'הבא' : 'סיום') : 'נסה שוב'}
         </button>
       )}
     </div>
