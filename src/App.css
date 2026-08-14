@@ -3177,17 +3177,46 @@
    per-breakpoint tuning needed. */
 .synonym-progress-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 8px;
   align-items: start;
 }
 
 .synonym-progress-list .word-row {
   display: block;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 8px;
   min-width: 0;
+}
+
+.synonym-progress-list .word-row-main {
+  gap: 2px;
+}
+
+.synonym-progress-list .word-row-word {
+  font-size: 14px;
+}
+
+.synonym-progress-list .progress-row-title {
+  gap: 4px;
+}
+
+.synonym-progress-list .progress-row-title .dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.synonym-progress-list .synonym-list {
+  margin: 4px 0 0;
+  gap: 2px;
+}
+
+.synonym-progress-list .synonym-item {
+  font-size: 12px;
+  padding: 0;
+  border-bottom: none;
 }
 
 .synonym-item-actions {
