@@ -71,7 +71,7 @@ function essayCounts() {
   const sentences = getSentences()
   const synonymSets = getSynonymSets().filter((s) => s.synonyms.length > 0)
   const sentenceGreen = sentences.filter((s) => getSentenceLevel(s.id) === 'green').length
-  const synonymGreen = synonymSets.filter((s) => getSynonymSetLevel(s.id) === 'green').length
+  const synonymGreen = synonymSets.filter((s) => getSynonymSetLevel(s) === 'green').length
   return {
     green: sentenceGreen + synonymGreen,
     total: sentences.length + synonymSets.length,

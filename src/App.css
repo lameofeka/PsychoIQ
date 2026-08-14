@@ -3161,6 +3161,15 @@
   overflow-wrap: break-word;
 }
 
+/* Essay progress map: a level dot inline with the word/synonym text, shared
+   between the word-level title row and each individual synonym row so both
+   read as the same kind of "here's how well you know this" indicator. */
+.progress-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .synonym-item-actions {
   display: flex;
   gap: 4px;

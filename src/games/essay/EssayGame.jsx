@@ -9,14 +9,14 @@ const ACTIVITIES = [
     title: 'טמפלייט',
     description: 'תרגול הקלדת משפטי הטמפלייט ברצף ולפי הסדר',
     icon: '≡',
-    manageLabel: 'ניהול משפטים',
+    manageLabel: 'מפת התקדמות',
   },
   {
     id: 'synonyms',
     title: 'מילים נרדפות',
     description: 'תרגול מילים נרדפות בשפה גבוהה למילים פשוטות',
     icon: '≈',
-    manageLabel: 'ניהול מילים',
+    manageLabel: 'מפת התקדמות',
   },
 ]
 

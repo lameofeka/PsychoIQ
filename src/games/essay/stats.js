@@ -1,4 +1,4 @@
-const SYNONYM_STORAGE_KEY = 'psychoiq_essay_synonym_stats_v1'
+const SYNONYM_STORAGE_KEY = 'psychoiq_essay_synonym_item_stats_v1'
 const SENTENCE_STORAGE_KEY = 'psychoiq_essay_sentence_stats_v1'
 const WINDOW_SIZE = 6
 
@@ -47,20 +47,28 @@ function getWeakIds(key, ids) {
   return ids.filter((id) => levelFromHistory(stats[id]) !== 'green')
 }
 
-// --- Synonym sets (one entry per "simple word", tracked across every
-// practice round regardless of how many of its synonyms were typed vs
-// revealed) ---
+// --- Synonyms (one entry per individual synonym, not per word - so the
+// progress map can show exactly which synonyms of a given word are
+// remembered and which aren't, instead of a single blended score per word) ---
 
-export function recordSynonymSetResult(setId, isCorrect) {
-  recordResult(SYNONYM_STORAGE_KEY, setId, isCorrect)
+export function recordSynonymResult(synonymId, isCorrect) {
+  recordResult(SYNONYM_STORAGE_KEY, synonymId, isCorrect)
 }
 
-export function getSynonymSetLevel(setId) {
-  return getLevel(SYNONYM_STORAGE_KEY, setId)
+export function getSynonymLevel(synonymId) {
+  return getLevel(SYNONYM_STORAGE_KEY, synonymId)
 }
 
-export function getWeakSynonymSetIds(ids) {
-  return getWeakIds(SYNONYM_STORAGE_KEY, ids)
+// A word's own level is the worst level among its synonyms - "green" only
+// once every synonym is mastered, so a single still-shaky synonym is enough
+// to flag the whole word as needing more practice.
+const LEVEL_RANK = { red: 0, yellow: 1, unseen: 2, green: 3 }
+
+export function getSynonymSetLevel(set) {
+  if (!set.synonyms || set.synonyms.length === 0) return 'unseen'
+  return set.synonyms
+    .map((syn) => getSynonymLevel(syn.id))
+    .reduce((worst, level) => (LEVEL_RANK[level] < LEVEL_RANK[worst] ? level : worst))
 }
 
 // --- Template sentences (one entry per sentence, per pass through the

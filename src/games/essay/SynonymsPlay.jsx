@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { wordsMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
-import { recordSynonymSetResult } from './stats'
+import { recordSynonymResult } from './stats'
 
 export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const questions = sets
@@ -99,6 +99,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
       setCorrectTotal((c) => c + 1)
       setInput('')
       vibrateSuccess()
+      recordSynonymResult(match.id, true)
     } else {
       setWrongTotal((c) => c + 1)
       setWrongFlash(true)
@@ -119,6 +120,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     setWrongFlash(true)
     setInput('')
     setWordHasMistake(true)
+    recordSynonymResult(remaining.id, false)
   }
 
   // A word with any mistake this pass doesn't advance - it's cleared back to
@@ -131,7 +133,6 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   }
 
   function goNext() {
-    recordSynonymSetResult(current.id, true)
     if (qIndex + 1 < questions.length) {
       setQIndex((i) => i + 1)
       setFilledIds(new Set())
