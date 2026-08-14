@@ -3170,6 +3170,26 @@
   gap: 6px;
 }
 
+/* Synonyms progress map: each word (with its nested synonym list) is a
+   self-contained card instead of a full-width divided row, laid out in as
+   many side-by-side columns as the screen has room for - narrow phones get
+   one column, wider screens fit two or three, automatically, with no
+   per-breakpoint tuning needed. */
+.synonym-progress-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.synonym-progress-list .word-row {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 0;
+}
+
 .synonym-item-actions {
   display: flex;
   gap: 4px;
@@ -3221,6 +3241,13 @@
 
 .synonym-slot.filled {
   color: var(--success);
+  font-weight: 600;
+}
+
+/* Revealed by giving up (empty Enter/Backspace) rather than a correct guess
+   - red instead of green, since the user didn't actually know this one. */
+.synonym-slot.revealed {
+  color: var(--danger);
   font-weight: 600;
 }
 

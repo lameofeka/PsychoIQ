@@ -7,6 +7,9 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const questions = sets
   const [qIndex, setQIndex] = useState(0)
   const [filledIds, setFilledIds] = useState(new Set())
+  // Slots filled by giving up (empty Enter/Backspace) rather than a correct
+  // guess - shown red instead of green, since the user didn't actually know it.
+  const [revealedIds, setRevealedIds] = useState(new Set())
   const [input, setInput] = useState('')
   const [wrongFlash, setWrongFlash] = useState(false)
   const [correctTotal, setCorrectTotal] = useState(0)
@@ -116,6 +119,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     const remaining = current.synonyms.find((syn) => !filledIds.has(syn.id))
     if (!remaining) return
     setFilledIds((prev) => new Set(prev).add(remaining.id))
+    setRevealedIds((prev) => new Set(prev).add(remaining.id))
     setWrongTotal((c) => c + 1)
     setWrongFlash(true)
     setInput('')
@@ -128,6 +132,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   // a clean pass with no mistakes at all.
   function retryWord() {
     setFilledIds(new Set())
+    setRevealedIds(new Set())
     setWordHasMistake(false)
     setInput('')
   }
@@ -136,6 +141,7 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     if (qIndex + 1 < questions.length) {
       setQIndex((i) => i + 1)
       setFilledIds(new Set())
+      setRevealedIds(new Set())
       setWordHasMistake(false)
       setInput('')
     } else {
@@ -170,12 +176,16 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         <div className="question-text vocab-word">{current.word}</div>
 
         <ol className="synonym-slots">
-          {current.synonyms.map((syn, i) => (
-            <li key={syn.id} className={`synonym-slot ${filledIds.has(syn.id) ? 'filled' : ''}`}>
-              <span className="synonym-slot-num">{i + 1}.</span>
-              <span className="synonym-slot-text">{filledIds.has(syn.id) ? syn.text : '. . . . .'}</span>
-            </li>
-          ))}
+          {current.synonyms.map((syn, i) => {
+            const filled = filledIds.has(syn.id)
+            const revealed = revealedIds.has(syn.id)
+            return (
+              <li key={syn.id} className={`synonym-slot ${filled ? (revealed ? 'revealed' : 'filled') : ''}`}>
+                <span className="synonym-slot-num">{i + 1}.</span>
+                <span className="synonym-slot-text">{filled ? syn.text : '. . . . .'}</span>
+              </li>
+            )
+          })}
         </ol>
 
         {!allFilled && (
