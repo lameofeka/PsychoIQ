@@ -3171,9 +3171,8 @@
 }
 
 /* Synonyms progress map: each word (with its nested synonym list) is a
-   self-contained card, flowed into as many side-by-side columns as the
-   screen has room for - narrow phones get one column, wider screens fit two
-   or three, automatically, with no per-breakpoint tuning needed.
+   self-contained card, flowed into a fixed number of side-by-side columns -
+   2 on mobile, 3 on wider screens (see @media block below).
    CSS multi-columns (not grid) on purpose: grid lays cards out row-by-row,
    so a row with one tall card (many synonyms) next to a short one leaves a
    ragged gap under the short card before the next row starts. Columns flow
@@ -3181,8 +3180,14 @@
    the gap between cards is the same fixed amount everywhere regardless of
    how tall neighboring cards are. */
 .synonym-progress-list {
-  columns: 130px;
+  column-count: 2;
   column-gap: 10px;
+}
+
+@media (min-width: 601px) {
+  .synonym-progress-list {
+    column-count: 3;
+  }
 }
 
 .synonym-progress-list .word-row {
