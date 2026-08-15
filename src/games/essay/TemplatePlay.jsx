@@ -41,7 +41,7 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (status === 'broken' || input.trim() === '') return
+    if (status === 'broken') return
 
     if (sentencesMatch(input, current.text)) {
       vibrateSuccess()
