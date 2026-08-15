@@ -45,7 +45,7 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
   }
 
   return (
-    <div className="game-shell">
+    <div className={`game-shell ${stage === 'progress' ? 'wide' : ''}`}>
       {stage === 'progress' && (
         <SynonymsProgressMap onBack={onExit} onStartPractice={startPractice} onPracticeWeak={startPracticeWithSets} />
       )}

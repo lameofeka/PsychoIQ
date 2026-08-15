@@ -3180,6 +3180,10 @@
    the gap between cards is the same fixed amount everywhere regardless of
    how tall neighboring cards are. */
 .synonym-progress-list {
+  /* Override .word-list's display:flex - multi-column layout (column-count
+     below) is a no-op on flex containers, so this has to win back block
+     display for the columns to actually take effect. */
+  display: block;
   column-count: 2;
   column-gap: 10px;
 }
