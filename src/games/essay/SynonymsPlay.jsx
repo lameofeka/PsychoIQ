@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { wordsMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
 import { recordSynonymResult } from './stats'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const questions = sets
   const [qIndex, setQIndex] = useState(0)
   const [filledIds, setFilledIds] = useState(new Set())

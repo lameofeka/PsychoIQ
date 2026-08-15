@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function TemplateResults({ total, mistakeCount, elapsedMs, onPracticeAgain, onManage, onExit }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const seconds = Math.round(elapsedMs / 1000)
 
   useEffect(() => {

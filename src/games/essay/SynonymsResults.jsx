@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function SynonymsResults({ totalWords, correctTotal, wrongTotal, elapsedMs, onPracticeAgain, onManage, onExit }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const attempts = correctTotal + wrongTotal
   const percent = attempts === 0 ? 100 : Math.round((correctTotal / attempts) * 100)
   const seconds = Math.round(elapsedMs / 1000)

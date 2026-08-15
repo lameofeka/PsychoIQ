@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { sentencesMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
 import { recordSentenceResult } from './stats'
+import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
 
 export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
+  useHtmlClassLock('quant-gameplay-lock')
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [status, setStatus] = useState('typing') // 'typing' | 'broken'
@@ -145,11 +147,21 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
                       setInput(e.target.value)
                     }}
                     onKeyDown={(e) => {
+                      // stopPropagation matters here: submitting can flip
+                      // status to 'broken' within this same handler, and the
+                      // document-level Enter/Tab listener below re-registers
+                      // itself synchronously before this event finishes
+                      // bubbling - without this it would see the fresh
+                      // 'broken' status and immediately treat this very
+                      // keypress as a "retry", undoing the broken screen
+                      // before it's ever shown.
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault()
+                        e.stopPropagation()
                         handleSubmit(e)
                       } else if (e.key === 'Backspace' && input === '') {
                         e.preventDefault()
+                        e.stopPropagation()
                         handleSubmit(e, '')
                       }
                     }}
