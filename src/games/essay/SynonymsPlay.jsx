@@ -72,16 +72,20 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     }
   }, [])
 
+  // Once a word is fully filled (whether the pass was clean or had
+  // mistakes), Enter always redoes the same word from scratch and Tab
+  // always advances to the next one - lets the user re-drill a word they
+  // just got right, not just recover from a wrong one.
   useEffect(() => {
     function onKeyDown(e) {
       if (e.target.closest('button')) return
-      if (e.key !== 'Enter') return
-      if (wordSucceeded) {
-        e.preventDefault()
-        goNext()
-      } else if (wordFailed) {
+      if (!allFilled) return
+      if (e.key === 'Enter') {
         e.preventDefault()
         retryWord()
+      } else if (e.key === 'Tab') {
+        e.preventDefault()
+        goNext()
       }
     }
     document.addEventListener('keydown', onKeyDown)
@@ -127,9 +131,10 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     recordSynonymResult(remaining.id, false)
   }
 
-  // A word with any mistake this pass doesn't advance - it's cleared back to
-  // empty so the user has to type every synonym again, from scratch, until
-  // a clean pass with no mistakes at all.
+  // Clears the current word back to empty so it can be typed again from
+  // scratch - used both to recover from a pass with mistakes and, via
+  // Enter/the "נסה שוב" button, to voluntarily re-drill a word already
+  // gotten right.
   function retryWord() {
     setFilledIds(new Set())
     setRevealedIds(new Set())
@@ -213,9 +218,14 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         {wordSucceeded && (
           <div className="vocab-reveal">
             <div className="feedback-msg correct">כל המילים הנרדפות נמצאו! ✔</div>
-            <button className="primary-btn vocab-next-btn" onClick={goNext}>
-              {qIndex + 1 < questions.length ? 'למילה הבאה' : 'סיום'}
-            </button>
+            <div className="vocab-edit-form-actions">
+              <button className="primary-btn vocab-next-btn" onClick={goNext}>
+                {qIndex + 1 < questions.length ? 'למילה הבאה' : 'סיום'}
+              </button>
+              <button className="secondary-btn" onClick={retryWord}>
+                נסה שוב
+              </button>
+            </div>
           </div>
         )}
 
