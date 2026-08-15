@@ -39,11 +39,12 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
     return () => document.removeEventListener('keydown', onKeyDown)
   })
 
-  function handleSubmit(e) {
+  function handleSubmit(e, valueOverride) {
     e.preventDefault()
     if (status === 'broken') return
+    const value = valueOverride !== undefined ? valueOverride : input
 
-    if (sentencesMatch(input, current.text)) {
+    if (sentencesMatch(value, current.text)) {
       vibrateSuccess()
       recordSentenceResult(current.id, !sentenceMistakeRef.current)
       sentenceMistakeRef.current = false
@@ -54,7 +55,7 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
         onFinish({ mistakeCount, elapsedMs: Date.now() - startTimeRef.current, total })
       }
     } else {
-      setBrokenInput(input)
+      setBrokenInput(value)
       setMistakeCount((c) => c + 1)
       setStatus('broken')
       sentenceMistakeRef.current = true
@@ -127,11 +128,29 @@ export default function TemplatePlay({ sentences, onFinish, onExitQuiz }) {
                     ref={inputRef}
                     rows={2}
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    onChange={(e) => {
+                      // Some mobile keyboards don't fire a keydown with
+                      // key === 'Enter' on Return (IME/composition quirks) -
+                      // insertLineBreak on the change event is the reliable
+                      // cross-device signal that Return was pressed, so it's
+                      // handled here too as a fallback to the keydown check
+                      // below, same empty-field convention as every other
+                      // quiz (submit-as-wrong, not silently ignored).
+                      if (e.nativeEvent.inputType === 'insertLineBreak') {
+                        const value = e.target.value.replace(/\n+$/, '')
+                        setInput(value)
+                        handleSubmit(e, value)
+                        return
+                      }
+                      setInput(e.target.value)
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault()
                         handleSubmit(e)
+                      } else if (e.key === 'Backspace' && input === '') {
+                        e.preventDefault()
+                        handleSubmit(e, '')
                       }
                     }}
                     placeholder="הקלד/י את המשפט הבא..."
