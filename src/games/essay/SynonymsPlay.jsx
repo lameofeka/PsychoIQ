@@ -80,6 +80,17 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   // just got right, not just recover from a wrong one.
   useEffect(() => {
     function onKeyDown(e) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        // Inside the text field with content, the arrow keys must move the
+        // caret, not switch words - only take over once the field is empty
+        // or the word is already fully filled.
+        const tag = e.target.tagName
+        if ((tag === 'INPUT' || tag === 'TEXTAREA') && e.target.value && !allFilled) return
+        e.preventDefault()
+        if (e.key === 'ArrowLeft') goNext()
+        else goPrev()
+        return
+      }
       if (e.target.closest('button')) return
       if (!allFilled) return
       if (e.key === 'Enter') {
@@ -154,6 +165,18 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
     } else {
       onFinish({ correctTotal, wrongTotal, elapsedMs: Date.now() - startTimeRef.current, totalWords: questions.length })
     }
+  }
+
+  // Lets the arrow keys page freely between words without finishing the
+  // quiz - mirrors goNext's state reset but never triggers onFinish, and
+  // simply no-ops at the first word instead of wrapping.
+  function goPrev() {
+    if (qIndex === 0) return
+    setQIndex((i) => i - 1)
+    setFilledIds(new Set())
+    setRevealedIds(new Set())
+    setWordHasMistake(false)
+    setInput('')
   }
 
   return (
