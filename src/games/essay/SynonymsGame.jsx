@@ -17,17 +17,19 @@ export default function SynonymsGame({ onExit, initialStage = 'manage' }) {
   const [practiceSets, setPracticeSets] = useState(() => {
     if (initialStage === 'practice') {
       const sets = getSynonymSets().filter((s) => s.synonyms.length > 0)
-      if (sets.length > 0) return shuffle(sets)
+      if (sets.length > 0) return sets
     }
     return []
   })
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
 
+  // Fixed order (as authored in the data file), not shuffled - the main
+  // "start practice" flow always drills the words in the same sequence.
   function startPractice() {
     const sets = getSynonymSets().filter((s) => s.synonyms.length > 0)
     if (sets.length === 0) return
-    setPracticeSets(shuffle(sets))
+    setPracticeSets(sets)
     setRoundKey((k) => k + 1)
     setStage('practice')
   }
