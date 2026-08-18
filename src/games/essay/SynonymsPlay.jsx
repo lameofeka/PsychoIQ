@@ -185,6 +185,26 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         <button className="icon-back-btn" onClick={onExitQuiz} aria-label="יציאה מהתרגול">
           →
         </button>
+        <span className="quiz-group-nav">
+          <button
+            type="button"
+            className="group-nav-arrow"
+            onClick={goPrev}
+            aria-label="מילה קודמת"
+            title="מילה קודמת"
+          >
+            →
+          </button>
+          <button
+            type="button"
+            className="group-nav-arrow"
+            onClick={goNext}
+            aria-label="מילה הבאה"
+            title="מילה הבאה"
+          >
+            ←
+          </button>
+        </span>
       </div>
 
       <div className="quiz-progress">
