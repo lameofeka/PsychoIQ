@@ -68,7 +68,7 @@ export default function TemplateManager({ onExit, onStartPractice }) {
       {sentences.length === 0 ? (
         <p className="summary-line">הטמפלייט ריק. הוסיפו משפט ראשון למעלה.</p>
       ) : (
-        <div className="word-list">
+        <div className="word-list sentence-list">
           {sentences.map((s, i) => (
             <div key={s.id} className="word-row">
               {editingId === s.id ? (

@@ -2643,6 +2643,12 @@
   flex-shrink: 0;
 }
 
+.sentence-list .word-row-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .danger-link {
   color: var(--danger);
 }

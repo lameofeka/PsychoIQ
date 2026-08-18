@@ -1,5 +1,9 @@
 const NIQQUD_RE = /[֑-ׇ]/g
 
+// Matches the word תפיסה, optionally attached to up to two one-letter
+// Hebrew prefixes (ב/ה/ו/כ/ל/מ/ש, e.g. "בתפיסה", "ולתפיסה").
+const TFISA_RE = /([בהוכלמש]{0,2})תפיסה(?![א-ת])/g
+
 function normalize(str) {
   return str
     .replace(NIQQUD_RE, '')
@@ -8,7 +12,14 @@ function normalize(str) {
 }
 
 export function sentencesMatch(input, expected) {
-  return normalize(input) === normalize(expected)
+  const normInput = normalize(input)
+  const normExpected = normalize(expected)
+  if (normInput === normExpected) return true
+
+  // "תפיסה" is accepted interchangeably with "גישה" (same prefix carried
+  // over) - the rest of the sentence still has to match exactly.
+  const altExpected = normExpected.replace(TFISA_RE, (_m, prefix) => `${prefix}גישה`)
+  return altExpected !== normExpected && normInput === altExpected
 }
 
 export function wordsMatch(input, expected) {
