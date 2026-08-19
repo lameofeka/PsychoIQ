@@ -8,6 +8,7 @@ import { DIVISORS } from './games/division/logic'
 import { getWeakNumbers as getDivisionWeakNumbers } from './games/division/stats'
 import { PRIMES } from './games/primes/logic'
 import { getPrimeLevel } from './games/primes/stats'
+import { integersMasteryCounts } from './games/integers/stats'
 import { CIRCLE_FACTS } from './games/circleParts/logic'
 import { getWeakNumbers as getCirclePartsWeakNumbers } from './games/circleParts/stats'
 import { POLYGON_FACTS } from './games/polygons/logic'
@@ -102,6 +103,7 @@ export async function getMasteryBreakdown() {
     circlePartsCounts(),
     polygonsCounts(),
     pythagorasCounts(),
+    integersMasteryCounts(),
   ]
   const verbalParts = [vocabularyCounts(), essayCounts()]
 

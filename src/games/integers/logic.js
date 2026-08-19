@@ -131,21 +131,30 @@ function genParityQuestion() {
 // itself is never something the learner has to type — it has no keypad
 // button. All four rows produce distinct result text, so whichever operand
 // is blanked is always uniquely recoverable from the other operand + result.
-const FRACTION_ROWS = [
+export const FRACTION_ROWS = [
   { num: 'odd', den: 'odd', resultText: 'אי-זוגי או שבר' },
   { num: 'even', den: 'odd', resultText: 'זוגי או שבר' },
   { num: 'odd', den: 'even', resultText: 'שבר' },
   { num: 'even', den: 'even', resultText: 'אי-זוגי, זוגי או שבר' },
 ]
 
+// Plain "numerator ÷ denominator = result" text for the progress map (which
+// lists the rule itself, not an interactive fraction bar).
+export function formatFractionRule(row) {
+  return `${PARITY_LABEL[row.num]} ÷ ${PARITY_LABEL[row.den]} = ${row.resultText}`
+}
+
 // Rendered as a real numerator/denominator fraction bar (see FractionText in
 // GamePlay.jsx), not a "÷" sign — so these carry fracNumerator/fracDenominator/
 // resultText instead of before/after; `null` marks whichever side is blank.
+// `rowIndex` ties both directions of the same row back to one progress-map
+// entry (see recordFractionRowResult in stats.js).
 function buildFractionQuestions() {
   const questions = []
-  for (const row of FRACTION_ROWS) {
+  FRACTION_ROWS.forEach((row, rowIndex) => {
     questions.push({
       law: LAWS.FRACTION,
+      rowIndex,
       fracNumerator: null,
       fracDenominator: PARITY_LABEL[row.den],
       resultText: row.resultText,
@@ -154,13 +163,14 @@ function buildFractionQuestions() {
     })
     questions.push({
       law: LAWS.FRACTION,
+      rowIndex,
       fracNumerator: PARITY_LABEL[row.num],
       fracDenominator: null,
       resultText: row.resultText,
       answer: row.den,
       answerDisplay: PARITY_LABEL[row.den],
     })
-  }
+  })
   return questions
 }
 
@@ -168,7 +178,7 @@ function buildFractionQuestions() {
 // both fair blanks (every value involved - 2, 3, 4, 6, 8, and 24 via two
 // keypresses - is reachable from the keypad); the "kind" text (עוקבים /
 // זוגיים / זוגיים עוקבים) has no keypad button at all, so it's never blanked.
-const PRODUCT_FACTS = [
+export const PRODUCT_FACTS = [
   { count: 2, kind: 'עוקבים', divisor: 2 },
   { count: 3, kind: 'עוקבים', divisor: 6 },
   { count: 4, kind: 'עוקבים', divisor: 24 },
@@ -177,28 +187,38 @@ const PRODUCT_FACTS = [
   { count: 2, kind: 'זוגיים עוקבים', divisor: 8 },
 ]
 
+// Plain sentence text for the progress map, e.g.
+// "מכפלה של 2 מספרים עוקבים תמיד מתחלקת ב-2".
+export function formatProductFact(fact) {
+  return `מכפלה של ${fact.count} מספרים ${fact.kind} תמיד מתחלקת ב-${fact.divisor}`
+}
+
+// `factIndex` ties both blank variants of the same fact back to one
+// progress-map entry (see recordProductFactResult in stats.js).
 function buildProductQuestions() {
   const questions = []
-  for (const fact of PRODUCT_FACTS) {
-    questions.push(
-      makeQuestion(
+  PRODUCT_FACTS.forEach((fact, factIndex) => {
+    questions.push({
+      ...makeQuestion(
         LAWS.PRODUCTS,
         `מכפלה של ${fact.count} מספרים ${fact.kind} תמיד מתחלקת ב-`,
         '',
         String(fact.divisor),
         String(fact.divisor)
-      )
-    )
-    questions.push(
-      makeQuestion(
+      ),
+      factIndex,
+    })
+    questions.push({
+      ...makeQuestion(
         LAWS.PRODUCTS,
         'מכפלה של ',
         ` מספרים ${fact.kind} תמיד מתחלקת ב-${fact.divisor}`,
         String(fact.count),
         String(fact.count)
-      )
-    )
-  }
+      ),
+      factIndex,
+    })
+  })
   return questions
 }
 

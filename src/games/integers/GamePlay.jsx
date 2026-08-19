@@ -1,5 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
 import { getRoundQuestions, questionFontSize, KEYPAD_TOKENS, LAWS } from './logic'
+import {
+  recordLawResult,
+  recordFractionRowResult,
+  markFractionRowLearned,
+  recordProductFactResult,
+  markProductFactLearned,
+} from './stats'
 import { FractionText } from '../circleParts/FractionText'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
@@ -75,6 +82,17 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
+    // Laws 1/2 have no fixed fact to key on (see stats.js) - only the law
+    // itself gets a rolling window. Laws 3/4 are fixed fact sets, so each
+    // row/fact tracks its own window, same as every other quant quiz.
+    if (question.law === LAWS.SIGN || question.law === LAWS.PARITY) {
+      recordLawResult(question.law, isCorrect)
+    } else if (question.law === LAWS.FRACTION) {
+      recordFractionRowResult(question.rowIndex, isCorrect)
+    } else if (question.law === LAWS.PRODUCTS) {
+      recordProductFactResult(question.factIndex, isCorrect)
+    }
+
     const isFirstAttempt = !firstAttemptsRef.current.has(question.id)
     let requeue
 
@@ -91,6 +109,12 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
         if (nextRemaining <= 0) {
           retryPassesRef.current.delete(question.id)
           requeue = false
+          // Force the progress-map row/fact green right away instead of
+          // waiting for the rolling window to dilute back up (see point 13
+          // in the quant-quiz-conventions memory) - the retry queue itself
+          // just decided this exact row/fact is learned.
+          if (question.law === LAWS.FRACTION) markFractionRowLearned(question.rowIndex)
+          else if (question.law === LAWS.PRODUCTS) markProductFactLearned(question.factIndex)
         } else {
           retryPassesRef.current.set(question.id, nextRemaining)
           requeue = true
