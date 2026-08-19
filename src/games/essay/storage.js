@@ -170,6 +170,16 @@ export function deleteSynonymSet(id) {
   return sets
 }
 
+export function swapSynonymSets(id1, id2) {
+  const sets = [...synonymsCache]
+  const i1 = sets.findIndex((s) => s.id === id1)
+  const i2 = sets.findIndex((s) => s.id === id2)
+  if (i1 === -1 || i2 === -1 || i1 === i2) return sets
+  ;[sets[i1], sets[i2]] = [sets[i2], sets[i1]]
+  saveSynonymSets(sets)
+  return sets
+}
+
 export function addSynonym(setId, text) {
   const sets = synonymsCache.map((s) =>
     s.id === setId ? { ...s, synonyms: [...s.synonyms, { id: makeId(), text: text.trim() }] } : s,

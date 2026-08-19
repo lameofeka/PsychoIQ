@@ -3278,6 +3278,94 @@
   border-bottom: none;
 }
 
+/* Edit mode: same card grid as read-only view, plus a drag handle, a
+   click-to-open word button and a trash button on each card's title row. */
+.synonym-edit-title {
+  gap: 4px;
+}
+
+.drag-handle-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  margin: 0;
+  color: var(--text);
+  opacity: 0.5;
+  cursor: grab;
+  touch-action: none;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.drag-handle-btn:active {
+  cursor: grabbing;
+  opacity: 0.9;
+}
+
+.synonym-word-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 17px;
+  text-align: start;
+  cursor: pointer;
+  color: var(--text-h);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.synonym-word-btn:hover {
+  color: var(--accent);
+}
+
+.icon-trash-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  margin-inline-start: auto;
+  color: var(--text);
+  opacity: 0.55;
+  flex-shrink: 0;
+  border-radius: 6px;
+  line-height: 0;
+}
+
+.icon-trash-btn:hover {
+  opacity: 1;
+  color: var(--danger);
+}
+
+.icon-trash-btn.confirm {
+  opacity: 1;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+}
+
+.icon-trash-btn svg,
+.drag-handle-btn svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.synonym-progress-list .word-row.dragging {
+  opacity: 0.4;
+}
+
+.synonym-progress-list .word-row.drag-over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-bg);
+}
+
+.synonym-empty-hint {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.7;
+  margin: 4px 0 0;
+}
+
 .synonym-item-actions {
   display: flex;
   gap: 4px;
