@@ -10,7 +10,10 @@ export const LAWS = {
 }
 
 const SIGN_LABEL = { plus: '+', minus: '-' }
-const PARITY_LABEL = { even: 'זוגי', odd: 'אי-זוגי' }
+// "א"ז" instead of the full "אי-זוגי" - the hyphen in the full word read as
+// confusable with the minus sign shown right next to it in law-1 questions,
+// and the shorter label also lets questionFontSize size the text up a bit.
+const PARITY_LABEL = { even: 'זוגי', odd: 'א"ז' }
 
 // Every keypad button, in the fixed layout the user asked for: פלוס
 // top-right, מינוס below it; זוגי top-left, אי-זוגי below it; 2/4/8 down the
@@ -18,13 +21,13 @@ const PARITY_LABEL = { even: 'זוגי', odd: 'אי-זוגי' }
 // .integers-keypad), so this array's reading order fills left-to-right,
 // top-to-bottom - i.e. index 0 is the *visual* top-left cell, not top-right.
 // plus/minus/digits render as their bare symbol (bigger font, see
-// .keypad-short-btn) instead of a spelled-out word - only זוגי/אי-זוגי are
-// genuinely multi-word and need the smaller shared word-button size.
+// .keypad-short-btn) instead of a spelled-out word - only זוגי/א"ז are
+// genuinely words and need the smaller shared word-button size.
 export const KEYPAD_TOKENS = [
-  { key: 'even', label: 'זוגי' },
+  { key: 'even', label: PARITY_LABEL.even },
   { key: '2', label: '2', short: true },
   { key: 'plus', label: '+', short: true },
-  { key: 'odd', label: 'אי-זוגי' },
+  { key: 'odd', label: PARITY_LABEL.odd },
   { key: '4', label: '4', short: true },
   { key: 'minus', label: '-', short: true },
   { key: '3', label: '3', short: true },
@@ -132,10 +135,10 @@ function genParityQuestion() {
 // button. All four rows produce distinct result text, so whichever operand
 // is blanked is always uniquely recoverable from the other operand + result.
 export const FRACTION_ROWS = [
-  { num: 'odd', den: 'odd', resultText: 'אי-זוגי או שבר' },
+  { num: 'odd', den: 'odd', resultText: 'א"ז או שבר' },
   { num: 'even', den: 'odd', resultText: 'זוגי או שבר' },
   { num: 'odd', den: 'even', resultText: 'שבר' },
-  { num: 'even', den: 'even', resultText: 'אי-זוגי, זוגי או שבר' },
+  { num: 'even', den: 'even', resultText: 'א"ז, זוגי או שבר' },
 ]
 
 // Plain "numerator ÷ denominator = result" text for the progress map (which
@@ -299,7 +302,7 @@ export function getRoundQuestions(settings) {
 
 const LAW_LABELS = {
   [LAWS.SIGN]: 'סימנים בכפל ובחילוק',
-  [LAWS.PARITY]: 'זוגי ואי-זוגי',
+  [LAWS.PARITY]: 'זוגי וא"ז',
   [LAWS.FRACTION]: 'חילוק ושברים',
   [LAWS.PRODUCTS]: 'מכפלות מיוחדות',
   [LAWS.COMBINED]: 'מעורבב - כל הסוגים',
