@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import PrimesGame from './PrimesGame'
 import DivisionGame from '../division/DivisionGame'
+import IntegersGame from '../integers/IntegersGame'
 
 const QUIZZES = [
   { value: 'primes', label: 'ראשוניים', Component: PrimesGame },
   { value: 'division', label: 'חלוקה', Component: DivisionGame },
+  { value: 'integers', label: 'שלמים', Component: IntegersGame },
 ]
 
 // "ראשוניים" isn't a single game anymore - it opens straight into the

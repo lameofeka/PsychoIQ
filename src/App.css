@@ -644,6 +644,13 @@
   opacity: 0.75;
 }
 
+/* "שלמים" quiz has 4 law options (not the usual 3), which the default
+   3-column .operation-row would lay out as an unbalanced 3+1 - a plain 2x2
+   grid instead. */
+.integers-law-row {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 /* Setup screens split into separate stacked white cards (setup options,
    progress map) rather than one card with an internal divider. */
 .wizard-stack {
@@ -1227,6 +1234,17 @@
   opacity: 1;
 }
 
+/* "שלמים" quiz - same .numeric-keypad/.keypad-btn shell as every other
+   quant quiz, but the buttons are words (פלוס/מינוס/זוגי/אי-זוגי) instead
+   of digits, so they need a smaller font to fit inside the square button
+   without wrapping. Tap feedback reuses .divisor-found/.divisor-wrong
+   (green/red) from the division keypad above, since it's the same
+   "highlight the tapped button" pattern with a single-tap answer instead
+   of a typed one. */
+.integers-keypad .keypad-btn {
+  font-size: 15px;
+}
+
 /* The purple "הגשה" checkmark that grades the whole marked set at once. */
 .division-submit-btn {
   color: var(--accent);
@@ -1538,6 +1556,16 @@
 
 .prime-question-text {
   direction: ltr;
+}
+
+/* "שלמים" quiz questions are full sentences/expressions, not a short
+   "a × b" pair like every other quant quiz - the base 46px .question-text
+   size would badly overflow and wrap them. Direction itself is set inline
+   per-question in GamePlay.jsx (ltr for law 1's symbol chains, rtl for the
+   Hebrew-word sentences of laws 2-4), so it's intentionally not set here. */
+.integers-question-text {
+  font-size: 26px;
+  line-height: 1.5;
 }
 
 .prime-prev-number {
