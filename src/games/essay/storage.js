@@ -178,10 +178,20 @@ export function addSynonym(setId, text) {
   return sets
 }
 
-export function updateSynonym(setId, synId, text) {
+// `usage` is an optional short note on how/when this synonym is used (e.g.
+// "מאפשר" -> "להיתר למשהו חיובי") - most synonyms won't have one, so it's
+// only touched when explicitly passed (undefined leaves it as-is).
+export function updateSynonym(setId, synId, text, usage) {
   const sets = synonymsCache.map((s) =>
     s.id === setId
-      ? { ...s, synonyms: s.synonyms.map((syn) => (syn.id === synId ? { ...syn, text: text.trim() } : syn)) }
+      ? {
+          ...s,
+          synonyms: s.synonyms.map((syn) =>
+            syn.id === synId
+              ? { ...syn, text: text.trim(), ...(usage !== undefined ? { usage: usage.trim() } : {}) }
+              : syn,
+          ),
+        }
       : s,
   )
   saveSynonymSets(sets)

@@ -231,8 +231,11 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
             const revealed = revealedIds.has(syn.id)
             return (
               <li key={syn.id} className={`synonym-slot ${filled ? (revealed ? 'revealed' : 'filled') : ''}`}>
-                <span className="synonym-slot-num">{i + 1}.</span>
-                <span className="synonym-slot-text">{filled ? syn.text : '. . . . .'}</span>
+                <span className="synonym-slot-main">
+                  <span className="synonym-slot-num">{i + 1}.</span>
+                  <span className="synonym-slot-text">{filled ? syn.text : '. . . . .'}</span>
+                </span>
+                {filled && syn.usage && <span className="synonym-slot-usage">{syn.usage}</span>}
               </li>
             )
           })}

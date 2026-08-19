@@ -28,6 +28,7 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
   const [newSynText, setNewSynText] = useState({}) // setId -> text
   const [editingSyn, setEditingSyn] = useState(null) // { setId, synId } | null
   const [editSynText, setEditSynText] = useState('')
+  const [editSynUsage, setEditSynUsage] = useState('')
 
   const practicable = sets.filter((s) => s.synonyms.length > 0)
   const rows = practicable
@@ -72,11 +73,12 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
   function startEditSyn(setId, syn) {
     setEditingSyn({ setId, synId: syn.id })
     setEditSynText(syn.text)
+    setEditSynUsage(syn.usage ?? '')
   }
 
   function saveEditSyn() {
     if (!editSynText.trim()) return
-    setSets(updateSynonym(editingSyn.setId, editingSyn.synId, editSynText))
+    setSets(updateSynonym(editingSyn.setId, editingSyn.synId, editSynText, editSynUsage))
     setEditingSyn(null)
   }
 
@@ -172,20 +174,32 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
                 <ol className="synonym-list">
                   {s.synonyms.map((syn, i) =>
                     editingSyn?.setId === s.id && editingSyn?.synId === syn.id ? (
-                      <li key={syn.id} className="synonym-item synonym-item-editing">
-                        <input type="text" value={editSynText} onChange={(e) => setEditSynText(e.target.value)} autoFocus />
-                        <button className="link-btn" onClick={saveEditSyn}>
-                          שמירה
-                        </button>
-                        <button className="link-btn" onClick={() => setEditingSyn(null)}>
-                          ביטול
-                        </button>
+                      <li key={syn.id} className="synonym-item synonym-item-editing synonym-item-editing-block">
+                        <div className="synonym-item-editing-row">
+                          <input type="text" value={editSynText} onChange={(e) => setEditSynText(e.target.value)} autoFocus />
+                          <button className="link-btn" onClick={saveEditSyn}>
+                            שמירה
+                          </button>
+                          <button className="link-btn" onClick={() => setEditingSyn(null)}>
+                            ביטול
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          className="synonym-usage-input"
+                          placeholder="אופן שימוש (אופציונלי, למשל: 'לתמורה חיובית')"
+                          value={editSynUsage}
+                          onChange={(e) => setEditSynUsage(e.target.value)}
+                        />
                       </li>
                     ) : (
                       <li key={syn.id} className="synonym-item">
-                        <span className="synonym-item-text progress-row-title">
-                          <span className={`dot level-${getSynonymLevel(syn.id)}`} />
-                          {syn.text}
+                        <span className="synonym-item-text-wrap">
+                          <span className="synonym-item-text progress-row-title">
+                            <span className={`dot level-${getSynonymLevel(syn.id)}`} />
+                            {syn.text}
+                          </span>
+                          {syn.usage && <span className="synonym-item-usage">{syn.usage}</span>}
                         </span>
                         <span className="synonym-item-actions">
                           <button
