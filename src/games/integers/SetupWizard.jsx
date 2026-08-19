@@ -4,7 +4,7 @@ import { LAWS } from './logic'
 const LAW_OPTIONS = [
   { value: LAWS.SIGN, label: 'סימנים', icon: '±' },
   { value: LAWS.PARITY, label: 'זוגי / אי-זוגי', icon: '≡' },
-  { value: LAWS.FRACTION, label: 'חילוק ושברים', icon: '÷' },
+  { value: LAWS.FRACTION, label: 'חילוק ושברים', icon: '½' },
   { value: LAWS.PRODUCTS, label: 'מכפלות מיוחדות', icon: '∏' },
 ]
 
@@ -13,6 +13,7 @@ const LAW_DESCRIPTIONS = {
   [LAWS.PARITY]: 'זוגי ואי-זוגי בחיבור, בחיסור ובכפל - השלימו את התוצאה או את המספר החסר.',
   [LAWS.FRACTION]: 'חילוק בין זוגיים ואי-זוגיים - מתי בטוח יוצא שבר, ומתי אפשר לצאת עם מספר שלם?',
   [LAWS.PRODUCTS]: 'מכפלות של מספרים עוקבים או מספרים זוגיים תמיד מתחלקות במספר קבוע.',
+  [LAWS.COMBINED]: 'כל ארבעת החוקים מעורבבים יחד באותו תרגול.',
 }
 
 export default function SetupWizard({ initialSettings, onComplete, headerExtra }) {
@@ -40,6 +41,15 @@ export default function SetupWizard({ initialSettings, onComplete, headerExtra }
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          className={`integers-combined-btn ${law === LAWS.COMBINED ? 'selected' : ''}`}
+          onClick={() => setLaw(LAWS.COMBINED)}
+        >
+          <span className="option-icon">∗</span>
+          <span>מעורבב - כל הסוגים</span>
+        </button>
       </div>
 
       <p className="summary-line">{LAW_DESCRIPTIONS[law]}</p>

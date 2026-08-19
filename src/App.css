@@ -651,6 +651,45 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* The 5th "מעורבב" option sits below the 2x2 grid as its own full-width row
+   instead of a squeezed 5th square cube - same selected/hover look as
+   .operation-cube, just not aspect-ratio:1. */
+.integers-combined-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  background: none;
+  border: 2px solid color-mix(in srgb, var(--border) 42%, var(--card-bg));
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-h);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.integers-combined-btn:hover {
+  border-color: var(--accent);
+}
+
+.integers-combined-btn.selected {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent-dark);
+}
+
+.integers-combined-btn .option-icon {
+  font-size: 20px;
+  color: color-mix(in srgb, var(--border) 85%, var(--card-bg));
+}
+
+.integers-combined-btn.selected .option-icon {
+  color: var(--accent-dark);
+}
+
 /* Setup screens split into separate stacked white cards (setup options,
    progress map) rather than one card with an internal divider. */
 .wizard-stack {
@@ -828,6 +867,15 @@
 
 .frac-den {
   padding: 0.05em 0.2em 0;
+}
+
+/* The blank slot inside a "שלמים" law-3 fraction (see FractionText in
+   integers/GamePlay.jsx) - deliberately has no border of its own, since
+   .frac-num already draws the fraction bar right above/below it; adding
+   .answer-blank's own border-bottom here would double up that line. */
+.frac-blank {
+  display: inline-block;
+  min-width: 1.2em;
 }
 
 .sr-only-input {
@@ -1243,6 +1291,13 @@
    of a typed one. */
 .integers-keypad .keypad-btn {
   font-size: 15px;
+}
+
+/* Plus/minus render as the bare sign, not a spelled-out word - give them
+   back a large digit-like font instead of the 15px shared by the longer
+   זוגי/אי-זוגי word buttons. */
+.integers-keypad .keypad-btn.keypad-sign-btn {
+  font-size: 30px;
 }
 
 /* The purple "הגשה" checkmark that grades the whole marked set at once. */

@@ -6,6 +6,7 @@ export const LAWS = {
   PARITY: 2, // זוגי/אי-זוגי under +, -, ×
   FRACTION: 3, // זוגי/אי-זוגי under ÷ (result may be a fraction)
   PRODUCTS: 4, // special-products divisibility facts
+  COMBINED: 'combined', // a mix of all four, only ever a settings.law value — never a per-question .law
 }
 
 const SIGN_LABEL = { plus: '+', minus: '-' }
@@ -13,9 +14,11 @@ const PARITY_LABEL = { even: 'זוגי', odd: 'אי-זוגי' }
 
 // Every keypad button, in the order it should render (grid is LTR — see
 // .integers-keypad — so this reading order lands left-to-right, top-to-bottom).
+// plus/minus render as the actual sign (bigger font, see .keypad-sign-btn)
+// instead of spelling out "פלוס"/"מינוס" — faster to scan mid-quiz.
 export const KEYPAD_TOKENS = [
-  { key: 'plus', label: 'פלוס' },
-  { key: 'minus', label: 'מינוס' },
+  { key: 'plus', label: '+', big: true },
+  { key: 'minus', label: '-', big: true },
   { key: 'even', label: 'זוגי' },
   { key: 'odd', label: 'אי-זוגי' },
   { key: '2', label: '2' },
@@ -126,15 +129,28 @@ const FRACTION_ROWS = [
   { num: 'even', den: 'even', resultText: 'אי-זוגי, זוגי או שבר' },
 ]
 
+// Rendered as a real numerator/denominator fraction bar (see FractionText in
+// GamePlay.jsx), not a "÷" sign — so these carry fracNumerator/fracDenominator/
+// resultText instead of before/after; `null` marks whichever side is blank.
 function buildFractionQuestions() {
   const questions = []
   for (const row of FRACTION_ROWS) {
-    questions.push(
-      makeQuestion(LAWS.FRACTION, '', ' ÷ ' + PARITY_LABEL[row.den] + ' = ' + row.resultText, row.num, PARITY_LABEL[row.num])
-    )
-    questions.push(
-      makeQuestion(LAWS.FRACTION, PARITY_LABEL[row.num] + ' ÷ ', ' = ' + row.resultText, row.den, PARITY_LABEL[row.den])
-    )
+    questions.push({
+      law: LAWS.FRACTION,
+      fracNumerator: null,
+      fracDenominator: PARITY_LABEL[row.den],
+      resultText: row.resultText,
+      answer: row.num,
+      answerDisplay: PARITY_LABEL[row.num],
+    })
+    questions.push({
+      law: LAWS.FRACTION,
+      fracNumerator: PARITY_LABEL[row.num],
+      fracDenominator: null,
+      resultText: row.resultText,
+      answer: row.den,
+      answerDisplay: PARITY_LABEL[row.den],
+    })
   }
   return questions
 }
@@ -179,10 +195,38 @@ function buildProductQuestions() {
   return questions
 }
 
+// Question text length varies wildly here (a 2-operand sign chain vs. a full
+// law-4 sentence), unlike every other quant quiz's fixed-shape "a × b" — so
+// the base 46px .question-text would either overflow or wrap to near-nothing
+// per line. This maps rendered length to a font-size tier instead of using
+// one fixed size; called from GamePlay.jsx as an inline style.
+export function questionFontSize(question) {
+  let totalLen
+  if (question.law === LAWS.FRACTION) {
+    const numLen = (question.fracNumerator ?? question.answerDisplay).length
+    const denLen = (question.fracDenominator ?? question.answerDisplay).length
+    // The fraction stacks vertically, so its own width is only the wider of
+    // the two sides, not their sum - only resultText runs alongside it.
+    totalLen = Math.max(numLen, denLen) + question.resultText.length + 4
+  } else {
+    const blankLen = Math.max(3, question.answerDisplay.length)
+    totalLen = question.before.length + blankLen + question.after.length
+  }
+  if (totalLen <= 14) return 30
+  if (totalLen <= 22) return 25
+  if (totalLen <= 30) return 21
+  if (totalLen <= 40) return 18
+  if (totalLen <= 50) return 16
+  return 14
+}
+
 // LAW 1/2 have a huge combinatorial space (random chain length + random
 // signs), so a round samples a fixed count instead of enumerating it —
 // deduped by rendered text so the same sentence doesn't show up twice.
 const SINGLE_LAW_RANDOM_COUNT = 14
+// LAW 1/2's sample size within a COMBINED round — smaller, since laws 3/4
+// (always fully exhaustive: 8 + 10 = 18 questions) already make up most of it.
+const COMBINED_LAW_RANDOM_COUNT = 6
 
 function generateUnique(genFn, count) {
   const seen = new Set()
@@ -212,8 +256,15 @@ export function getRoundQuestions(settings) {
     pool = generateUnique(genParityQuestion, SINGLE_LAW_RANDOM_COUNT)
   } else if (settings.law === LAWS.FRACTION) {
     pool = buildFractionQuestions()
-  } else {
+  } else if (settings.law === LAWS.PRODUCTS) {
     pool = buildProductQuestions()
+  } else {
+    pool = [
+      ...generateUnique(genSignQuestion, COMBINED_LAW_RANDOM_COUNT),
+      ...generateUnique(genParityQuestion, COMBINED_LAW_RANDOM_COUNT),
+      ...buildFractionQuestions(),
+      ...buildProductQuestions(),
+    ]
   }
 
   return shuffle(pool).map((q, id) => ({ ...q, id }))
@@ -224,6 +275,7 @@ const LAW_LABELS = {
   [LAWS.PARITY]: 'זוגי ואי-זוגי',
   [LAWS.FRACTION]: 'חילוק ושברים',
   [LAWS.PRODUCTS]: 'מכפלות מיוחדות',
+  [LAWS.COMBINED]: 'מעורבב - כל הסוגים',
 }
 
 export function describeSettings(settings) {

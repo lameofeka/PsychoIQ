@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
-import { getRoundQuestions, KEYPAD_TOKENS, LAWS } from './logic'
+import { getRoundQuestions, questionFontSize, KEYPAD_TOKENS, LAWS } from './logic'
+import { FractionText } from '../circleParts/FractionText'
 import { vibrateSuccess } from '../../utils/haptics'
 import { useKeypadPress } from '../../utils/useKeypadPress'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
@@ -112,11 +113,24 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
       <div className={`question-card ${feedback ?? ''}`}>
         <div
           className="question-text integers-question-text"
-          style={{ direction: current.law === LAWS.SIGN ? 'ltr' : 'rtl' }}
+          style={{ direction: current.law === LAWS.SIGN ? 'ltr' : 'rtl', fontSize: questionFontSize(current) }}
         >
-          {current.before}
-          <span className="answer-blank">{feedback ? current.answerDisplay : ' '}</span>
-          {current.after}
+          {current.law === LAWS.FRACTION ? (
+            <>
+              <FractionText
+                numerator={current.fracNumerator ?? <span className="frac-blank">{feedback ? current.answerDisplay : ' '}</span>}
+                denominator={current.fracDenominator ?? <span className="frac-blank">{feedback ? current.answerDisplay : ' '}</span>}
+              />
+              {' = '}
+              {current.resultText}
+            </>
+          ) : (
+            <>
+              {current.before}
+              <span className="answer-blank">{feedback ? current.answerDisplay : ' '}</span>
+              {current.after}
+            </>
+          )}
         </div>
 
         <div className="numeric-keypad integers-keypad">
@@ -129,7 +143,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
               <button
                 key={token.key}
                 type="button"
-                className={`keypad-btn ${stateClass} ${pressedKey === token.key ? 'pressed' : ''}`}
+                className={`keypad-btn ${token.big ? 'keypad-sign-btn' : ''} ${stateClass} ${pressedKey === token.key ? 'pressed' : ''}`}
                 onClick={() => {
                   press(token.key)
                   submitAnswer(token.key)
