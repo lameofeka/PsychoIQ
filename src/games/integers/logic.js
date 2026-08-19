@@ -12,21 +12,30 @@ export const LAWS = {
 const SIGN_LABEL = { plus: '+', minus: '-' }
 const PARITY_LABEL = { even: 'זוגי', odd: 'אי-זוגי' }
 
-// Every keypad button, in the order it should render (grid is LTR — see
-// .integers-keypad — so this reading order lands left-to-right, top-to-bottom).
-// plus/minus render as the actual sign (bigger font, see .keypad-sign-btn)
-// instead of spelling out "פלוס"/"מינוס" — faster to scan mid-quiz.
+// Every keypad button, in the fixed layout the user asked for: פלוס
+// top-right, מינוס below it; זוגי top-left, אי-זוגי below it; 2/4/8 down the
+// middle column; 3 bottom-left, 6 bottom-right. The grid itself is LTR (see
+// .integers-keypad), so this array's reading order fills left-to-right,
+// top-to-bottom - i.e. index 0 is the *visual* top-left cell, not top-right.
+// plus/minus/digits render as their bare symbol (bigger font, see
+// .keypad-short-btn) instead of a spelled-out word - only זוגי/אי-זוגי are
+// genuinely multi-word and need the smaller shared word-button size.
 export const KEYPAD_TOKENS = [
-  { key: 'plus', label: '+', big: true },
-  { key: 'minus', label: '-', big: true },
   { key: 'even', label: 'זוגי' },
+  { key: '2', label: '2', short: true },
+  { key: 'plus', label: '+', short: true },
   { key: 'odd', label: 'אי-זוגי' },
-  { key: '2', label: '2' },
-  { key: '4', label: '4' },
-  { key: '6', label: '6' },
-  { key: '8', label: '8' },
-  { key: '24', label: '24' },
+  { key: '4', label: '4', short: true },
+  { key: 'minus', label: '-', short: true },
+  { key: '3', label: '3', short: true },
+  { key: '8', label: '8', short: true },
+  { key: '6', label: '6', short: true },
 ]
+// There's no dedicated "24" button - to answer 24, the learner types "2"
+// then "4" in sequence (see appendDigit's fail-fast prefix check in
+// GamePlay.jsx), same as any other multi-digit typed answer elsewhere in
+// the app. Freed up a 9th button slot for "3" instead, which lets law 4's
+// count (2, 3, or 4 עוקבים/זוגיים) be blanked for every fact, not just 2/4.
 
 function shuffle(list) {
   const arr = [...list]
@@ -155,9 +164,9 @@ function buildFractionQuestions() {
   return questions
 }
 
-// LAW 4 — special-products divisibility facts. The divisor is always a fair
-// blank (2/4/6/8/24 are all keypad buttons); the count is only a fair blank
-// when it's 2 or 4 (there's no "3" button) — the "kind" text (עוקבים /
+// LAW 4 — special-products divisibility facts. The divisor and the count are
+// both fair blanks (every value involved - 2, 3, 4, 6, 8, and 24 via two
+// keypresses - is reachable from the keypad); the "kind" text (עוקבים /
 // זוגיים / זוגיים עוקבים) has no keypad button at all, so it's never blanked.
 const PRODUCT_FACTS = [
   { count: 2, kind: 'עוקבים', divisor: 2 },
@@ -180,17 +189,15 @@ function buildProductQuestions() {
         String(fact.divisor)
       )
     )
-    if (fact.count === 2 || fact.count === 4) {
-      questions.push(
-        makeQuestion(
-          LAWS.PRODUCTS,
-          'מכפלה של ',
-          ` מספרים ${fact.kind} תמיד מתחלקת ב-${fact.divisor}`,
-          String(fact.count),
-          String(fact.count)
-        )
+    questions.push(
+      makeQuestion(
+        LAWS.PRODUCTS,
+        'מכפלה של ',
+        ` מספרים ${fact.kind} תמיד מתחלקת ב-${fact.divisor}`,
+        String(fact.count),
+        String(fact.count)
       )
-    }
+    )
   }
   return questions
 }
@@ -225,7 +232,7 @@ export function questionFontSize(question) {
 // deduped by rendered text so the same sentence doesn't show up twice.
 const SINGLE_LAW_RANDOM_COUNT = 14
 // LAW 1/2's sample size within a COMBINED round — smaller, since laws 3/4
-// (always fully exhaustive: 8 + 10 = 18 questions) already make up most of it.
+// (always fully exhaustive: 8 + 12 = 20 questions) already make up most of it.
 const COMBINED_LAW_RANDOM_COUNT = 6
 
 function generateUnique(genFn, count) {
@@ -243,7 +250,7 @@ function generateUnique(genFn, count) {
   return list
 }
 
-// LAW 3/4 are small closed fact sets (8 and 10 questions respectively), so —
+// LAW 3/4 are small closed fact sets (8 and 12 questions respectively), so —
 // like every other quant quiz's "every question in the range once" —
 // a round is the full set, shuffled, not a sample.
 export function getRoundQuestions(settings) {

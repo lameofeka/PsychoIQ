@@ -1293,10 +1293,10 @@
   font-size: 15px;
 }
 
-/* Plus/minus render as the bare sign, not a spelled-out word - give them
-   back a large digit-like font instead of the 15px shared by the longer
-   זוגי/אי-זוגי word buttons. */
-.integers-keypad .keypad-btn.keypad-sign-btn {
+/* Plus/minus/digits render as the bare symbol, not a spelled-out word -
+   give them back a large digit-like font instead of the 15px shared by the
+   longer זוגי/אי-זוגי word buttons. */
+.integers-keypad .keypad-btn.keypad-short-btn {
   font-size: 30px;
 }
 

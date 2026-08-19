@@ -12,16 +12,26 @@ const FEEDBACK_DELAY_MS = 900
 const RETRY_BUFFER = 5
 const RETRY_PASSES_NEEDED = 2
 
+// The only numeric answer that's more than one digit is 24 (law 4's "4
+// עוקבים" fact) - typed as "2" then "4" via the digit buttons, same
+// fail-fast-prefix pattern as primes' appendDigit. plus/minus/even/odd are
+// never part of a multi-token answer, so they always submit on a single tap.
+const DIGIT_KEYS = new Set(['2', '3', '4', '6', '8'])
+
 export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   useHtmlClassLock('quant-gameplay-lock')
   const questions = useMemo(() => getRoundQuestions(settings), [settings])
   const [queue, setQueue] = useState(questions)
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [selectedKey, setSelectedKey] = useState(null)
+  const [input, setInput] = useState('')
   const [correctCount, setCorrectCount] = useState(0)
   const [wrongCount, setWrongCount] = useState(0)
   const [pressedKey, press] = useKeypadPress()
   const startTimeRef = useRef(Date.now())
+  // Mirrors `input` synchronously, same reason as every other quant quiz's
+  // GamePlay.jsx: a fast double-tap can otherwise land on a stale closure.
+  const inputValueRef = useRef('')
   // First-attempt result per question id — the source of truth for scoring
   // and the final results screen. A ref (not state) so the setTimeout closure
   // in submitAnswer always sees the latest value, never a stale one.
@@ -34,12 +44,34 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
   const totalQuestions = questions.length
   const progressPercent = Math.round((correctCount / totalQuestions) * 100)
 
-  function submitAnswer(tokenKey) {
+  function pressToken(token) {
+    if (feedback) return
+    press(token.key)
+    // Which single button lights up green/red - always the last one
+    // physically pressed, even when the submitted value ends up being a
+    // 2-digit accumulation (e.g. "4" lights up after completing "24").
+    setSelectedKey(token.key)
+    if (!DIGIT_KEYS.has(token.key)) {
+      submitAnswer(token.key)
+      return
+    }
+    const next = inputValueRef.current + token.key
+    inputValueRef.current = next
+    setInput(next)
+    const answer = String(current.answer)
+    // Fail fast: submit the moment the typed digits can no longer be a
+    // prefix of the answer (e.g. typing "3" when the answer is "24"),
+    // instead of waiting for a second digit that could never help.
+    if (!answer.startsWith(next) || next.length >= answer.length) {
+      submitAnswer(next)
+    }
+  }
+
+  function submitAnswer(value) {
     if (feedback) return
 
     const question = current
-    const isCorrect = tokenKey === question.answer
-    setSelectedKey(tokenKey)
+    const isCorrect = value === question.answer
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) vibrateSuccess()
 
@@ -47,7 +79,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     let requeue
 
     if (isFirstAttempt) {
-      firstAttemptsRef.current.set(question.id, { question, userAnswer: tokenKey, isCorrect })
+      firstAttemptsRef.current.set(question.id, { question, userAnswer: value, isCorrect })
       if (isCorrect) setCorrectCount((c) => c + 1)
       else setWrongCount((c) => c + 1)
       if (!isCorrect) retryPassesRef.current.set(question.id, RETRY_PASSES_NEEDED)
@@ -80,6 +112,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
     }
     setSelectedKey(null)
     setFeedback(null)
+    inputValueRef.current = ''
+    setInput('')
 
     if (rest.length === 0) {
       const finalAnswers = questions.map((q) => firstAttemptsRef.current.get(q.id)).filter(Boolean)
@@ -127,7 +161,7 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
           ) : (
             <>
               {current.before}
-              <span className="answer-blank">{feedback ? current.answerDisplay : ' '}</span>
+              <span className="answer-blank">{feedback ? current.answerDisplay : input || ' '}</span>
               {current.after}
             </>
           )}
@@ -143,11 +177,8 @@ export default function GamePlay({ settings, onFinish, onExitQuiz }) {
               <button
                 key={token.key}
                 type="button"
-                className={`keypad-btn ${token.big ? 'keypad-sign-btn' : ''} ${stateClass} ${pressedKey === token.key ? 'pressed' : ''}`}
-                onClick={() => {
-                  press(token.key)
-                  submitAnswer(token.key)
-                }}
+                className={`keypad-btn ${token.short ? 'keypad-short-btn' : ''} ${stateClass} ${pressedKey === token.key ? 'pressed' : ''}`}
+                onClick={() => pressToken(token)}
                 disabled={!!feedback}
               >
                 {token.label}
