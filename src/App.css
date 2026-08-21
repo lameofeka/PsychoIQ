@@ -2787,6 +2787,13 @@
   cursor: pointer;
 }
 
+/* Synonyms quiz: the current word is always double-click-editable (unlike
+   vocab-word-archivable above, which only applies post-answer), so the
+   cursor affordance is unconditional here. */
+.vocab-word-editable {
+  cursor: pointer;
+}
+
 .question-card form input[type='text'] {
   direction: rtl;
   text-align: center;
@@ -3332,37 +3339,41 @@
 }
 
 /* Synonyms progress map: each word (with its nested synonym list) is a
-   self-contained card, flowed into a fixed number of side-by-side columns -
-   2 on mobile, 3 on wider screens (see @media block below).
-   CSS multi-columns (not grid) on purpose: grid lays cards out row-by-row,
-   so a row with one tall card (many synonyms) next to a short one leaves a
-   ragged gap under the short card before the next row starts. Columns flow
-   each card directly under the previous one in its own column instead, so
-   the gap between cards is the same fixed amount everywhere regardless of
-   how tall neighboring cards are. */
+   self-contained card, laid out in a fixed number of columns - 2 on mobile,
+   3 on wider screens (see @media block below). Row-major CSS grid on
+   purpose (not multi-columns): the practice order must read the same way
+   the words come up in the quiz - first word top-right, next one to its
+   left, then the next row - and only row-major source order gives that;
+   column flow would instead read top-to-bottom within the rightmost column
+   first. The page is RTL (see index.html), so plain source order already
+   fills each row right-to-left. */
 .synonym-progress-list {
-  /* Override .word-list's display:flex - multi-column layout (column-count
-     below) is a no-op on flex containers, so this has to win back block
-     display for the columns to actually take effect. */
-  display: block;
-  column-count: 2;
-  column-gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  align-items: start;
 }
 
 @media (min-width: 601px) {
   .synonym-progress-list {
-    column-count: 3;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .synonym-progress-list .word-row {
   display: block;
-  break-inside: avoid;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 8px;
-  margin-bottom: 10px;
   min-width: 0;
+}
+
+.word-row-clickable {
+  cursor: pointer;
+}
+
+.word-row-clickable:hover {
+  border-color: var(--accent);
 }
 
 .synonym-progress-list .word-row-main {

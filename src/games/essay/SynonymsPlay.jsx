@@ -3,10 +3,17 @@ import { wordsMatch } from './logic'
 import { vibrateSuccess } from '../../utils/haptics'
 import { recordSynonymResult } from './stats'
 import { useHtmlClassLock } from '../../utils/useHtmlClassLock'
+import { updateSynonymSetWord, addSynonym, updateSynonym, deleteSynonym, moveSynonym } from './storage'
+import SynonymEditModal from './SynonymEditModal'
 
 export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   useHtmlClassLock('quant-gameplay-lock')
-  const questions = sets
+  // A local, editable copy of the quiz's word sets - double-clicking the
+  // current word opens the same edit popup as the progress map, and any
+  // change (rename, add/edit/delete a synonym) needs to show up immediately
+  // in the running quiz, not just next time the sets are loaded from storage.
+  const [questions, setQuestions] = useState(sets)
+  const [editingWord, setEditingWord] = useState(false)
   const [qIndex, setQIndex] = useState(0)
   const [filledIds, setFilledIds] = useState(new Set())
   // Slots filled by giving up (empty Enter/Backspace) rather than a correct
@@ -29,6 +36,14 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
   const wordSucceeded = allFilled && !wordHasMistake
   const wordFailed = allFilled && wordHasMistake
   const progressPercent = Math.round((qIndex / questions.length) * 100)
+
+  // Storage calls return every synonym set, not just the ones in this quiz
+  // (practicing weak words only pulls a subset) - so merge the fresh copy of
+  // the current word back into this quiz's own list/order instead of
+  // replacing it wholesale.
+  function applyStorageUpdate(allSets) {
+    setQuestions((prev) => prev.map((q) => allSets.find((s) => s.id === q.id) ?? q))
+  }
 
   useEffect(() => {
     if (!allFilled) inputRef.current?.focus()
@@ -223,7 +238,12 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
       </div>
 
       <div className={`question-card ${wrongFlash || wordFailed ? 'wrong' : ''} ${wordSucceeded ? 'correct' : ''}`}>
-        <div className="question-text vocab-word">{current.word}</div>
+        <div
+          className="question-text vocab-word vocab-word-editable"
+          onDoubleClick={() => setEditingWord(true)}
+        >
+          {current.word}
+        </div>
 
         <ol className="synonym-slots">
           {current.synonyms.map((syn, i) => {
@@ -296,6 +316,18 @@ export default function SynonymsPlay({ sets, onFinish, onExitQuiz }) {
         >
           {wordSucceeded ? (qIndex + 1 < questions.length ? 'הבא' : 'סיום') : 'נסה שוב'}
         </button>
+      )}
+
+      {editingWord && (
+        <SynonymEditModal
+          set={current}
+          onClose={() => setEditingWord(false)}
+          onSaveWord={(text) => applyStorageUpdate(updateSynonymSetWord(current.id, text))}
+          onAddSynonym={(text) => applyStorageUpdate(addSynonym(current.id, text))}
+          onEditSynonym={(synId, text, usage) => applyStorageUpdate(updateSynonym(current.id, synId, text, usage))}
+          onDeleteSynonym={(synId) => applyStorageUpdate(deleteSynonym(current.id, synId))}
+          onMoveSynonym={(synId, dir) => applyStorageUpdate(moveSynonym(current.id, synId, dir))}
+        />
       )}
     </div>
   )

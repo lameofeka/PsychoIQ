@@ -11,11 +11,7 @@ import {
   swapSynonymSets,
 } from './storage'
 import { getSynonymLevel, getSynonymSetLevel } from './stats'
-import Modal from '../vocabulary/Modal'
-
-// Weakest word first, so the words that most need practice sit at the top
-// of the list instead of being buried among words already mastered.
-const LEVEL_ORDER = { red: 0, yellow: 1, unseen: 2, green: 3 }
+import SynonymEditModal from './SynonymEditModal'
 
 function GripIcon() {
   return (
@@ -48,15 +44,9 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
   const [newWord, setNewWord] = useState('')
   const [confirmDeleteSetId, setConfirmDeleteSetId] = useState(null)
 
-  // Word-edit popup: opened by clicking a word's card title. Holds its own
-  // rename field plus the full synonym add/edit/delete/reorder UI, since
-  // that no longer fits inline on the card itself.
+  // Word-edit popup: opened by clicking a word's card, in either mode - no
+  // need to enter edit mode first just to edit one word's synonyms.
   const [openSetId, setOpenSetId] = useState(null)
-  const [popupWordText, setPopupWordText] = useState('')
-  const [newSynText, setNewSynText] = useState('')
-  const [editingSynId, setEditingSynId] = useState(null)
-  const [editSynText, setEditSynText] = useState('')
-  const [editSynUsage, setEditSynUsage] = useState('')
 
   // Drag-to-reorder: a pointer-events based implementation (not native HTML5
   // drag-and-drop) so it also works on touch/iOS, where this app mostly
@@ -67,9 +57,10 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
   const dragActiveRef = useRef(false)
 
   const practicable = sets.filter((s) => s.synonyms.length > 0)
-  const rows = practicable
-    .map((s) => ({ set: s, level: getSynonymSetLevel(s) }))
-    .sort((a, b) => LEVEL_ORDER[a.level] - LEVEL_ORDER[b.level])
+  // Same order the words appear in when practiced (the raw, authored/dragged
+  // order), not sorted by mastery level - so the map's layout lines up with
+  // the order the words show up in the quiz.
+  const rows = practicable.map((s) => ({ set: s, level: getSynonymSetLevel(s) }))
   const weakSets = rows.filter((r) => r.level !== 'green').map((r) => r.set)
   const openSet = sets.find((s) => s.id === openSetId) ?? null
 
@@ -92,45 +83,10 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
 
   function openWordPopup(s) {
     setOpenSetId(s.id)
-    setPopupWordText(s.word)
-    setNewSynText('')
-    setEditingSynId(null)
   }
 
   function closeWordPopup() {
     setOpenSetId(null)
-  }
-
-  function savePopupWord() {
-    if (!popupWordText.trim()) return
-    setSets(updateSynonymSetWord(openSetId, popupWordText))
-  }
-
-  function handleAddSynonym() {
-    const text = newSynText.trim()
-    if (!text) return
-    setSets(addSynonym(openSetId, text))
-    setNewSynText('')
-  }
-
-  function startEditSyn(syn) {
-    setEditingSynId(syn.id)
-    setEditSynText(syn.text)
-    setEditSynUsage(syn.usage ?? '')
-  }
-
-  function saveEditSyn() {
-    if (!editSynText.trim()) return
-    setSets(updateSynonym(openSetId, editingSynId, editSynText, editSynUsage))
-    setEditingSynId(null)
-  }
-
-  function handleDeleteSynonym(synId) {
-    setSets(deleteSynonym(openSetId, synId))
-  }
-
-  function moveSyn(synId, dir) {
-    setSets(moveSynonym(openSetId, synId, dir))
   }
 
   function handleHandlePointerDown(e, id) {
@@ -195,7 +151,19 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
         ) : (
           <div className="word-list synonym-progress-list">
             {rows.map(({ set, level }) => (
-              <div key={set.id} className="word-row">
+              <div
+                key={set.id}
+                className="word-row word-row-clickable"
+                role="button"
+                tabIndex={0}
+                onClick={() => openWordPopup(set)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    openWordPopup(set)
+                  }
+                }}
+              >
                 <div className="word-row-main">
                   <div className="progress-row-title">
                     <span className={`dot level-${level}`} />
@@ -275,88 +243,15 @@ export default function SynonymsProgressMap({ onBack, onStartPractice, onPractic
       )}
 
       {openSet && (
-        <Modal title={`עריכת מילה: ${openSet.word}`} onClose={closeWordPopup}>
-          <div className="dict-form">
-            <input type="text" value={popupWordText} onChange={(e) => setPopupWordText(e.target.value)} autoFocus />
-            <button className="primary-btn" onClick={savePopupWord} disabled={!popupWordText.trim()}>
-              שמירת שם המילה
-            </button>
-          </div>
-
-          {openSet.synonyms.length > 0 && (
-            <ol className="synonym-list">
-              {openSet.synonyms.map((syn, i) =>
-                editingSynId === syn.id ? (
-                  <li key={syn.id} className="synonym-item synonym-item-editing synonym-item-editing-block">
-                    <div className="synonym-item-editing-row">
-                      <input type="text" value={editSynText} onChange={(e) => setEditSynText(e.target.value)} autoFocus />
-                      <button className="link-btn" onClick={saveEditSyn}>
-                        שמירה
-                      </button>
-                      <button className="link-btn" onClick={() => setEditingSynId(null)}>
-                        ביטול
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      className="synonym-usage-input"
-                      placeholder="אופן שימוש (אופציונלי, למשל: 'לתמורה חיובית')"
-                      value={editSynUsage}
-                      onChange={(e) => setEditSynUsage(e.target.value)}
-                    />
-                  </li>
-                ) : (
-                  <li key={syn.id} className="synonym-item">
-                    <span className="synonym-item-text-wrap">
-                      <span className="synonym-item-text progress-row-title">
-                        <span className={`dot level-${getSynonymLevel(syn.id)}`} />
-                        {syn.text}
-                      </span>
-                      {syn.usage && <span className="synonym-item-usage">{syn.usage}</span>}
-                    </span>
-                    <span className="synonym-item-actions">
-                      <button className="link-btn" onClick={() => moveSyn(syn.id, -1)} disabled={i === 0} aria-label="הזזה למעלה">
-                        ↑
-                      </button>
-                      <button
-                        className="link-btn"
-                        onClick={() => moveSyn(syn.id, 1)}
-                        disabled={i === openSet.synonyms.length - 1}
-                        aria-label="הזזה למטה"
-                      >
-                        ↓
-                      </button>
-                      <button className="link-btn" onClick={() => startEditSyn(syn)}>
-                        עריכה
-                      </button>
-                      <button className="link-btn danger-link" onClick={() => handleDeleteSynonym(syn.id)}>
-                        מחיקה
-                      </button>
-                    </span>
-                  </li>
-                ),
-              )}
-            </ol>
-          )}
-
-          <div className="synonym-add-form">
-            <input
-              type="text"
-              placeholder="מילה נרדפת חדשה (שפה גבוהה)"
-              value={newSynText}
-              onChange={(e) => setNewSynText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  handleAddSynonym()
-                }
-              }}
-            />
-            <button className="secondary-btn" onClick={handleAddSynonym}>
-              הוספה
-            </button>
-          </div>
-        </Modal>
+        <SynonymEditModal
+          set={openSet}
+          onClose={closeWordPopup}
+          onSaveWord={(text) => setSets(updateSynonymSetWord(openSet.id, text))}
+          onAddSynonym={(text) => setSets(addSynonym(openSet.id, text))}
+          onEditSynonym={(synId, text, usage) => setSets(updateSynonym(openSet.id, synId, text, usage))}
+          onDeleteSynonym={(synId) => setSets(deleteSynonym(openSet.id, synId))}
+          onMoveSynonym={(synId, dir) => setSets(moveSynonym(openSet.id, synId, dir))}
+        />
       )}
 
       {!editMode && (
