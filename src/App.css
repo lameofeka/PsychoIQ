@@ -3160,6 +3160,65 @@
   white-space: pre-wrap;
 }
 
+/* --- Essay: template progress map (A4-page essay layout) --- */
+
+.template-page {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 26px 22px;
+  margin-bottom: 20px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.template-page-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.template-page-para {
+  font-size: 16px;
+  line-height: 2.1;
+  color: var(--text-h);
+  margin: 0 0 22px;
+}
+
+.template-page-para:last-child {
+  margin-bottom: 0;
+}
+
+.template-page-closing {
+  color: var(--text);
+}
+
+.template-blank {
+  display: inline-block;
+  width: 42px;
+  height: 0.9em;
+  margin: 0 3px -0.15em;
+  border-bottom: 2px solid var(--border);
+}
+
+.template-blank.level-green {
+  border-color: var(--success);
+}
+
+.template-blank.level-yellow {
+  border-color: var(--warning);
+}
+
+.template-blank.level-red {
+  border-color: var(--danger);
+}
+
+.template-blank.level-unseen {
+  border-color: var(--border);
+}
+
 /* --- Essay: template typing sequence --- */
 
 .template-list {
