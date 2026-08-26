@@ -1,5 +1,4 @@
-import { Fragment } from 'react'
-import { ROOTS, shortLabel, questionFromKey } from './logic'
+import { ROOTS, ROOT_GROUPS, questionFromKey } from './logic'
 import { getFactLevel, getWeakKeys, meaningKey, wordKey } from './stats'
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
@@ -19,29 +18,43 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       )}
 
       <h2>מפת התקדמות</h2>
-      <p className="summary-line">כל שורש - תא עליון לפי שליטה בפירוש, תא תחתון לפי שליטה במילה</p>
+      <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בפירוש ובמילה של אותו שורש, בנפרד</p>
 
-      <div className="circle-progress-scroll">
-        <div className="progress-grid circle-progress-grid">
-          {ROOTS.map((r) => {
-            const mLevel = getFactLevel(meaningKey(r.id))
-            const wLevel = getFactLevel(wordKey(r.id))
-            return (
-              <Fragment key={r.id}>
-                <div className="grid-header" title={r.root}>
-                  {shortLabel(r)}
-                </div>
-                <div className={`grid-cell circle-fraction-cell level-${mLevel}`} title={`${r.root} · פירוש: ${r.meaning}`}>
-                  {mLevel === 'green' ? '✓' : ''}
-                </div>
-                <div className={`grid-cell circle-percent-cell level-${wLevel}`} title={`${r.root} · מילה: ${r.words.join(' / ')}`}>
-                  {wLevel === 'green' ? '✓' : ''}
-                </div>
-              </Fragment>
-            )
-          })}
-        </div>
-      </div>
+      {ROOT_GROUPS.map((group) => {
+        const roots = ROOTS.filter((r) => r.group === group.key)
+        if (roots.length === 0) return null
+        return (
+          <div key={group.key} className={`roots-group roots-group--${group.key}`}>
+            <h3 className="roots-group-title">{group.label}</h3>
+            <table className="roots-table">
+              <thead>
+                <tr>
+                  <th>שורש</th>
+                  <th>פירוש</th>
+                  <th>מילה לדוגמה</th>
+                </tr>
+              </thead>
+              <tbody>
+                {roots.map((r) => {
+                  const mLevel = getFactLevel(meaningKey(r.id))
+                  const wLevel = getFactLevel(wordKey(r.id))
+                  return (
+                    <tr key={r.id}>
+                      <td className="roots-table-root" dir="ltr">
+                        {r.root}
+                      </td>
+                      <td className={`level-${mLevel}`}>{r.meaning}</td>
+                      <td className={`level-${wLevel}`} dir="ltr">
+                        {r.words.join(' / ')}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )
+      })}
 
       <div className="legend">
         <span className="legend-item">

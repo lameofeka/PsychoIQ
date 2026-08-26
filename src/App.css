@@ -1812,6 +1812,121 @@
   color: color-mix(in srgb, #b29ee8 80%, black);
 }
 
+/* Roots ("אנגלית") progress map: unlike every other quiz's square grid-cell
+   layout, this one reads better as an actual table (root / meaning / example
+   word per row) split into a few labeled groups - grows downward instead of
+   scrolling sideways, which is fine since there are only ~15 rows total. */
+.roots-group {
+  margin-bottom: 20px;
+}
+
+.roots-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--roots-group-color, var(--text-h));
+}
+
+.roots-group-title::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--roots-group-color, var(--accent));
+  flex-shrink: 0;
+}
+
+.roots-group--positive {
+  --roots-group-color: var(--success);
+}
+
+.roots-group--negative {
+  --roots-group-color: var(--danger);
+}
+
+.roots-group--communication {
+  --roots-group-color: var(--accent);
+}
+
+.roots-group--relational {
+  --roots-group-color: var(--warning);
+}
+
+.roots-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(28, 26, 36, 0.04);
+  font-size: 13px;
+}
+
+.roots-table th,
+.roots-table td {
+  padding: 9px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.roots-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.roots-table tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+.roots-table thead th {
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+
+.roots-table td {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.roots-table-root {
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.roots-table td.level-green {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.roots-table td.level-yellow {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.roots-table td.level-red {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.setup-compact .roots-group-title {
+  font-size: 12.5px;
+}
+
+.setup-compact .roots-table {
+  font-size: 11.5px;
+}
+
+.setup-compact .roots-table th,
+.setup-compact .roots-table td {
+  padding: 7px 6px;
+}
+
 .primes-grid {
   direction: ltr;
   display: grid;

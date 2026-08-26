@@ -1,31 +1,34 @@
 import { checkAnswer as checkMeaningAnswer } from '../vocabulary/logic'
 
+// `group` buckets each root into one of ROOT_GROUPS below, purely for the
+// progress-map table's sectioning - `tag` is the finer-grained hint shown
+// during gameplay and stays independent of it.
 export const ROOTS = [
-  { id: 'mal', root: 'Mal-', tag: 'שלילי', meaning: 'רע, לקוי, זדוני', words: ['Malevolent', 'Malicious', 'Malfunction'] },
-  { id: 'bene', root: 'Bene- / Bon-', tag: 'חיובי', meaning: 'טוב, מועיל, נדיב', words: ['Benevolent', 'Beneficial', 'Benign'] },
-  { id: 'magna', root: 'Magna- / Major-', tag: 'חיובי / גודל', meaning: 'גדול, אציל', words: ['Magnanimous', 'Magnify', 'Magnitude'] },
-  { id: 'in', root: 'In- / Un- / Dis- / Im- / Ir-', tag: 'שלילי', meaning: 'לא, ביטול', words: ['Irreversible', 'Impartial', 'Disparate'] },
-  { id: 'ex', root: 'Ex- / E-', tag: 'ניטרלי / יציאה', meaning: 'החוצה, להסיר, לשעבר', words: ['Exonerate', 'Eradicate', 'Exclude'] },
-  { id: 'dict', root: 'Dict-', tag: 'ניטרלי / דיבור', meaning: 'אמירה, דיבור', words: ['Predict', 'Contradict', 'Dictate'] },
-  { id: 'bell', root: 'Bell-', tag: 'שלילי', meaning: 'מלחמה, תוקפנות', words: ['Belligerent', 'Bellicose', 'Rebellion'] },
-  { id: 'ver', root: 'Ver-', tag: 'חיובי', meaning: 'אמת, נכונות', words: ['Verify', 'Veracity', 'Verdict'] },
-  { id: 'luc', root: 'Luc- / Lum-', tag: 'חיובי', meaning: 'אור, בהירות', words: ['Lucid', 'Illuminate', 'Elucidate'] },
-  { id: 'path', root: 'Path-', tag: 'רגש / סבל', meaning: 'רגש, מחלה', words: ['Empathy', 'Apathy', 'Pathological'] },
-  { id: 'chron', root: 'Chron-', tag: 'זמן', meaning: 'זמן, משך', words: ['Chronic', 'Chronological', 'Anachronism'] },
-  { id: 'loq', root: 'Loq- / Loc-', tag: 'דיבור', meaning: 'פטפוט, שפה', words: ['Eloquent', 'Loquacious', 'Colloquial'] },
-  { id: 'cred', root: 'Cred-', tag: 'אמונה / אמון', meaning: 'אמונה, יחס רציני', words: ['Credible', 'Incredible', 'Credulous'] },
-  { id: 'sub', root: 'Sub-', tag: 'מיקום / הפחתה', meaning: 'מתחת, פחות', words: ['Subtle', 'Subside', 'Subordinate'] },
-  { id: 'ant', root: 'Ant- / Anti-', tag: 'שלילי / ניגוד', meaning: 'נגד, מנוגד', words: ['Antipathy', 'Antagonist', 'Antidote'] },
+  { id: 'mal', root: 'Mal-', tag: 'שלילי', group: 'negative', meaning: 'רע, לקוי, זדוני', words: ['Malevolent', 'Malicious', 'Malfunction'] },
+  { id: 'bene', root: 'Bene- / Bon-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', words: ['Benevolent', 'Beneficial', 'Benign'] },
+  { id: 'magna', root: 'Magna- / Major-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', words: ['Magnanimous', 'Magnify', 'Magnitude'] },
+  { id: 'in', root: 'In- / Un- / Dis- / Im- / Ir-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Irreversible', 'Impartial', 'Disparate'] },
+  { id: 'ex', root: 'Ex- / E-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', words: ['Exonerate', 'Eradicate', 'Exclude'] },
+  { id: 'dict', root: 'Dict-', tag: 'ניטרלי / דיבור', group: 'communication', meaning: 'אמירה, דיבור', words: ['Predict', 'Contradict', 'Dictate'] },
+  { id: 'bell', root: 'Bell-', tag: 'שלילי', group: 'negative', meaning: 'מלחמה, תוקפנות', words: ['Belligerent', 'Bellicose', 'Rebellion'] },
+  { id: 'ver', root: 'Ver-', tag: 'חיובי', group: 'positive', meaning: 'אמת, נכונות', words: ['Verify', 'Veracity', 'Verdict'] },
+  { id: 'luc', root: 'Luc- / Lum-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', words: ['Lucid', 'Illuminate', 'Elucidate'] },
+  { id: 'path', root: 'Path-', tag: 'רגש / סבל', group: 'relational', meaning: 'רגש, מחלה', words: ['Empathy', 'Apathy', 'Pathological'] },
+  { id: 'chron', root: 'Chron-', tag: 'זמן', group: 'relational', meaning: 'זמן, משך', words: ['Chronic', 'Chronological', 'Anachronism'] },
+  { id: 'loq', root: 'Loq- / Loc-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', words: ['Eloquent', 'Loquacious', 'Colloquial'] },
+  { id: 'cred', root: 'Cred-', tag: 'אמונה / אמון', group: 'relational', meaning: 'אמונה, יחס רציני', words: ['Credible', 'Incredible', 'Credulous'] },
+  { id: 'sub', root: 'Sub-', tag: 'מיקום / הפחתה', group: 'relational', meaning: 'מתחת, פחות', words: ['Subtle', 'Subside', 'Subordinate'] },
+  { id: 'ant', root: 'Ant- / Anti-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', words: ['Antipathy', 'Antagonist', 'Antidote'] },
 ]
 
 export const ROOTS_BY_ID = new Map(ROOTS.map((r) => [r.id, r]))
 
-// Progress-map column headers need a short label - the full display form
-// ("In- / Un- / Dis- / Im- / Ir-") is fine in the wide question card but
-// wraps badly in a narrow grid cell, so just the first variant is used there.
-export function shortLabel(root) {
-  return root.root.split(' / ')[0]
-}
+export const ROOT_GROUPS = [
+  { key: 'positive', label: 'חיובי' },
+  { key: 'negative', label: 'שלילי' },
+  { key: 'communication', label: 'תקשורת' },
+  { key: 'relational', label: 'יחסי' },
+]
 
 export const QUESTION_KINDS = {
   MEANING: 'meaning',
