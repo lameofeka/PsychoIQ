@@ -19,6 +19,8 @@ import { loadDictionary, getWords, getGroups } from './games/vocabulary/dictiona
 import { getGroupLevel } from './games/vocabulary/stats'
 import { loadTemplateData, loadSynonymData, getSentences, getSynonymSets } from './games/essay/storage'
 import { getSentenceLevel, getSynonymSetLevel } from './games/essay/stats'
+import { ROOTS } from './games/roots/logic'
+import { getFactLevel as getRootFactLevel, meaningKey, wordKey } from './games/roots/stats'
 
 function multiplicationCounts() {
   let total = 0
@@ -79,6 +81,12 @@ function essayCounts() {
   }
 }
 
+function rootsCounts() {
+  const keys = ROOTS.flatMap((r) => [meaningKey(r.id), wordKey(r.id)])
+  const green = keys.filter((key) => getRootFactLevel(key) === 'green').length
+  return { green, total: keys.length }
+}
+
 function percentOf(parts) {
   const total = parts.reduce((sum, p) => sum + p.total, 0)
   if (total === 0) return 0
@@ -105,7 +113,7 @@ export async function getMasteryBreakdown() {
     pythagorasCounts(),
     integersMasteryCounts(),
   ]
-  const verbalParts = [vocabularyCounts(), essayCounts()]
+  const verbalParts = [vocabularyCounts(), essayCounts(), rootsCounts()]
 
   return {
     overall: percentOf([...quantitativeParts, ...verbalParts]),

@@ -6,6 +6,7 @@ import PrimesGroup from './games/primes/PrimesGroup'
 import GeoGame from './games/geo/GeoGame'
 import VocabularyGame from './games/vocabulary/VocabularyGame'
 import EssayGame from './games/essay/EssayGame'
+import RootsGame from './games/roots/RootsGame'
 import { recordVisitAndGetStreak } from './streak'
 import { getMasteryBreakdown } from './overallProgress'
 import FlameIcon from './icons/FlameIcon'
@@ -90,6 +91,12 @@ const GAMES = [
     category: 'verbal',
     title: 'חיבור',
     Component: EssayGame,
+  },
+  {
+    id: 'roots',
+    category: 'verbal',
+    title: 'אנגלית',
+    Component: RootsGame,
   },
 ]
 
