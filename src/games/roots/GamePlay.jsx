@@ -176,7 +176,6 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
         <div className="question-text vocab-word" style={{ direction: 'ltr' }}>
           {root.root}
         </div>
-        <div className="summary-line">{root.tag}</div>
 
         <form onSubmit={handleSubmit}>
           <input
