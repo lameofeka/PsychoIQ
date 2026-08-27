@@ -651,6 +651,42 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Roots quiz group picker: 4 groups (positive/negative/communication/
+   relational), same 2x2 override as integers' 4-law grid, not aspect-ratio:1
+   since a group label is a single word (no icon). Each cube tints toward its
+   group's color (reusing the --roots-group-color vars from the progress
+   map's roots-group classes) so the picker visually matches the map below it. */
+.roots-group-row {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.roots-group-cube {
+  aspect-ratio: auto;
+  padding: 14px;
+}
+
+.roots-group-cube--positive {
+  --roots-group-color: var(--success);
+}
+
+.roots-group-cube--negative {
+  --roots-group-color: var(--danger);
+}
+
+.roots-group-cube--communication {
+  --roots-group-color: var(--accent);
+}
+
+.roots-group-cube--relational {
+  --roots-group-color: var(--warning);
+}
+
+.roots-group-cube.selected {
+  border-color: var(--roots-group-color, var(--accent));
+  background: color-mix(in srgb, var(--roots-group-color, var(--accent)) 16%, transparent);
+  color: var(--roots-group-color, var(--accent-dark));
+}
+
 /* The 5th "מעורבב" option sits below the 2x2 grid as its own full-width row
    instead of a squeezed 5th square cube - same selected/hover look as
    .operation-cube, just not aspect-ratio:1. */

@@ -7,6 +7,7 @@ import { ROOTS, generateRound } from './logic'
 export default function RootsGame({ onPhaseChange }) {
   const [stage, setStage] = useState('setup')
   const [kind, setKind] = useState(null)
+  const [group, setGroup] = useState('all')
   const [questions, setQuestions] = useState([])
   const [roundResult, setRoundResult] = useState(null)
   const [roundKey, setRoundKey] = useState(0)
@@ -15,9 +16,11 @@ export default function RootsGame({ onPhaseChange }) {
     onPhaseChange?.(stage === 'setup' ? 'inline' : 'full')
   }, [stage])
 
-  function handleSetupComplete(selectedKind) {
+  function handleSetupComplete(selectedKind, selectedGroup) {
+    const roots = selectedGroup === 'all' ? ROOTS : ROOTS.filter((r) => r.group === selectedGroup)
     setKind(selectedKind)
-    setQuestions(generateRound(selectedKind, ROOTS))
+    setGroup(selectedGroup)
+    setQuestions(generateRound(selectedKind, roots))
     setRoundKey((k) => k + 1)
     setStage('playing')
   }
@@ -54,7 +57,12 @@ export default function RootsGame({ onPhaseChange }) {
   return (
     <div className="game-shell">
       {stage === 'setup' && (
-        <SetupWizard initialKind={kind} onComplete={handleSetupComplete} onPracticeWeak={handlePracticeWeak} />
+        <SetupWizard
+          initialKind={kind}
+          initialGroup={group}
+          onComplete={handleSetupComplete}
+          onPracticeWeak={handlePracticeWeak}
+        />
       )}
       {stage === 'playing' && (
         <GamePlay key={roundKey} questions={questions} onFinish={handleFinish} onExitQuiz={handleNewSettings} />
