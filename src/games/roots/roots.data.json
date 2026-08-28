@@ -1,27 +1,202 @@
 [
-  { "id": "mal", "root": "Mal-", "tag": "שלילי", "group": "negative", "meaning": "רע, לקוי, זדוני", "example": "Malware" },
-  { "id": "bene", "root": "Bene-", "tag": "חיובי", "group": "positive", "meaning": "טוב, מועיל, נדיב", "example": "Benefit" },
-  { "id": "bon", "root": "Bon-", "tag": "חיובי", "group": "positive", "meaning": "טוב, מועיל, נדיב", "example": "Bonus" },
-  { "id": "magna", "root": "Magna-", "tag": "חיובי / גודל", "group": "positive", "meaning": "גדול, אציל", "example": "Magnify" },
-  { "id": "major", "root": "Major-", "tag": "חיובי / גודל", "group": "positive", "meaning": "גדול, אציל", "example": "Majority" },
-  { "id": "in", "root": "In-", "tag": "שלילי", "group": "negative", "meaning": "לא, ביטול", "example": "Inaccurate" },
-  { "id": "un", "root": "Un-", "tag": "שלילי", "group": "negative", "meaning": "לא, ביטול", "example": "Unaware" },
-  { "id": "dis", "root": "Dis-", "tag": "שלילי", "group": "negative", "meaning": "לא, ביטול", "example": "Disparate" },
-  { "id": "im", "root": "Im-", "tag": "שלילי", "group": "negative", "meaning": "לא, ביטול", "example": "Impartial" },
-  { "id": "ir", "root": "Ir-", "tag": "שלילי", "group": "negative", "meaning": "לא, ביטול", "example": "Irreversible" },
-  { "id": "ex", "root": "Ex-", "tag": "ניטרלי / יציאה", "group": "relational", "meaning": "לשעבר", "example": "Exonerate" },
-  { "id": "e", "root": "E-", "tag": "ניטרלי / יציאה", "group": "relational", "meaning": "להסיר", "example": "Eject" },
-  { "id": "dict", "root": "Dict-", "tag": "ניטרלי / דיבור", "group": "communication", "meaning": "אמירה, דיבור", "example": "Dictionary" },
-  { "id": "bell", "root": "Bell-", "tag": "שלילי", "group": "negative", "meaning": "מלחמה, תוקפנות", "example": "Belligerent" },
-  { "id": "ver", "root": "Ver-", "tag": "חיובי", "group": "positive", "meaning": "אמת, נכונות", "example": "Verify" },
-  { "id": "luc", "root": "Luc-", "tag": "חיובי", "group": "positive", "meaning": "ברור מואר", "example": "Lucid" },
-  { "id": "lum", "root": "Lum-", "tag": "חיובי", "group": "positive", "meaning": "אור, בהירות", "example": "Illuminate" },
-  { "id": "path", "root": "Path-", "tag": "רגש / סבל", "group": "relational", "meaning": "רגש", "example": "Empathy" },
-  { "id": "chron", "root": "Chron-", "tag": "זמן", "group": "relational", "meaning": "זמן, משך", "example": "Chronic" },
-  { "id": "loq", "root": "Loq-", "tag": "דיבור", "group": "communication", "meaning": "פטפוט, שפה", "example": "Loquacious" },
-  { "id": "loc", "root": "Loc-", "tag": "דיבור", "group": "communication", "meaning": "פטפוט, שפה", "example": "Interlocutor" },
-  { "id": "cred", "root": "Cred-", "tag": "אמונה / אמון", "group": "relational", "meaning": "אמונה, יחס רציני", "example": "Credible" },
-  { "id": "sub", "root": "Sub-", "tag": "מיקום / הפחתה", "group": "relational", "meaning": "פחות, מתחת", "example": "Subtle" },
-  { "id": "ant", "root": "Ant-", "tag": "שלילי / ניגוד", "group": "negative", "meaning": "נגד, מנוגד", "example": "Antarctic" },
-  { "id": "anti", "root": "Anti-", "tag": "שלילי / ניגוד", "group": "negative", "meaning": "נגד, מנוגד", "example": "Antipathy" }
+  {
+    "id": "mal",
+    "root": "Mal-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "רע, לקוי, זדוני",
+    "example": "Malware"
+  },
+  {
+    "id": "bene",
+    "root": "Bene-",
+    "tag": "חיובי",
+    "group": "positive",
+    "meaning": "טוב, מועיל, נדיב",
+    "example": "Benefit"
+  },
+  {
+    "id": "bon",
+    "root": "Bon-",
+    "tag": "חיובי",
+    "group": "positive",
+    "meaning": "טוב, מועיל, נדיב",
+    "example": "Bonus"
+  },
+  {
+    "id": "magna",
+    "root": "Magna-",
+    "tag": "חיובי / גודל",
+    "group": "positive",
+    "meaning": "גדול, אציל",
+    "example": "Magnify"
+  },
+  {
+    "id": "major",
+    "root": "Major-",
+    "tag": "חיובי / גודל",
+    "group": "positive",
+    "meaning": "גדול, אציל",
+    "example": "Majority"
+  },
+  {
+    "id": "in",
+    "root": "In-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "לא, ביטול",
+    "example": "Inaccurate"
+  },
+  {
+    "id": "un",
+    "root": "Un-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "לא, ביטול",
+    "example": "Unaware"
+  },
+  {
+    "id": "dis",
+    "root": "Dis-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "לא, ביטול",
+    "example": "Disparate"
+  },
+  {
+    "id": "im",
+    "root": "Im-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "לא, ביטול",
+    "example": "Impartial"
+  },
+  {
+    "id": "ir",
+    "root": "Ir-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "לא, ביטול",
+    "example": "Irreversible"
+  },
+  {
+    "id": "ex",
+    "root": "Ex-",
+    "tag": "ניטרלי / יציאה",
+    "group": "relational",
+    "meaning": "לשעבר",
+    "example": "Exonerate"
+  },
+  {
+    "id": "e",
+    "root": "E-",
+    "tag": "ניטרלי / יציאה",
+    "group": "relational",
+    "meaning": "להסיר",
+    "example": "Eject"
+  },
+  {
+    "id": "dict",
+    "root": "Dict-",
+    "tag": "ניטרלי / דיבור",
+    "group": "communication",
+    "meaning": "אמירה, דיבור",
+    "example": "Dictionary"
+  },
+  {
+    "id": "bell",
+    "root": "Bell-",
+    "tag": "שלילי",
+    "group": "negative",
+    "meaning": "מלחמה, תוקפנות",
+    "example": "Rebellion"
+  },
+  {
+    "id": "ver",
+    "root": "Ver-",
+    "tag": "חיובי",
+    "group": "positive",
+    "meaning": "אמת, נכונות",
+    "example": "Verify"
+  },
+  {
+    "id": "luc",
+    "root": "Luc-",
+    "tag": "חיובי",
+    "group": "positive",
+    "meaning": "ברור מואר",
+    "example": "Lucid"
+  },
+  {
+    "id": "lum",
+    "root": "Lum-",
+    "tag": "חיובי",
+    "group": "positive",
+    "meaning": "אור, בהירות",
+    "example": "Illuminate"
+  },
+  {
+    "id": "path",
+    "root": "Path-",
+    "tag": "רגש / סבל",
+    "group": "relational",
+    "meaning": "רגש",
+    "example": "Empathy"
+  },
+  {
+    "id": "chron",
+    "root": "Chron-",
+    "tag": "זמן",
+    "group": "relational",
+    "meaning": "זמן, משך",
+    "example": "Chronic"
+  },
+  {
+    "id": "loq",
+    "root": "Loq-",
+    "tag": "דיבור",
+    "group": "communication",
+    "meaning": "פטפוט, שפה",
+    "example": "Loquacious"
+  },
+  {
+    "id": "loc",
+    "root": "Loc-",
+    "tag": "דיבור",
+    "group": "communication",
+    "meaning": "פטפוט, שפה",
+    "example": "Interlocutor"
+  },
+  {
+    "id": "cred",
+    "root": "Cred-",
+    "tag": "אמונה / אמון",
+    "group": "relational",
+    "meaning": "אמונה, יחס רציני",
+    "example": "Credible"
+  },
+  {
+    "id": "sub",
+    "root": "Sub-",
+    "tag": "מיקום / הפחתה",
+    "group": "relational",
+    "meaning": "פחות, מתחת",
+    "example": "Subtle"
+  },
+  {
+    "id": "ant",
+    "root": "Ant-",
+    "tag": "שלילי / ניגוד",
+    "group": "negative",
+    "meaning": "נגד, מנוגד",
+    "example": "Antarctic"
+  },
+  {
+    "id": "anti",
+    "root": "Anti-",
+    "tag": "שלילי / ניגוד",
+    "group": "negative",
+    "meaning": "נגד, מנוגד",
+    "example": "Antipathy"
+  }
 ]
