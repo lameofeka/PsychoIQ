@@ -19,7 +19,7 @@ import { loadDictionary, getWords, getGroups } from './games/vocabulary/dictiona
 import { getGroupLevel } from './games/vocabulary/stats'
 import { loadTemplateData, loadSynonymData, getSentences, getSynonymSets } from './games/essay/storage'
 import { getSentenceLevel, getSynonymSetLevel } from './games/essay/stats'
-import { ROOTS } from './games/roots/logic'
+import { loadDictionary as loadRootsDictionary, getRoots } from './games/roots/dictionary'
 import { getFactLevel as getRootFactLevel, meaningKey, wordKey } from './games/roots/stats'
 
 function multiplicationCounts() {
@@ -82,7 +82,7 @@ function essayCounts() {
 }
 
 function rootsCounts() {
-  const keys = ROOTS.flatMap((r) => [meaningKey(r.id), wordKey(r.id)])
+  const keys = getRoots().flatMap((r) => [meaningKey(r.id), wordKey(r.id)])
   const green = keys.filter((key) => getRootFactLevel(key) === 'green').length
   return { green, total: keys.length }
 }
@@ -100,7 +100,7 @@ function percentOf(parts) {
 // category. Vocabulary's word list loads asynchronously, so this resolves
 // only once it's available rather than undercounting it as empty.
 export async function getMasteryBreakdown() {
-  await Promise.all([loadDictionary(), loadTemplateData(), loadSynonymData()])
+  await Promise.all([loadDictionary(), loadTemplateData(), loadSynonymData(), loadRootsDictionary()])
 
   const quantitativeParts = [
     multiplicationCounts(),

@@ -1,41 +1,13 @@
 import { checkAnswer as checkMeaningAnswer } from '../vocabulary/logic'
 
-// `group` buckets each root into one of ROOT_GROUPS below, purely for the
+// The root list itself now lives in roots.data.json, edited through
+// dictionary.js (getRoots/updateRoot) instead of a hardcoded array here -
+// same dev-server-backed-file approach as the vocabulary dictionary. `group`
+// buckets each root into one of ROOT_GROUPS below, purely for the
 // progress-map table's sectioning - `tag` is the finer-grained hint shown
-// during gameplay and stays independent of it. Every root gets its own
-// entry now (no "X- / Y-" combined variants) so each spelling is drilled and
-// scored on its own - `example` is the single word shown after an answer is
-// submitted, and doubles as the accepted answer for the "word" question kind.
-export const ROOTS = [
-  { id: 'mal', root: 'Mal-', tag: 'שלילי', group: 'negative', meaning: 'רע, לקוי, זדוני', example: 'Malevolent' },
-  { id: 'bene', root: 'Bene-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', example: 'Benevolent' },
-  { id: 'bon', root: 'Bon-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', example: 'Bonus' },
-  { id: 'magna', root: 'Magna-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', example: 'Magnanimous' },
-  { id: 'major', root: 'Major-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', example: 'Majority' },
-  { id: 'in', root: 'In-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', example: 'Inaccurate' },
-  { id: 'un', root: 'Un-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', example: 'Unaware' },
-  { id: 'dis', root: 'Dis-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', example: 'Disparate' },
-  { id: 'im', root: 'Im-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', example: 'Impartial' },
-  { id: 'ir', root: 'Ir-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', example: 'Irreversible' },
-  { id: 'ex', root: 'Ex-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', example: 'Exonerate' },
-  { id: 'e', root: 'E-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', example: 'Eradicate' },
-  { id: 'dict', root: 'Dict-', tag: 'ניטרלי / דיבור', group: 'communication', meaning: 'אמירה, דיבור', example: 'Predict' },
-  { id: 'bell', root: 'Bell-', tag: 'שלילי', group: 'negative', meaning: 'מלחמה, תוקפנות', example: 'Belligerent' },
-  { id: 'ver', root: 'Ver-', tag: 'חיובי', group: 'positive', meaning: 'אמת, נכונות', example: 'Verify' },
-  { id: 'luc', root: 'Luc-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', example: 'Lucid' },
-  { id: 'lum', root: 'Lum-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', example: 'Illuminate' },
-  { id: 'path', root: 'Path-', tag: 'רגש / סבל', group: 'relational', meaning: 'רגש, מחלה', example: 'Empathy' },
-  { id: 'chron', root: 'Chron-', tag: 'זמן', group: 'relational', meaning: 'זמן, משך', example: 'Chronic' },
-  { id: 'loq', root: 'Loq-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', example: 'Eloquent' },
-  { id: 'loc', root: 'Loc-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', example: 'Interlocutor' },
-  { id: 'cred', root: 'Cred-', tag: 'אמונה / אמון', group: 'relational', meaning: 'אמונה, יחס רציני', example: 'Credible' },
-  { id: 'sub', root: 'Sub-', tag: 'מיקום / הפחתה', group: 'relational', meaning: 'מתחת, פחות', example: 'Subtle' },
-  { id: 'ant', root: 'Ant-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', example: 'Antarctic' },
-  { id: 'anti', root: 'Anti-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', example: 'Antipathy' },
-]
-
-export const ROOTS_BY_ID = new Map(ROOTS.map((r) => [r.id, r]))
-
+// during gameplay and stays independent of it. `example` is the single word
+// shown after an answer is submitted, and doubles as the accepted answer for
+// the "word" question kind.
 export const ROOT_GROUPS = [
   { key: 'positive', label: 'חיובי' },
   { key: 'negative', label: 'שלילי' },
@@ -61,7 +33,7 @@ export function shuffle(list) {
 // One question per root per requested kind - "combined" asks both, so every
 // root's meaning AND word get drilled once per round (full coverage, same
 // spirit as every other quiz's buffered-retry pool).
-export function generateRound(kind, roots = ROOTS) {
+export function generateRound(kind, roots) {
   const questions = []
   for (const r of roots) {
     if (kind === QUESTION_KINDS.MEANING || kind === QUESTION_KINDS.COMBINED) {

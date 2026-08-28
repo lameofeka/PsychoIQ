@@ -1,39 +1,39 @@
 import { useState } from 'react'
-import { ROOTS, ROOT_GROUPS, questionFromKey } from './logic'
+import { ROOT_GROUPS, questionFromKey } from './logic'
 import { getFactLevel, getWeakKeys, meaningKey, wordKey } from './stats'
-import { getEffectiveRoot, setRootOverride } from './overrides'
+import { getRoots, updateRoot } from './dictionary'
 import Modal from '../vocabulary/Modal'
 
 const EMPTY_FORM = { root: '', meaning: '', example: '' }
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
+  // Local copy of the dictionary cache so an edit re-renders this table
+  // immediately - same pattern as vocabulary's DictionaryManager.
+  const [roots, setRoots] = useState(() => getRoots())
+
   // A root counts as weak if either its meaning or one of its words isn't
   // mastered yet - the two are tracked (and colored) independently, so
   // either one alone flags the root for practice.
-  const weakKeys = getWeakKeys(ROOTS.flatMap((r) => [meaningKey(r.id), wordKey(r.id)]))
+  const weakKeys = getWeakKeys(roots.flatMap((r) => [meaningKey(r.id), wordKey(r.id)]))
 
-  // The base ROOTS entry being edited (or null when the popup is closed) -
-  // editForm holds the text fields, seeded from its effective (override-
-  // merged) data whenever a row is clicked.
+  // The root being edited (or null when the popup is closed) - editForm
+  // holds the text fields, seeded from it whenever a row is clicked.
   const [editingRoot, setEditingRoot] = useState(null)
   const [editForm, setEditForm] = useState(EMPTY_FORM)
 
   function openEdit(r) {
-    const effective = getEffectiveRoot(r)
-    setEditForm({
-      root: effective.root,
-      meaning: effective.meaning,
-      example: effective.example,
-    })
+    setEditForm({ root: r.root, meaning: r.meaning, example: r.example })
     setEditingRoot(r)
   }
 
   function saveEdit() {
-    setRootOverride(editingRoot.id, {
-      root: editForm.root.trim() || editingRoot.root,
-      meaning: editForm.meaning.trim() || editingRoot.meaning,
-      example: editForm.example.trim() || editingRoot.example,
-    })
+    setRoots(
+      updateRoot(editingRoot.id, {
+        root: editForm.root.trim() || editingRoot.root,
+        meaning: editForm.meaning.trim() || editingRoot.meaning,
+        example: editForm.example.trim() || editingRoot.example,
+      }),
+    )
     setEditingRoot(null)
   }
 
@@ -51,8 +51,8 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       <p className="summary-line">כל תא צבוע לפי רמת השליטה שלך בפירוש ובמילה של אותו שורש, בנפרד</p>
 
       {ROOT_GROUPS.map((group) => {
-        const roots = ROOTS.filter((r) => r.group === group.key)
-        if (roots.length === 0) return null
+        const groupRoots = roots.filter((r) => r.group === group.key)
+        if (groupRoots.length === 0) return null
         return (
           <div key={group.key} className={`roots-group roots-group--${group.key}`}>
             <h3 className="roots-group-title">{group.label}</h3>
@@ -65,18 +65,17 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
                 </tr>
               </thead>
               <tbody>
-                {roots.map((r) => {
-                  const effective = getEffectiveRoot(r)
+                {groupRoots.map((r) => {
                   const mLevel = getFactLevel(meaningKey(r.id))
                   const wLevel = getFactLevel(wordKey(r.id))
                   return (
                     <tr key={r.id} className="roots-table-row" onClick={() => openEdit(r)}>
                       <td className="roots-table-root" dir="ltr">
-                        {effective.root}
+                        {r.root}
                       </td>
-                      <td className={`level-${mLevel}`}>{effective.meaning}</td>
+                      <td className={`level-${mLevel}`}>{r.meaning}</td>
                       <td className={`level-${wLevel}`} dir="ltr">
-                        {effective.example}
+                        {r.example}
                       </td>
                     </tr>
                   )

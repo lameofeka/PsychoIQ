@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { ROOTS_BY_ID, checkMeaningAnswer, checkWordAnswer, QUESTION_KINDS } from './logic'
+import { checkMeaningAnswer, checkWordAnswer, QUESTION_KINDS } from './logic'
 import { recordFactResult, markFactLearned } from './stats'
-import { getEffectiveRoot } from './overrides'
+import { getRoots } from './dictionary'
 import { vibrateSuccess } from '../../utils/haptics'
 
 const RETRY_BUFFER = 5
@@ -27,9 +27,9 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const retryPassesRef = useRef(new Map())
 
   const current = queue[0]
-  // Reads through any user edit saved from the progress map's edit popup, so
-  // a corrected root/meaning/words/example applies here too, not just there.
-  const root = getEffectiveRoot(ROOTS_BY_ID.get(current.rootId))
+  // Reads through the live dictionary cache, so a root edited from the
+  // progress map's popup applies here too, not just there.
+  const root = getRoots().find((r) => r.id === current.rootId)
   const isMeaning = current.kind === QUESTION_KINDS.MEANING
 
   const total = questions.length

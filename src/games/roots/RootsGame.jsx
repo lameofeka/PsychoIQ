@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import SetupWizard from './SetupWizard'
 import GamePlay from './GamePlay'
 import Results from './Results'
-import { ROOTS, generateRound } from './logic'
+import { generateRound } from './logic'
+import { getRoots, loadDictionary } from './dictionary'
 
 export default function RootsGame({ onPhaseChange }) {
+  const [ready, setReady] = useState(false)
   const [stage, setStage] = useState('setup')
   const [kind, setKind] = useState(null)
   const [group, setGroup] = useState('all')
@@ -13,11 +15,15 @@ export default function RootsGame({ onPhaseChange }) {
   const [roundKey, setRoundKey] = useState(0)
 
   useEffect(() => {
+    loadDictionary().then(() => setReady(true))
+  }, [])
+
+  useEffect(() => {
     onPhaseChange?.(stage === 'setup' ? 'inline' : 'full')
   }, [stage])
 
   function handleSetupComplete(selectedKind, selectedGroup) {
-    const roots = selectedGroup === 'all' ? ROOTS : ROOTS.filter((r) => r.group === selectedGroup)
+    const roots = selectedGroup === 'all' ? getRoots() : getRoots().filter((r) => r.group === selectedGroup)
     setKind(selectedKind)
     setGroup(selectedGroup)
     setQuestions(generateRound(selectedKind, roots))
@@ -52,6 +58,16 @@ export default function RootsGame({ onPhaseChange }) {
     setQuestions(mistakes)
     setRoundKey((k) => k + 1)
     setStage('playing')
+  }
+
+  if (!ready) {
+    return (
+      <div className="game-shell">
+        <div className="wizard">
+          <p className="summary-line">טוען שורשים...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

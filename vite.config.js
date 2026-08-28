@@ -11,6 +11,8 @@ const sentencesFilePath = fileURLToPath(new URL('./src/games/essay/sentences.dat
 const sentencesRelPath = 'src/games/essay/sentences.data.json'
 const synonymsFilePath = fileURLToPath(new URL('./src/games/essay/synonyms.data.json', import.meta.url))
 const synonymsRelPath = 'src/games/essay/synonyms.data.json'
+const rootsFilePath = fileURLToPath(new URL('./src/games/roots/roots.data.json', import.meta.url))
+const rootsRelPath = 'src/games/roots/roots.data.json'
 
 function runGit(args) {
   return new Promise((resolve, reject) => {
@@ -53,6 +55,12 @@ async function synonymsCommitMessage() {
   if (delta > 0) return `Essay: add ${delta} synonym word${delta === 1 ? '' : 's'} to static data`
   if (delta < 0) return `Essay: remove ${-delta} synonym word${delta === -1 ? '' : 's'} from static data`
   return 'Essay: update static synonym data'
+}
+
+// Roots are only ever edited in place (root/meaning/example), never
+// added or removed, so there's no count delta worth reporting here.
+async function rootsCommitMessage() {
+  return 'Roots: update static root data'
 }
 
 // Auto-commits+pushes a static dataset after it's been quiet for `idleMs`:
@@ -189,5 +197,6 @@ export default defineConfig({
       synonymsFilePath,
       scheduleAutoPush(synonymsRelPath, synonymsCommitMessage),
     ),
+    jsonFileApiPlugin('roots-api', '/api/roots', rootsFilePath, scheduleAutoPush(rootsRelPath, rootsCommitMessage)),
   ],
 })
