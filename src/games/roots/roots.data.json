@@ -12,7 +12,7 @@
     "root": "Bene-",
     "tag": "חיובי",
     "group": "positive",
-    "meaning": "טוב, מועיל, נדיב",
+    "meaning": "טוב",
     "example": "Benefit"
   },
   {
@@ -20,7 +20,7 @@
     "root": "Bon-",
     "tag": "חיובי",
     "group": "positive",
-    "meaning": "טוב, מועיל, נדיב",
+    "meaning": "נדיב",
     "example": "Bonus"
   },
   {
@@ -28,7 +28,7 @@
     "root": "Magna-",
     "tag": "חיובי / גודל",
     "group": "positive",
-    "meaning": "גדול, אציל",
+    "meaning": "גדול",
     "example": "Magnify"
   },
   {
@@ -36,7 +36,7 @@
     "root": "Major-",
     "tag": "חיובי / גודל",
     "group": "positive",
-    "meaning": "גדול, אציל",
+    "meaning": "גדול",
     "example": "Majority"
   },
   {
@@ -116,7 +116,7 @@
     "root": "Ver-",
     "tag": "חיובי",
     "group": "positive",
-    "meaning": "אמת, נכונות",
+    "meaning": "אמת",
     "example": "Verify"
   },
   {
@@ -124,7 +124,7 @@
     "root": "Luc-",
     "tag": "חיובי",
     "group": "positive",
-    "meaning": "ברור מואר",
+    "meaning": "ברור, מואר",
     "example": "Lucid"
   },
   {
