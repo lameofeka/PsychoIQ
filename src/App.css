@@ -1917,6 +1917,14 @@
   background: var(--bg);
 }
 
+.roots-table-row {
+  cursor: pointer;
+}
+
+.roots-table-row:hover td {
+  background: var(--accent-bg);
+}
+
 .roots-table thead th {
   background: var(--bg);
   color: var(--muted);

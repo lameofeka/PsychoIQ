@@ -1,12 +1,47 @@
+import { useState } from 'react'
 import { ROOTS, ROOT_GROUPS, questionFromKey } from './logic'
 import { getFactLevel, getWeakKeys, meaningKey, wordKey } from './stats'
-import { exampleFor } from './overrides'
+import { getEffectiveRoot, setRootOverride } from './overrides'
+import Modal from '../vocabulary/Modal'
+
+const EMPTY_FORM = { root: '', meaning: '', words: '', example: '' }
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
   // A root counts as weak if either its meaning or one of its words isn't
   // mastered yet - the two are tracked (and colored) independently, so
   // either one alone flags the root for practice.
   const weakKeys = getWeakKeys(ROOTS.flatMap((r) => [meaningKey(r.id), wordKey(r.id)]))
+
+  // The base ROOTS entry being edited (or null when the popup is closed) -
+  // editForm holds the text fields, seeded from its effective (override-
+  // merged) data whenever a row is clicked.
+  const [editingRoot, setEditingRoot] = useState(null)
+  const [editForm, setEditForm] = useState(EMPTY_FORM)
+
+  function openEdit(r) {
+    const effective = getEffectiveRoot(r)
+    setEditForm({
+      root: effective.root,
+      meaning: effective.meaning,
+      words: effective.words.join(' / '),
+      example: effective.example,
+    })
+    setEditingRoot(r)
+  }
+
+  function saveEdit() {
+    const words = editForm.words
+      .split('/')
+      .map((w) => w.trim())
+      .filter(Boolean)
+    setRootOverride(editingRoot.id, {
+      root: editForm.root.trim() || editingRoot.root,
+      meaning: editForm.meaning.trim() || editingRoot.meaning,
+      words: words.length > 0 ? words : editingRoot.words,
+      example: editForm.example.trim() || editingRoot.example,
+    })
+    setEditingRoot(null)
+  }
 
   return (
     <div className="progress-map">
@@ -37,16 +72,17 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
               </thead>
               <tbody>
                 {roots.map((r) => {
+                  const effective = getEffectiveRoot(r)
                   const mLevel = getFactLevel(meaningKey(r.id))
                   const wLevel = getFactLevel(wordKey(r.id))
                   return (
-                    <tr key={r.id}>
+                    <tr key={r.id} className="roots-table-row" onClick={() => openEdit(r)}>
                       <td className="roots-table-root" dir="ltr">
-                        {r.root}
+                        {effective.root}
                       </td>
-                      <td className={`level-${mLevel}`}>{r.meaning}</td>
+                      <td className={`level-${mLevel}`}>{effective.meaning}</td>
                       <td className={`level-${wLevel}`} dir="ltr">
-                        {exampleFor(r)}
+                        {effective.example}
                       </td>
                     </tr>
                   )
@@ -79,6 +115,48 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
       >
         {weakKeys.length === 0 ? 'מושלם' : `תרגול חולשות (${weakKeys.length})`}
       </button>
+
+      {editingRoot && (
+        <Modal title="עריכת שורש" onClose={() => setEditingRoot(null)}>
+          <div className="vocab-edit-form">
+            <input
+              type="text"
+              value={editForm.root}
+              onChange={(e) => setEditForm((f) => ({ ...f, root: e.target.value }))}
+              placeholder="שורש (למשל Bene-)"
+              dir="ltr"
+            />
+            <input
+              type="text"
+              value={editForm.meaning}
+              onChange={(e) => setEditForm((f) => ({ ...f, meaning: e.target.value }))}
+              placeholder="פירוש"
+            />
+            <input
+              type="text"
+              value={editForm.words}
+              onChange={(e) => setEditForm((f) => ({ ...f, words: e.target.value }))}
+              placeholder="מילים מתקבלות, מופרדות ב-/ (למשל Benevolent / Beneficial)"
+              dir="ltr"
+            />
+            <input
+              type="text"
+              value={editForm.example}
+              onChange={(e) => setEditForm((f) => ({ ...f, example: e.target.value }))}
+              placeholder="מילה לדוגמה"
+              dir="ltr"
+            />
+            <div className="vocab-edit-form-actions">
+              <button type="button" className="primary-btn" onClick={saveEdit}>
+                שמירה
+              </button>
+              <button type="button" className="secondary-btn" onClick={() => setEditingRoot(null)}>
+                ביטול
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

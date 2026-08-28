@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ROOTS_BY_ID, checkMeaningAnswer, checkWordAnswer, QUESTION_KINDS } from './logic'
 import { recordFactResult, markFactLearned } from './stats'
-import { exampleFor, setExampleOverride } from './overrides'
+import { getEffectiveRoot } from './overrides'
 import { vibrateSuccess } from '../../utils/haptics'
 
 const RETRY_BUFFER = 5
@@ -19,8 +19,6 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const [resolvedIds, setResolvedIds] = useState(() => new Set())
   const [input, setInput] = useState('')
   const [verdict, setVerdict] = useState(null) // null | 'correct' | 'wrong'
-  const [isEditingExample, setIsEditingExample] = useState(false)
-  const [editExampleValue, setEditExampleValue] = useState('')
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
   // Per question: how many more correct answers in a row it needs before
@@ -29,7 +27,9 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const retryPassesRef = useRef(new Map())
 
   const current = queue[0]
-  const root = ROOTS_BY_ID.get(current.rootId)
+  // Reads through any user edit saved from the progress map's edit popup, so
+  // a corrected root/meaning/words/example applies here too, not just there.
+  const root = getEffectiveRoot(ROOTS_BY_ID.get(current.rootId))
   const isMeaning = current.kind === QUESTION_KINDS.MEANING
 
   const total = questions.length
@@ -37,7 +37,6 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const wrongCount = firstAttempts.size - firstCorrectCount
   const progressPercent = Math.round((resolvedIds.size / total) * 100)
   const isLastOverall = queue.length === 1 && !pendingRequeue
-  const displayExample = exampleFor(root)
 
   useEffect(() => {
     inputRef.current?.focus({ preventScroll: true })
@@ -124,19 +123,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
     submitAnswer(isCorrect, input)
   }
 
-  function startEditExample() {
-    setEditExampleValue(displayExample)
-    setIsEditingExample(true)
-  }
-
-  function saveEditExample() {
-    if (!editExampleValue.trim()) return
-    setExampleOverride(root.id, editExampleValue)
-    setIsEditingExample(false)
-  }
-
   function goNext() {
-    setIsEditingExample(false)
     const rest = queue.slice(1)
     if (pendingRequeue) {
       // Reinsert ~RETRY_BUFFER questions ahead, but never let repeated
@@ -166,7 +153,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
       if (e.key === 'Tab' && !verdict) {
         e.preventDefault()
         submitAnswer(false, input)
-      } else if (e.key === 'Enter' && verdict && !isEditingExample) {
+      } else if (e.key === 'Enter' && verdict) {
         e.preventDefault()
         goNext()
       }
@@ -228,45 +215,19 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
               {isMeaning ? root.meaning : root.words.join(' / ')}
             </div>
 
-            {isEditingExample ? (
-              <div className="vocab-edit-form">
-                <input
-                  type="text"
-                  value={editExampleValue}
-                  onChange={(e) => setEditExampleValue(e.target.value)}
-                  placeholder="מילה לדוגמה"
-                  dir="ltr"
-                  autoFocus
-                />
-                <div className="vocab-edit-form-actions">
-                  <button type="button" className="primary-btn" onClick={saveEditExample}>
-                    שמירה
-                  </button>
-                  <button type="button" className="secondary-btn" onClick={() => setIsEditingExample(false)}>
-                    ביטול
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="vocab-aas">
-                  <strong>מילה לדוגמה: </strong>
-                  <span style={{ direction: 'ltr' }}>{displayExample}</span>
-                </div>
+            <div className="vocab-aas">
+              <strong>מילה לדוגמה: </strong>
+              <span style={{ direction: 'ltr' }}>{root.example}</span>
+            </div>
 
-                <button className="primary-btn vocab-next-btn" onClick={goNext}>
-                  {isLastOverall ? 'סיום' : 'לשאלה הבאה'}
-                </button>
-                <button className="link-btn edit-word-btn" onClick={startEditExample}>
-                  עריכה
-                </button>
-              </>
-            )}
+            <button className="primary-btn vocab-next-btn" onClick={goNext}>
+              {isLastOverall ? 'סיום' : 'לשאלה הבאה'}
+            </button>
           </div>
         )}
       </div>
 
-      {verdict && !isEditingExample && (
+      {verdict && (
         <button type="button" className="next-word-fab" onClick={goNext} title="לשאלה הבאה">
           {isLastOverall ? 'סיום' : 'הבא'}
         </button>

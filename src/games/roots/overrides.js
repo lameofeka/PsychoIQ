@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'psychoiq_roots_example_overrides_v1'
+const STORAGE_KEY = 'psychoiq_roots_overrides_v2'
 
 function loadOverrides() {
   try {
@@ -17,19 +17,23 @@ function saveOverrides(overrides) {
   }
 }
 
-export function getAllExampleOverrides() {
-  return loadOverrides()
-}
-
-export function setExampleOverride(rootId, example) {
+// `patch` only needs to carry the fields that changed - it's merged onto
+// whatever's already stored for this root, and that in turn is merged onto
+// the built-in ROOTS entry by getEffectiveRoot.
+export function setRootOverride(rootId, patch) {
   const overrides = loadOverrides()
-  const trimmed = example.trim()
-  if (trimmed) overrides[rootId] = trimmed
-  else delete overrides[rootId]
+  overrides[rootId] = { ...overrides[rootId], ...patch }
   saveOverrides(overrides)
 }
 
-// The example word shown for a root, preferring a user edit over the built-in one.
+// The root's data with any user edits layered on top - what gameplay, the
+// progress map, and the edit popup should all read through instead of the
+// raw ROOTS entry.
+export function getEffectiveRoot(root) {
+  const override = loadOverrides()[root.id]
+  return override ? { ...root, ...override } : root
+}
+
 export function exampleFor(root) {
-  return loadOverrides()[root.id] ?? root.example
+  return getEffectiveRoot(root).example
 }
