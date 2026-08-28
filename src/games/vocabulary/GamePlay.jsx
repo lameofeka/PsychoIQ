@@ -25,6 +25,11 @@ export default function GamePlay({
   const [queue, setQueue] = useState(() => (bufferedRetry ? [...words] : []))
   const [pendingRequeue, setPendingRequeue] = useState(false)
   const [firstAttempts, setFirstAttempts] = useState(() => new Map())
+  // Words that won't be requeued again (answered right first try, or
+  // finished their retry passes) - the progress bar tracks *this*, not
+  // firstCorrectCount, so it still reaches 100% at the end of the quiz even
+  // though a missed-then-relearned word never counts toward firstCorrectCount.
+  const [resolvedIds, setResolvedIds] = useState(() => new Set())
   const [input, setInput] = useState('')
   const [verdict, setVerdict] = useState(null) // null | 'correct' | 'wrong'
   const [answers, setAnswers] = useState([])
@@ -62,7 +67,7 @@ export default function GamePlay({
   const correctCount = bufferedRetry ? firstCorrectCount : answers.filter((a) => a.isCorrect).length
   const wrongCount = bufferedRetry ? firstAttempts.size - firstCorrectCount : answers.length - correctCount
   const progressPercent = bufferedRetry
-    ? Math.round((firstCorrectCount / totalWords) * 100)
+    ? Math.round((resolvedIds.size / totalWords) * 100)
     : Math.round((answers.length / questions.length) * 100)
   const isLastOverall = bufferedRetry ? queue.length === 1 && !pendingRequeue : index + 1 >= questions.length
 
@@ -147,6 +152,7 @@ export default function GamePlay({
         }
 
         if (!isCorrect) retryPassesRef.current.set(word.id, RETRY_PASSES_NEEDED)
+        else setResolvedIds((prev) => new Set(prev).add(word.id))
         setPendingRequeue(!isCorrect)
       } else {
         const remaining = retryPassesRef.current.get(word.id) ?? RETRY_PASSES_NEEDED
@@ -155,6 +161,7 @@ export default function GamePlay({
           if (nextRemaining <= 0) {
             retryPassesRef.current.delete(word.id)
             setPendingRequeue(false)
+            setResolvedIds((prev) => new Set(prev).add(word.id))
           } else {
             retryPassesRef.current.set(word.id, nextRemaining)
             setPendingRequeue(true)
@@ -370,7 +377,7 @@ export default function GamePlay({
 
       <div className="quiz-progress">
         <div className="quiz-progress-row">
-          <span>{bufferedRetry ? `${firstCorrectCount} / ${totalWords}` : `${index + 1} / ${questions.length}`}</span>
+          <span>{bufferedRetry ? `${resolvedIds.size} / ${totalWords}` : `${index + 1} / ${questions.length}`}</span>
           <span className="quiz-progress-score">
             <span className="correct">✔︎ {correctCount}</span>
             <span className="wrong">✘ {wrongCount}</span>

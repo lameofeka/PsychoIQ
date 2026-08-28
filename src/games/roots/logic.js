@@ -2,23 +2,37 @@ import { checkAnswer as checkMeaningAnswer } from '../vocabulary/logic'
 
 // `group` buckets each root into one of ROOT_GROUPS below, purely for the
 // progress-map table's sectioning - `tag` is the finer-grained hint shown
-// during gameplay and stays independent of it.
+// during gameplay and stays independent of it. Every root gets its own
+// entry now (no "X- / Y-" combined variants) so each spelling is drilled and
+// scored on its own - `example` is the single word shown after an answer is
+// submitted, while `words` stays the (usually wider) accepted-answer pool
+// for the "word" question kind.
 export const ROOTS = [
-  { id: 'mal', root: 'Mal-', tag: 'שלילי', group: 'negative', meaning: 'רע, לקוי, זדוני', words: ['Malevolent', 'Malicious', 'Malfunction'] },
-  { id: 'bene', root: 'Bene- / Bon-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', words: ['Benevolent', 'Beneficial', 'Benign'] },
-  { id: 'magna', root: 'Magna- / Major-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', words: ['Magnanimous', 'Magnify', 'Magnitude'] },
-  { id: 'in', root: 'In- / Un- / Dis- / Im- / Ir-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Irreversible', 'Impartial', 'Disparate'] },
-  { id: 'ex', root: 'Ex- / E-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', words: ['Exonerate', 'Eradicate', 'Exclude'] },
-  { id: 'dict', root: 'Dict-', tag: 'ניטרלי / דיבור', group: 'communication', meaning: 'אמירה, דיבור', words: ['Predict', 'Contradict', 'Dictate'] },
-  { id: 'bell', root: 'Bell-', tag: 'שלילי', group: 'negative', meaning: 'מלחמה, תוקפנות', words: ['Belligerent', 'Bellicose', 'Rebellion'] },
-  { id: 'ver', root: 'Ver-', tag: 'חיובי', group: 'positive', meaning: 'אמת, נכונות', words: ['Verify', 'Veracity', 'Verdict'] },
-  { id: 'luc', root: 'Luc- / Lum-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', words: ['Lucid', 'Illuminate', 'Elucidate'] },
-  { id: 'path', root: 'Path-', tag: 'רגש / סבל', group: 'relational', meaning: 'רגש, מחלה', words: ['Empathy', 'Apathy', 'Pathological'] },
-  { id: 'chron', root: 'Chron-', tag: 'זמן', group: 'relational', meaning: 'זמן, משך', words: ['Chronic', 'Chronological', 'Anachronism'] },
-  { id: 'loq', root: 'Loq- / Loc-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', words: ['Eloquent', 'Loquacious', 'Colloquial'] },
-  { id: 'cred', root: 'Cred-', tag: 'אמונה / אמון', group: 'relational', meaning: 'אמונה, יחס רציני', words: ['Credible', 'Incredible', 'Credulous'] },
-  { id: 'sub', root: 'Sub-', tag: 'מיקום / הפחתה', group: 'relational', meaning: 'מתחת, פחות', words: ['Subtle', 'Subside', 'Subordinate'] },
-  { id: 'ant', root: 'Ant- / Anti-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', words: ['Antipathy', 'Antagonist', 'Antidote'] },
+  { id: 'mal', root: 'Mal-', tag: 'שלילי', group: 'negative', meaning: 'רע, לקוי, זדוני', words: ['Malevolent', 'Malicious', 'Malfunction'], example: 'Malevolent' },
+  { id: 'bene', root: 'Bene-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', words: ['Benevolent', 'Beneficial', 'Benign'], example: 'Benevolent' },
+  { id: 'bon', root: 'Bon-', tag: 'חיובי', group: 'positive', meaning: 'טוב, מועיל, נדיב', words: ['Bonus', 'Bonanza'], example: 'Bonus' },
+  { id: 'magna', root: 'Magna-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', words: ['Magnanimous', 'Magnify', 'Magnitude'], example: 'Magnanimous' },
+  { id: 'major', root: 'Major-', tag: 'חיובי / גודל', group: 'positive', meaning: 'גדול, אציל', words: ['Majority', 'Majestic'], example: 'Majority' },
+  { id: 'in', root: 'In-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Inaccurate', 'Insufficient'], example: 'Inaccurate' },
+  { id: 'un', root: 'Un-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Unaware', 'Unlikely'], example: 'Unaware' },
+  { id: 'dis', root: 'Dis-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Disparate', 'Disagree'], example: 'Disparate' },
+  { id: 'im', root: 'Im-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Impartial', 'Immoral'], example: 'Impartial' },
+  { id: 'ir', root: 'Ir-', tag: 'שלילי', group: 'negative', meaning: 'לא, ביטול', words: ['Irreversible', 'Irregular'], example: 'Irreversible' },
+  { id: 'ex', root: 'Ex-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', words: ['Exonerate', 'Exclude'], example: 'Exonerate' },
+  { id: 'e', root: 'E-', tag: 'ניטרלי / יציאה', group: 'relational', meaning: 'החוצה, להסיר, לשעבר', words: ['Eradicate', 'Evade'], example: 'Eradicate' },
+  { id: 'dict', root: 'Dict-', tag: 'ניטרלי / דיבור', group: 'communication', meaning: 'אמירה, דיבור', words: ['Predict', 'Contradict', 'Dictate'], example: 'Predict' },
+  { id: 'bell', root: 'Bell-', tag: 'שלילי', group: 'negative', meaning: 'מלחמה, תוקפנות', words: ['Belligerent', 'Bellicose', 'Rebellion'], example: 'Belligerent' },
+  { id: 'ver', root: 'Ver-', tag: 'חיובי', group: 'positive', meaning: 'אמת, נכונות', words: ['Verify', 'Veracity', 'Verdict'], example: 'Verify' },
+  { id: 'luc', root: 'Luc-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', words: ['Lucid', 'Elucidate'], example: 'Lucid' },
+  { id: 'lum', root: 'Lum-', tag: 'חיובי', group: 'positive', meaning: 'אור, בהירות', words: ['Illuminate', 'Luminous'], example: 'Illuminate' },
+  { id: 'path', root: 'Path-', tag: 'רגש / סבל', group: 'relational', meaning: 'רגש, מחלה', words: ['Empathy', 'Apathy', 'Pathological'], example: 'Empathy' },
+  { id: 'chron', root: 'Chron-', tag: 'זמן', group: 'relational', meaning: 'זמן, משך', words: ['Chronic', 'Chronological', 'Anachronism'], example: 'Chronic' },
+  { id: 'loq', root: 'Loq-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', words: ['Eloquent', 'Loquacious'], example: 'Eloquent' },
+  { id: 'loc', root: 'Loc-', tag: 'דיבור', group: 'communication', meaning: 'פטפוט, שפה', words: ['Interlocutor', 'Circumlocution'], example: 'Interlocutor' },
+  { id: 'cred', root: 'Cred-', tag: 'אמונה / אמון', group: 'relational', meaning: 'אמונה, יחס רציני', words: ['Credible', 'Incredible', 'Credulous'], example: 'Credible' },
+  { id: 'sub', root: 'Sub-', tag: 'מיקום / הפחתה', group: 'relational', meaning: 'מתחת, פחות', words: ['Subtle', 'Subside', 'Subordinate'], example: 'Subtle' },
+  { id: 'ant', root: 'Ant-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', words: ['Antarctic', 'Antacid'], example: 'Antarctic' },
+  { id: 'anti', root: 'Anti-', tag: 'שלילי / ניגוד', group: 'negative', meaning: 'נגד, מנוגד', words: ['Antipathy', 'Antagonist', 'Antidote'], example: 'Antipathy' },
 ]
 
 export const ROOTS_BY_ID = new Map(ROOTS.map((r) => [r.id, r]))

@@ -45,7 +45,7 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
                       </td>
                       <td className={`level-${mLevel}`}>{r.meaning}</td>
                       <td className={`level-${wLevel}`} dir="ltr">
-                        {r.words.join(' / ')}
+                        {r.example}
                       </td>
                     </tr>
                   )

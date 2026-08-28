@@ -22,6 +22,11 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
   const [feedback, setFeedback] = useState(null) // 'correct' | 'wrong' | null
   const [correctCount, setCorrectCount] = useState(0)
   const [wrongCount, setWrongCount] = useState(0)
+  // Questions that won't be requeued again (answered right first try, or
+  // finished their retry passes) - the progress bar tracks *this*, not
+  // correctCount, so it still reaches 100% at the end of the quiz even
+  // though a missed-then-relearned question never counts toward correctCount.
+  const [resolvedIds, setResolvedIds] = useState(() => new Set())
   const startTimeRef = useRef(Date.now())
   const inputRef = useRef(null)
   const firstAttemptsRef = useRef(new Map())
@@ -29,7 +34,7 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
 
   const current = queue[0]
   const totalQuestions = questions.length
-  const progressPercent = Math.round((correctCount / totalQuestions) * 100)
+  const progressPercent = Math.round((resolvedIds.size / totalQuestions) * 100)
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -87,6 +92,7 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
       }
     }
 
+    if (!requeue) setResolvedIds((prev) => new Set(prev).add(question.id))
     setTimeout(() => goNext(question, requeue), FEEDBACK_DELAY_MS)
   }
 
@@ -121,7 +127,7 @@ export default function OctagonAreaGamePlay({ settings, onFinish, onExitQuiz }) 
 
       <div className="quiz-progress">
         <div className="quiz-progress-row">
-          <span>{correctCount} / {totalQuestions}</span>
+          <span>{resolvedIds.size} / {totalQuestions}</span>
           <span className="quiz-progress-score">
             <span className="correct">✔︎ {correctCount}</span>
             <span className="wrong">✘ {wrongCount}</span>

@@ -10,6 +10,12 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const [queue, setQueue] = useState(questions)
   const [pendingRequeue, setPendingRequeue] = useState(false)
   const [firstAttempts, setFirstAttempts] = useState(() => new Map())
+  // Questions that won't be requeued again (answered right first try, or
+  // finished their retry passes) - the progress bar tracks *this*, not
+  // firstCorrectCount, so it still reaches 100% at the end of the quiz even
+  // though a missed-then-relearned question never counts toward
+  // firstCorrectCount.
+  const [resolvedIds, setResolvedIds] = useState(() => new Set())
   const [input, setInput] = useState('')
   const [verdict, setVerdict] = useState(null) // null | 'correct' | 'wrong'
   const startTimeRef = useRef(Date.now())
@@ -26,7 +32,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
   const total = questions.length
   const firstCorrectCount = [...firstAttempts.values()].filter((a) => a.isCorrect).length
   const wrongCount = firstAttempts.size - firstCorrectCount
-  const progressPercent = Math.round((firstCorrectCount / total) * 100)
+  const progressPercent = Math.round((resolvedIds.size / total) * 100)
   const isLastOverall = queue.length === 1 && !pendingRequeue
 
   useEffect(() => {
@@ -81,6 +87,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
       recordFactResult(question.id, isCorrect)
 
       if (!isCorrect) retryPassesRef.current.set(question.id, RETRY_PASSES_NEEDED)
+      else setResolvedIds((prev) => new Set(prev).add(question.id))
       setPendingRequeue(!isCorrect)
     } else {
       const remaining = retryPassesRef.current.get(question.id) ?? RETRY_PASSES_NEEDED
@@ -90,6 +97,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
           retryPassesRef.current.delete(question.id)
           setPendingRequeue(false)
           markFactLearned(question.id)
+          setResolvedIds((prev) => new Set(prev).add(question.id))
         } else {
           retryPassesRef.current.set(question.id, nextRemaining)
           setPendingRequeue(true)
@@ -161,7 +169,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
 
       <div className="quiz-progress">
         <div className="quiz-progress-row">
-          <span>{firstCorrectCount} / {total}</span>
+          <span>{resolvedIds.size} / {total}</span>
           <span className="quiz-progress-score">
             <span className="correct">✔︎ {firstCorrectCount}</span>
             <span className="wrong">✘ {wrongCount}</span>
@@ -202,6 +210,11 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
             <div className="vocab-answer">
               <strong>{isMeaning ? 'משמעות: ' : 'מילים: '}</strong>
               {isMeaning ? root.meaning : root.words.join(' / ')}
+            </div>
+
+            <div className="vocab-aas">
+              <strong>מילה לדוגמה: </strong>
+              <span style={{ direction: 'ltr' }}>{root.example}</span>
             </div>
 
             <button className="primary-btn vocab-next-btn" onClick={goNext}>
