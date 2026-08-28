@@ -1,5 +1,6 @@
 import { ROOTS, ROOT_GROUPS, questionFromKey } from './logic'
 import { getFactLevel, getWeakKeys, meaningKey, wordKey } from './stats'
+import { exampleFor } from './overrides'
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
   // A root counts as weak if either its meaning or one of its words isn't
@@ -45,7 +46,7 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
                       </td>
                       <td className={`level-${mLevel}`}>{r.meaning}</td>
                       <td className={`level-${wLevel}`} dir="ltr">
-                        {r.example}
+                        {exampleFor(r)}
                       </td>
                     </tr>
                   )
