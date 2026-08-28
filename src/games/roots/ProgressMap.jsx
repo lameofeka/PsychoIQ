@@ -4,7 +4,7 @@ import { getFactLevel, getWeakKeys, meaningKey, wordKey } from './stats'
 import { getEffectiveRoot, setRootOverride } from './overrides'
 import Modal from '../vocabulary/Modal'
 
-const EMPTY_FORM = { root: '', meaning: '', words: '', example: '' }
+const EMPTY_FORM = { root: '', meaning: '', example: '' }
 
 export default function ProgressMap({ onBack, onPracticeWeak }) {
   // A root counts as weak if either its meaning or one of its words isn't
@@ -23,21 +23,15 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
     setEditForm({
       root: effective.root,
       meaning: effective.meaning,
-      words: effective.words.join(' / '),
       example: effective.example,
     })
     setEditingRoot(r)
   }
 
   function saveEdit() {
-    const words = editForm.words
-      .split('/')
-      .map((w) => w.trim())
-      .filter(Boolean)
     setRootOverride(editingRoot.id, {
       root: editForm.root.trim() || editingRoot.root,
       meaning: editForm.meaning.trim() || editingRoot.meaning,
-      words: words.length > 0 ? words : editingRoot.words,
       example: editForm.example.trim() || editingRoot.example,
     })
     setEditingRoot(null)
@@ -131,13 +125,6 @@ export default function ProgressMap({ onBack, onPracticeWeak }) {
               value={editForm.meaning}
               onChange={(e) => setEditForm((f) => ({ ...f, meaning: e.target.value }))}
               placeholder="פירוש"
-            />
-            <input
-              type="text"
-              value={editForm.words}
-              onChange={(e) => setEditForm((f) => ({ ...f, words: e.target.value }))}
-              placeholder="מילים מתקבלות, מופרדות ב-/ (למשל Benevolent / Beneficial)"
-              dir="ltr"
             />
             <input
               type="text"

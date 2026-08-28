@@ -119,7 +119,7 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
       submitAnswer(false, input)
       return
     }
-    const isCorrect = isMeaning ? checkMeaningAnswer(input, root.meaning) : checkWordAnswer(input, root.words)
+    const isCorrect = isMeaning ? checkMeaningAnswer(input, root.meaning) : checkWordAnswer(input, [root.example])
     submitAnswer(isCorrect, input)
   }
 
@@ -210,10 +210,12 @@ export default function GamePlay({ questions, onFinish, onExitQuiz }) {
           <div className="vocab-reveal">
             <div className={`feedback-msg ${verdict}`}>{verdict === 'correct' ? 'נכון ✔︎' : 'טעות ✘'}</div>
 
-            <div className="vocab-answer">
-              <strong>{isMeaning ? 'משמעות: ' : 'מילים: '}</strong>
-              {isMeaning ? root.meaning : root.words.join(' / ')}
-            </div>
+            {isMeaning && (
+              <div className="vocab-answer">
+                <strong>משמעות: </strong>
+                {root.meaning}
+              </div>
+            )}
 
             <div className="vocab-aas">
               <strong>מילה לדוגמה: </strong>
