@@ -1,0 +1,189 @@
+.psych-exam-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #ffffff;
+  direction: rtl;
+}
+
+.psych-exam-home {
+  position: relative;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: calc(24px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.psych-exam-home h1 {
+  font-size: 28px;
+}
+
+.psych-exam-status {
+  color: var(--muted);
+}
+
+.psych-exam-exit {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  left: calc(12px + env(safe-area-inset-left));
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--muted-bg);
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.psych-exam-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 160px));
+  gap: 16px;
+}
+
+.psych-exam-cards--end {
+  grid-template-columns: repeat(2, minmax(140px, 200px));
+}
+
+.psych-exam-card {
+  padding: 28px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(28, 26, 36, 0.06);
+}
+
+.psych-exam-card:active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+}
+
+.psych-practice {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.psych-practice-image {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.psych-practice-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.psych-clear-btn {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: calc(14px + env(safe-area-inset-right));
+  z-index: 2;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(28, 26, 36, 0.08);
+}
+
+.psych-answer-picker {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  left: calc(14px + env(safe-area-inset-left));
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(28, 26, 36, 0.08);
+}
+
+.psych-answer-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 16px;
+  font-weight: 700;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.psych-answer-btn:disabled {
+  opacity: 1;
+}
+
+.psych-answer-btn--correct {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.psych-answer-btn--wrong {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.psych-next-btn {
+  position: absolute;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(107, 78, 186, 0.35);
+}
+
+.psych-back-btn {
+  position: absolute;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  right: calc(14px + env(safe-area-inset-right));
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  opacity: 0.7;
+}

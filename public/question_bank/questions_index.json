@@ -1,0 +1,2032 @@
+[
+  {
+    "id": "verbal_ch1_q15_apr_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q5_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q6_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q7_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q20_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q21_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q22_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q15_apr_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q5_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_apr_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q6_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q7_apr_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_apr_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q20_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q21_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q22_apr_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q1_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q2_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 2,
+    "image_path": "quant_ch1_q2_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q3_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 3,
+    "image_path": "quant_ch1_q3_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q4_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 4,
+    "image_path": "quant_ch1_q4_apr_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q5_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "quant_ch1_q5_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q6_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "quant_ch1_q6_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q7_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "quant_ch1_q7_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q1_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 1,
+    "image_path": "quant_ch2_q1_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q3_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 3,
+    "image_path": "quant_ch2_q3_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q5_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "quant_ch2_q5_apr_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q7_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "quant_ch2_q7_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q8_apr_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 8,
+    "image_path": "quant_ch2_q8_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q12_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 12,
+    "image_path": "english_ch1_q12_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q13_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q14_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_apr_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q12_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 12,
+    "image_path": "english_ch2_q12_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q13_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_apr_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q14_apr_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2010",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_apr_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q5_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q6_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q7_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q15_apr_2011",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q20_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q21_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q22_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q5_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q6_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q7_apr_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q15_apr_2011",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q20_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q21_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q22_apr_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q1_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q2_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 2,
+    "image_path": "quant_ch1_q2_apr_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q4_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 4,
+    "image_path": "quant_ch1_q4_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q2_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 2,
+    "image_path": "quant_ch2_q2_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q3_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 3,
+    "image_path": "quant_ch2_q3_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q4_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 4,
+    "image_path": "quant_ch2_q4_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q6_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "quant_ch2_q6_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q8_apr_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 8,
+    "image_path": "quant_ch2_q8_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch1_q13_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_apr_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "english_ch1_q14_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_apr_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q15_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "english_ch1_q15_apr_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch2_q13_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_apr_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q14_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q15_apr_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "apr_2011",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "english_ch2_q15_apr_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q5_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q6_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q7_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q15_feb_2009",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q20_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q21_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q22_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q5_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q6_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q7_feb_2009",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q15_feb_2009",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q20_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q21_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q22_feb_2009",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q1_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q3_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 3,
+    "image_path": "quant_ch1_q3_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q5_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "quant_ch1_q5_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q6_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "quant_ch1_q6_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q1_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 1,
+    "image_path": "quant_ch2_q1_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q2_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 2,
+    "image_path": "quant_ch2_q2_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q5_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "quant_ch2_q5_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q6_feb_2009",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "quant_ch2_q6_feb_2009.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q13_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q14_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_feb_2009.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q15_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "english_ch1_q15_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q13_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_feb_2009.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q14_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "english_ch2_q15_feb_2009",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2009",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "english_ch2_q15_feb_2009.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q5_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q6_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q7_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q15_feb_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q20_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q21_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q22_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q5_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q6_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_feb_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q7_feb_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q15_feb_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_feb_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q20_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_feb_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q21_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q22_feb_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q5_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "quant_ch1_q5_feb_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q6_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "quant_ch1_q6_feb_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q8_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 8,
+    "image_path": "quant_ch1_q8_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q1_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 1,
+    "image_path": "quant_ch2_q1_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q3_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 3,
+    "image_path": "quant_ch2_q3_feb_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q4_feb_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 4,
+    "image_path": "quant_ch2_q4_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q12_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 12,
+    "image_path": "english_ch1_q12_feb_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "english_ch1_q13_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q14_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_feb_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q12_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 12,
+    "image_path": "english_ch2_q12_feb_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q13_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch2_q14_feb_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2010",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_feb_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q5_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q6_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_feb_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q7_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q15_feb_2011",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q20_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q21_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q22_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q5_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q6_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q7_feb_2011",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q15_feb_2011",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q20_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q21_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_feb_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q22_feb_2011",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_feb_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q1_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q3_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 3,
+    "image_path": "quant_ch1_q3_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q4_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 4,
+    "image_path": "quant_ch1_q4_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q5_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "quant_ch1_q5_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q7_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "quant_ch2_q7_feb_2011.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q8_feb_2011",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 8,
+    "image_path": "quant_ch2_q8_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch1_q12_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 12,
+    "image_path": "english_ch1_q12_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q13_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_feb_2011.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q14_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q12_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 12,
+    "image_path": "english_ch2_q12_feb_2011.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q13_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q14_feb_2011",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2011",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_feb_2011.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q5_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q6_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q7_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q15_feb_2012",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q20_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q21_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_feb_2012.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q22_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q5_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q6_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_feb_2012.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch2_q7_feb_2012",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q15_feb_2012",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q20_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q21_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q22_feb_2012",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q1_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q2_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 2,
+    "image_path": "quant_ch1_q2_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q3_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 3,
+    "image_path": "quant_ch1_q3_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q4_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 4,
+    "image_path": "quant_ch1_q4_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q5_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "quant_ch1_q5_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch1_q6_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "quant_ch1_q6_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q7_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "quant_ch1_q7_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch1_q8_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 8,
+    "image_path": "quant_ch1_q8_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q1_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 1,
+    "image_path": "quant_ch2_q1_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q3_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 3,
+    "image_path": "quant_ch2_q3_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q4_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 4,
+    "image_path": "quant_ch2_q4_feb_2012.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q6_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "quant_ch2_q6_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q7_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "quant_ch2_q7_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q8_feb_2012",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 8,
+    "image_path": "quant_ch2_q8_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "english_ch1_q12_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 12,
+    "image_path": "english_ch1_q12_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch1_q13_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_feb_2012.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch1_q14_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_feb_2012.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch2_q12_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 12,
+    "image_path": "english_ch2_q12_feb_2012.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q13_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_feb_2012.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "english_ch2_q14_feb_2012",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "feb_2012",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_feb_2012.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q5_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 5,
+    "image_path": "verbal_ch1_q5_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q6_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 6,
+    "image_path": "verbal_ch1_q6_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q7_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 7,
+    "image_path": "verbal_ch1_q7_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch1_q15_oct_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 15,
+    "image_path": "verbal_ch1_q15_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch1_q20_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 20,
+    "image_path": "verbal_ch1_q20_oct_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "verbal_ch1_q21_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 21,
+    "image_path": "verbal_ch1_q21_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch1_q22_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 22,
+    "image_path": "verbal_ch1_q22_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q5_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "verbal_ch2_q5_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q6_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "verbal_ch2_q6_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "verbal_ch2_q7_oct_2010",
+    "category": "verbal",
+    "subtype": "analogy",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "verbal_ch2_q7_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q15_oct_2010",
+    "category": "verbal",
+    "subtype": "sentence_completion",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 15,
+    "image_path": "verbal_ch2_q15_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q20_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 20,
+    "image_path": "verbal_ch2_q20_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "verbal_ch2_q21_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 21,
+    "image_path": "verbal_ch2_q21_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "verbal_ch2_q22_oct_2010",
+    "category": "verbal",
+    "subtype": "logic",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 22,
+    "image_path": "verbal_ch2_q22_oct_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q1_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 1,
+    "image_path": "quant_ch1_q1_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch1_q2_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 2,
+    "image_path": "quant_ch1_q2_oct_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch1_q3_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 3,
+    "image_path": "quant_ch1_q3_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q1_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 1,
+    "image_path": "quant_ch2_q1_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q2_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 2,
+    "image_path": "quant_ch2_q2_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "quant_ch2_q5_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 5,
+    "image_path": "quant_ch2_q5_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "quant_ch2_q6_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 6,
+    "image_path": "quant_ch2_q6_oct_2010.png",
+    "correct_answer": 2
+  },
+  {
+    "id": "quant_ch2_q7_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 7,
+    "image_path": "quant_ch2_q7_oct_2010.png",
+    "correct_answer": 4
+  },
+  {
+    "id": "quant_ch2_q8_oct_2010",
+    "category": "quant",
+    "subtype": "regular",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 8,
+    "image_path": "quant_ch2_q8_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q12_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 12,
+    "image_path": "english_ch1_q12_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch1_q13_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 13,
+    "image_path": "english_ch1_q13_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch1_q14_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 1,
+    "question_number": 14,
+    "image_path": "english_ch1_q14_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q12_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 12,
+    "image_path": "english_ch2_q12_oct_2010.png",
+    "correct_answer": 1
+  },
+  {
+    "id": "english_ch2_q13_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 13,
+    "image_path": "english_ch2_q13_oct_2010.png",
+    "correct_answer": 3
+  },
+  {
+    "id": "english_ch2_q14_oct_2010",
+    "category": "english",
+    "subtype": "restatement",
+    "source_exam": "oct_2010",
+    "chapter": 2,
+    "question_number": 14,
+    "image_path": "english_ch2_q14_oct_2010.png",
+    "correct_answer": 3
+  }
+]

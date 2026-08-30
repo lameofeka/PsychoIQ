@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import PsychExamGame from './games/psychExam/PsychExamGame'
 import MultiplicationGame from './games/multiplication/MultiplicationGame'
 import PowersGame from './games/powers/PowersGame'
 import FactorialGame from './games/factorial/FactorialGame'
@@ -111,6 +112,10 @@ function masteryTier(percent) {
   return percent < 25 ? 'low' : percent <= 50 ? 'mid' : 'high'
 }
 
+// Two quick taps/clicks on this threshold count as the hidden double-tap
+// that opens the psychometric practice module — see handleTitleTap below.
+const DOUBLE_TAP_MS = 350
+
 function App() {
   const [streak] = useState(() => recordVisitAndGetStreak())
   const [mastery, setMastery] = useState(null)
@@ -121,6 +126,21 @@ function App() {
   // alongside the header. 'full' = actual gameplay/results, which takes
   // over the whole screen like before (header + pills hidden).
   const [phase, setPhase] = useState('inline')
+  // Hidden entry point (not a pill): double-clicking/double-tapping the
+  // "PsychoIQ" title opens the psychometric practice module instead of the
+  // normal game chrome. See PsychExamGame.jsx.
+  const [examMode, setExamMode] = useState(false)
+  const lastTitleTapRef = useRef(0)
+
+  function handleTitleTap() {
+    const now = Date.now()
+    if (now - lastTitleTapRef.current < DOUBLE_TAP_MS) {
+      lastTitleTapRef.current = 0
+      setExamMode(true)
+    } else {
+      lastTitleTapRef.current = now
+    }
+  }
 
   // Recompute whenever the home/inline chrome (where the badge lives) comes
   // back into view - including right after finishing a round - so the
@@ -178,6 +198,10 @@ function App() {
   const selectedGame = GAMES.find((g) => g.id === selectedGameId)
   const showChrome = phase === 'inline'
 
+  if (examMode) {
+    return <PsychExamGame onExit={() => setExamMode(false)} />
+  }
+
   return (
     <div className="app-shell">
       {showChrome && (
@@ -191,7 +215,7 @@ function App() {
                 <span>{streak}</span>
               </div>
             )}
-            <h1>PsychoIQ</h1>
+            <h1 onPointerUp={handleTitleTap}>PsychoIQ</h1>
             <p>תרגול לפסיכומטרי</p>
             {mastery !== null && (
               <div className="mastery-badge-wrap">
