@@ -60,7 +60,8 @@ export default function PsychExamGame({ onExit }) {
   function startCategory(value) {
     const pool = value === 'random' ? allQuestions : allQuestions.filter((q) => q.category === value)
     const poolIds = pool.map((q) => q.id)
-    setOrder(loadOrder(value, poolIds))
+    const isPriority = (id) => byId.get(id)?.batch === 'campus'
+    setOrder(loadOrder(value, poolIds, isPriority))
     setActiveCategory(value)
   }
 

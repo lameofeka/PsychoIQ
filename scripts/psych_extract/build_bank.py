@@ -11,6 +11,8 @@ import os
 import sys
 from collections import defaultdict
 
+import fitz
+
 from render import PageRenderer
 from segment import page_bands, trim_leading_blank, crop_band
 
@@ -43,39 +45,54 @@ def build(manifests):
     for manifest in manifests:
         source_exam = manifest["source_exam"]
         pdf_path = manifest["pdf_path"]
+        batch = manifest.get("batch")
         renderer = PageRenderer(pdf_path)
         band_cache = {}  # page_index -> (rgb, gray, bands)
 
         for q in manifest["questions"]:
             page_index = q["page_index"]
-            if page_index not in band_cache:
-                rgb = renderer.rgb(page_index)
-                gray = renderer.gray(page_index)
-                bands = page_bands(rgb, gray)
-                band_cache[page_index] = (rgb, gray, bands)
-            rgb, gray, bands = band_cache[page_index]
-
-            y0, y1 = bands[q["band_index"]]
-            if q.get("trim"):
-                y0 = trim_leading_blank(gray, y0, y1)
-
             qid = make_id(q["category"], q["chapter"], q["question_number"], source_exam)
-            img = crop_band(rgb, y0, y1)
             img_filename = f"{qid}.png"
-            img.save(os.path.join(IMAGES_DIR, img_filename))
 
-            index.append(
-                {
-                    "id": qid,
-                    "category": q["category"],
-                    "subtype": q["subtype"],
-                    "source_exam": source_exam,
-                    "chapter": q["chapter"],
-                    "question_number": q["question_number"],
-                    "image_path": img_filename,
-                    "correct_answer": q["correct_answer"],
-                }
-            )
+            if "bbox" in q:
+                # New-format ("campus") manifests: the question's own bbox
+                # (in PDF points) was already located precisely from the
+                # PDF's text/image blocks — no band-detection needed.
+                zoom = renderer.dpi / 72
+                mat = fitz.Matrix(zoom, zoom)
+                pix = renderer._doc[page_index].get_pixmap(matrix=mat, clip=fitz.Rect(q["bbox"]))
+                pix.save(os.path.join(IMAGES_DIR, img_filename))
+            else:
+                if page_index not in band_cache:
+                    rgb = renderer.rgb(page_index)
+                    gray = renderer.gray(page_index)
+                    bands = page_bands(rgb, gray)
+                    band_cache[page_index] = (rgb, gray, bands)
+                rgb, gray, bands = band_cache[page_index]
+
+                y0, y1 = bands[q["band_index"]]
+                if q.get("trim"):
+                    y0 = trim_leading_blank(gray, y0, y1)
+
+                img = crop_band(rgb, y0, y1)
+                img.save(os.path.join(IMAGES_DIR, img_filename))
+
+            entry = {
+                "id": qid,
+                "category": q["category"],
+                "subtype": q["subtype"],
+                "source_exam": source_exam,
+                "chapter": q["chapter"],
+                "question_number": q["question_number"],
+                "image_path": img_filename,
+                "correct_answer": q["correct_answer"],
+            }
+            if batch:
+                entry["batch"] = batch
+            if q.get("solution_text"):
+                entry["solution_text"] = q["solution_text"]
+
+            index.append(entry)
             summary[(source_exam, q["category"], q["chapter"])][q["question_number"]] = q["correct_answer"]
 
         renderer.close()

@@ -7,6 +7,7 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
   const lastMidRef = useRef(null)
   const [selected, setSelected] = useState(null)
   const [answered, setAnswered] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
 
   // Fresh answer state every time the question changes (component is also
   // remounted via `key={question.id}` in PsychExamGame, but this guards
@@ -14,6 +15,7 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
   useEffect(() => {
     setSelected(null)
     setAnswered(false)
+    setShowSolution(false)
   }, [question.id])
 
   useEffect(() => {
@@ -43,6 +45,10 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
   }
 
   function handlePointerDown(e) {
+    // Only draw for Apple Pencil (and mouse, for desktop testing) — ignore
+    // touch/palm contact so resting a hand on the iPad screen while writing
+    // doesn't leave stray marks.
+    if (e.pointerType !== 'pen' && e.pointerType !== 'mouse') return
     canvasRef.current.setPointerCapture(e.pointerId)
     drawingRef.current = true
     const point = pointFromEvent(e)
@@ -120,6 +126,12 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
         })}
       </div>
 
+      {answered && question.solution_text && (
+        <button type="button" className="psych-solution-btn" onClick={() => setShowSolution(true)}>
+          ראה פתרון
+        </button>
+      )}
+
       {answered && (
         <button type="button" className="psych-next-btn" onClick={onAdvance}>
           השאלה הבאה
@@ -129,6 +141,17 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
       <button type="button" className="psych-back-btn" onClick={onBackToCategories}>
         חזרה
       </button>
+
+      {showSolution && (
+        <div className="psych-solution-overlay" onClick={() => setShowSolution(false)}>
+          <div className="psych-solution-panel" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="psych-solution-close" onClick={() => setShowSolution(false)}>
+              ✕
+            </button>
+            <p className="psych-solution-text">{question.solution_text}</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
