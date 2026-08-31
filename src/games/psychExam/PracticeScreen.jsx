@@ -4,6 +4,7 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
   const canvasRef = useRef(null)
   const drawingRef = useRef(false)
   const lastPointRef = useRef(null)
+  const lastMidRef = useRef(null)
   const [selected, setSelected] = useState(null)
   const [answered, setAnswered] = useState(false)
 
@@ -44,7 +45,9 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
   function handlePointerDown(e) {
     canvasRef.current.setPointerCapture(e.pointerId)
     drawingRef.current = true
-    lastPointRef.current = pointFromEvent(e)
+    const point = pointFromEvent(e)
+    lastPointRef.current = point
+    lastMidRef.current = point
   }
 
   function handlePointerMove(e) {
@@ -52,18 +55,24 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
     const ctx = canvasRef.current.getContext('2d')
     const point = pointFromEvent(e)
     const last = lastPointRef.current
+    const lastMid = lastMidRef.current
     const midX = (last.x + point.x) / 2
     const midY = (last.y + point.y) / 2
+    // Each segment must start exactly where the previous one ended (lastMid),
+    // not at the raw last point — otherwise consecutive curves leave a gap
+    // between the previous segment's end and this one's start.
     ctx.beginPath()
-    ctx.moveTo(last.x, last.y)
+    ctx.moveTo(lastMid.x, lastMid.y)
     ctx.quadraticCurveTo(last.x, last.y, midX, midY)
     ctx.stroke()
     lastPointRef.current = point
+    lastMidRef.current = { x: midX, y: midY }
   }
 
   function stopDrawing() {
     drawingRef.current = false
     lastPointRef.current = null
+    lastMidRef.current = null
   }
 
   function handleClear() {
