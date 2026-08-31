@@ -118,8 +118,6 @@ def find_chapters(doc):
         m = VERBAL_HEADER_RE.search(page_text) or QUANT_HEADER_RE.search(page_text)
         me = ENGLISH_HEADER_RE.search(page_text)
         if m or me:
-            if current:
-                chapters.append(current)
             if m:
                 category = "verbal" if "מילולית" in page_text[m.start() : m.start() + 30] else "quant"
                 chnum = int(m.group(1))
@@ -130,14 +128,28 @@ def find_chapters(doc):
                 chnum = int(me.group(1))
                 cm = ENGLISH_COUNT_RE.search(page_text)
                 total = int(cm.group(1)) if cm else None
-            current = {
-                "category": category,
-                "chapter": chnum,
-                "start_page": page_index,
-                "total_questions": total,
-                "ranges": [],
-            }
-            continue
+
+            # The title block re-matches on every page of some exams' PDFs
+            # (a repeated per-page banner that sometimes uses the same
+            # "פרק N: category" colon form as the real title, unlike other
+            # exams where the banner uses a dash) — only start a new chapter
+            # when the category/number actually changes, and fall through
+            # to range-scanning below either way rather than skipping the
+            # page (a banner-only match on a later page still needs its
+            # sub-range labels, like "הסקה מתרשים", picked up).
+            is_new_chapter = current is None or current["category"] != category or current["chapter"] != chnum
+            if is_new_chapter:
+                if current:
+                    chapters.append(current)
+                current = {
+                    "category": category,
+                    "chapter": chnum,
+                    "start_page": page_index,
+                    "total_questions": total,
+                    "ranges": [],
+                }
+            elif total and not current["total_questions"]:
+                current["total_questions"] = total
 
         if current is None:
             continue
@@ -268,8 +280,10 @@ def locate_bboxes(doc, chapter, targets):
 
 # Matched against whitespace-collapsed text: the category word can wrap
 # across a line break mid-word (e.g. "אנגלי\nת"), which breaks a
-# space-tolerant (\s*) regex but not a fully-collapsed one.
-ANSWER_TABLE_HEADER_RE = re.compile(r"פרק(\d+)-(חשיבהמילולית|חשיבהכמותית|אנגלית)")
+# space-tolerant (\s*) regex but not a fully-collapsed one. The separator
+# is usually "-" but some exams' chapter-title blocks use ":" instead
+# (same dash/colon inconsistency seen in the questions PDFs).
+ANSWER_TABLE_HEADER_RE = re.compile(r"פרק(\d+)[-:](חשיבהמילולית|חשיבהכמותית|אנגלית)")
 
 
 def _merge_split_numbers(lines):
@@ -328,6 +342,11 @@ def _parse_answer_table(lines):
         if re.match(r"^\d$", tok):
             answers.append(int(tok))
             i += 1
+        elif tok in ("-", "–", "—"):
+            # Placeholder for a pilot-chapter question with no correct
+            # answer at all (a genuine gap in the source material).
+            answers.append(None)
+            i += 1
         elif tok == "":
             i += 1
         else:
@@ -359,10 +378,16 @@ def _parse_chapter_lines(lines):
 
     for line in lines:
         stripped = line.strip()
-        if re.match(r"^\d{1,2}\.$", stripped):
+        solo = re.match(r"^(\d{1,2})\.$", stripped)
+        # Usually "N." sits alone on its own line with the answer/explanation
+        # starting on the next one, but occasionally "תשובה" runs on straight
+        # after the number on the same line ("7. תשובה...") — recognize that
+        # too, keeping its trailing content as the item's first line.
+        inline = None if solo else re.match(r"^(\d{1,2})\.\s+(תשובה.*)$", stripped)
+        if solo or inline:
             commit(pending_num, pending_lines)
-            pending_num = int(stripped.rstrip("."))
-            pending_lines = []
+            pending_num = int((solo or inline).group(1))
+            pending_lines = [inline.group(2)] if inline else []
         elif pending_num is not None:
             pending_lines.append(line)
     commit(pending_num, pending_lines)
@@ -381,9 +406,18 @@ def parse_solutions(ans_path):
     for page_index in range(doc.page_count):
         text = doc[page_index].get_text()
         collapsed = re.sub(r"\s+", "", text)
-        header = ANSWER_TABLE_HEADER_RE.search(collapsed)
-        if header:
-            current_chapter = int(header.group(1))
+        # Some pages carry a stray/stale "פרק N - category" eyebrow fragment
+        # (a page-header artifact in the source PDF, sometimes for the wrong
+        # chapter number entirely) that isn't an actual new chapter start —
+        # a genuine chapter title block is always immediately followed by
+        # the "מספר השאלה" answer-key table, so require that to confirm it,
+        # and ignore header matches that aren't (keep accumulating into
+        # whatever chapter is already current).
+        genuine = [
+            h for h in ANSWER_TABLE_HEADER_RE.finditer(collapsed) if "מספרהשאלה" in collapsed[h.end() : h.end() + 60]
+        ]
+        if genuine:
+            current_chapter = int(genuine[-1].group(1))
             chapter_lines.setdefault(current_chapter, [])
         if current_chapter is None:
             continue

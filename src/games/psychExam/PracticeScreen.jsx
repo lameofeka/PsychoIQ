@@ -119,9 +119,14 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
           if (answered && n === question.correct_answer) cls += ' psych-answer-btn--correct'
           else if (answered && n === selected) cls += ' psych-answer-btn--wrong'
           return (
-            <button key={n} type="button" className={cls} onClick={() => handleAnswer(n)} disabled={answered}>
-              {n}
-            </button>
+            <button
+              key={n}
+              type="button"
+              className={cls}
+              onClick={() => handleAnswer(n)}
+              disabled={answered}
+              aria-label={`תשובה ${n}`}
+            />
           )
         })}
       </div>
