@@ -307,6 +307,32 @@ def _merge_split_numbers(lines):
     return merged
 
 
+def _merge_split_teshuva(lines):
+    """Rarely, the word תשובה itself gets split right at the boundary
+    marker line — either "N. ת" on one line with "שובה ..." on the next,
+    or (after _merge_split_numbers has already turned "N" + ". ת" into
+    "N." + "ת" as two separate lines) a lone "ת" line followed by
+    "שובה ...". Either form makes the marker unrecognizable as the bare
+    "N." or inline "N. תשובה" boundary form, silently losing that
+    question. Recombine them."""
+    merged = []
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        if line == "ת" and i + 1 < len(lines) and lines[i + 1].strip().startswith("שובה"):
+            merged.append(f"ת{lines[i + 1].strip()}")
+            i += 2
+            continue
+        if re.match(r"^\d{1,2}\.\s*ת$", line) and i + 1 < len(lines) and lines[i + 1].strip().startswith("שובה"):
+            num_part = line[:-1].strip()  # "N." with the trailing "ת" dropped
+            merged.append(f"{num_part} ת{lines[i + 1].strip()}")
+            i += 2
+            continue
+        merged.append(lines[i])
+        i += 1
+    return merged
+
+
 def _parse_answer_table(lines):
     """Find the "מספר השאלה" / "התשובה הנכונה" table at the top of a
     chapter's solutions and return {question_number: answer}. Returns {} if
@@ -357,17 +383,122 @@ def _parse_answer_table(lines):
     return dict(zip(numbers, answers))
 
 
+_SOLO_NUM_RE = re.compile(r"^(\d{1,2})\.$")
+# Usually "N." sits alone on its own line with the answer/explanation
+# starting on the next one, but occasionally "תשובה" runs on straight after
+# the number on the same line ("7. תשובה...") — recognize that too, keeping
+# its trailing content as the item's first line.
+_INLINE_NUM_RE = re.compile(r"^(\d{1,2})\.\s+(תשובה.*)$")
+
+# Every genuine per-question explanation in this corpus opens with a
+# "(תשובה N) נכונה" verdict line within a few lines of its "N." marker —
+# solving the marker/boundary ambiguity below by content rather than
+# position: real markers are always followed almost immediately by this
+# phrase, while decoy "N." lines (nested rule/tip lists, stray sentence-
+# ending numerals) are followed by ordinary prose instead. Must require
+# תשובה followed closely by a digit specifically (the verdict's answer
+# number) — quant explanations routinely say "תשובה נכונה" / "נבדוק את
+# התשובות" mid-reasoning with no digit attached, which a bare "'תשובה' in
+# lookahead" substring check would wrongly treat as a nearby decoy's own
+# verdict line too.
+_LOOKAHEAD_LINES = 6
+_VERDICT_RE = re.compile(r"תשובה\s*\)?\s*\d")
+
+
+def _find_number_markers(lines):
+    """Return every line that looks like a top-level "N." boundary marker,
+    as (line_index, number, inline_tail_or_None, looks_real), in line order.
+    looks_real is the תשובה/נכונה content check described above; not every
+    looks_real=True entry is necessarily a genuine boundary either (a
+    duplicate/out-of-place one can still pass) — see _parse_chapter_lines."""
+    markers = []
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        m = _SOLO_NUM_RE.match(stripped)
+        tail = None
+        if not m:
+            m = _INLINE_NUM_RE.match(stripped)
+            if m:
+                tail = m.group(2)
+        if not m:
+            continue
+        if tail is not None:
+            looks_real = bool(_VERDICT_RE.search(tail))
+        else:
+            lookahead = "".join(lines[i + 1 : i + 1 + _LOOKAHEAD_LINES])
+            looks_real = bool(_VERDICT_RE.search(lookahead))
+        markers.append((i, int(m.group(1)), tail, looks_real))
+    return markers
+
+
 def _parse_chapter_lines(lines):
     lines = _merge_split_numbers(lines)
+    lines = _merge_split_teshuva(lines)
     answer_table = _parse_answer_table(lines)
+    markers = _find_number_markers(lines)
+
+    # A "N." line is textually identical whether it's a genuine top-level
+    # question boundary or just part of the explanation body — this bites
+    # in practice as: explanations for rule/logic questions containing
+    # their own nested "1. / 2. / 3." list enumerating premises or steps;
+    # pilot chapters' "רציונל" intro block (printed between the answer
+    # table and question 1) containing its own "1. / 2. / 3." tips list in
+    # the exact same format; and the rare stray sentence-ending numeral
+    # ("...מתוך ה-5.") coinciding with a real question number. All of
+    # these are prose-followed, not תשובה/נכונה-followed, so looks_real
+    # (see _find_number_markers) flags them — but some genuinely real
+    # markers occasionally fail that check too (unusual page furniture
+    # between the marker and its verdict line), so it's used as a
+    # *preference*, not a hard filter — a chapter with messier layout
+    # still resolves every question, just without the extra disambiguation.
+    #
+    # Matched against the answer-key table's ground-truth ordered sequence
+    # by walking it backwards (highest number first): for each expected
+    # number, look among markers of that exact number sitting before the
+    # already-resolved next-higher boundary, preferring a looks_real one
+    # if any exists there, otherwise taking the last one regardless. Going
+    # backwards is what correctly skips earlier decoys sitting before the
+    # real marker (rule list, intro tips) — the real one is closer to, but
+    # still before, the next boundary — while decoys sitting after the
+    # real marker (out-of-place blocks, e.g. the sentence-ending "5." case
+    # above) are excluded outright by the upper bound; the looks_real
+    # preference additionally resolves the case where a decoy and the real
+    # marker fall in the same window (e.g. a decoy inside the real
+    # question's own body, after its marker). A number whose marker never
+    # extracts cleanly (e.g. a still-unmerged split line) is simply
+    # skipped: its content merges into the previous question's body rather
+    # than permanently desyncing every question after it.
+    boundaries = []
+    if answer_table:
+        upper_bound = len(lines)
+        for target in sorted(answer_table.keys(), reverse=True):
+            best = None  # last candidate overall, as positional fallback
+            best_real = None  # last looks_real candidate, preferred
+            for idx, num, tail, looks_real in markers:
+                if idx >= upper_bound or num != target:
+                    continue
+                best = (idx, num, tail)
+                if looks_real:
+                    best_real = best
+            chosen = best_real or best
+            if chosen:
+                boundaries.append(chosen)
+                upper_bound = chosen[0]
+        boundaries.reverse()
+    else:
+        # No ground-truth table to validate against: fall back to treating
+        # any strictly-increasing looks_real marker as a boundary.
+        last = None
+        for idx, num, tail, looks_real in markers:
+            if looks_real and (last is None or num > last):
+                boundaries.append((idx, num, tail))
+                last = num
 
     by_q = {}
-    pending_num = None
-    pending_lines = []
-
-    def commit(num, body_lines):
-        if num is None:
-            return
+    for bi, (idx, num, tail) in enumerate(boundaries):
+        body_start = idx + 1
+        body_end = boundaries[bi + 1][0] if bi + 1 < len(boundaries) else len(lines)
+        body_lines = ([tail] if tail else []) + lines[body_start:body_end]
         joined = "\n".join(l for l in body_lines if l.strip())
         am = re.search(r"תשובה\s*(\d)", joined)
         parsed_answer = int(am.group(1)) if am else None
@@ -375,22 +506,6 @@ def _parse_chapter_lines(lines):
             "correct_answer": answer_table.get(num, parsed_answer),
             "solution_text": joined.strip(),
         }
-
-    for line in lines:
-        stripped = line.strip()
-        solo = re.match(r"^(\d{1,2})\.$", stripped)
-        # Usually "N." sits alone on its own line with the answer/explanation
-        # starting on the next one, but occasionally "תשובה" runs on straight
-        # after the number on the same line ("7. תשובה...") — recognize that
-        # too, keeping its trailing content as the item's first line.
-        inline = None if solo else re.match(r"^(\d{1,2})\.\s+(תשובה.*)$", stripped)
-        if solo or inline:
-            commit(pending_num, pending_lines)
-            pending_num = int((solo or inline).group(1))
-            pending_lines = [inline.group(2)] if inline else []
-        elif pending_num is not None:
-            pending_lines.append(line)
-    commit(pending_num, pending_lines)
     return by_q
 
 

@@ -49,6 +49,11 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
     // touch/palm contact so resting a hand on the iPad screen while writing
     // doesn't leave stray marks.
     if (e.pointerType !== 'pen' && e.pointerType !== 'mouse') return
+    // Without this, fast successive strokes (e.g. drawing a "+") can still
+    // be picked up by iOS's native text/image-selection gesture recognizer
+    // underneath the canvas, popping up the "Copy / Copy with Highlight"
+    // callout mid-drawing — touch-action/user-select CSS alone doesn't stop it.
+    e.preventDefault()
     canvasRef.current.setPointerCapture(e.pointerId)
     drawingRef.current = true
     const point = pointFromEvent(e)
@@ -58,6 +63,7 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
 
   function handlePointerMove(e) {
     if (!drawingRef.current) return
+    e.preventDefault()
     const ctx = canvasRef.current.getContext('2d')
     const point = pointFromEvent(e)
     const last = lastPointRef.current
@@ -107,6 +113,7 @@ export default function PracticeScreen({ question, onAdvance, onBackToCategories
         onPointerUp={stopDrawing}
         onPointerCancel={stopDrawing}
         onPointerLeave={stopDrawing}
+        onContextMenu={(e) => e.preventDefault()}
       />
 
       <button type="button" className="psych-clear-btn" onClick={handleClear}>
